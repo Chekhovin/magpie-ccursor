@@ -12,6 +12,8 @@ import { BASE_REDIRECT } from './defaults.js';
 import { DEFAULT_REDIRECT } from './defaults.js';
 import { isLocalLoopCompatible, patchLocalLoopGate, patchLocalLoopHook, upgradeLocalLoopHook } from './patch-local-loop.js';
 export { isLocalLoopCompatible } from './patch-local-loop.js';
+import { isModelCatalogCompatible, patchModelCatalogHook, upgradeModelCatalogHook } from './patch-model-catalog.js';
+export { isModelCatalogCompatible } from './patch-model-catalog.js';
 
 const HOOK_MARKER = '__byokWrapTransport';
 const HOOK_SOURCE_MARKER = 'CURSOR-BYOK-HOOK-START';
@@ -24,7 +26,7 @@ function hasCompleteHook(code) {
 }
 
 export function isInjectPatched(code) {
-  return hasCompleteHook(code) && isLocalLoopCompatible(code);
+  return hasCompleteHook(code) && isLocalLoopCompatible(code) && isModelCatalogCompatible(code);
 }
 // ConnectRPC 客户端模块的 esbuild 注册键。
 //
@@ -177,7 +179,7 @@ function buildHookPayload(hasGlass) {
   const refreshLogic = `globalThis.__byokRefreshModels=function(){if(globalThis.__byokAiSvc&&typeof globalThis.__byokAiSvc.refreshDefaultModels==="function"){try{var p=globalThis.__byokAiSvc.refreshDefaultModels();console.log("[BYOK] refreshDefaultModels() invoked via captured aiService ref");if(p&&typeof p.then==="function")p.catch(function(e){console.warn("[BYOK] refreshDefaultModels failed:",e&&e.message||e)});return"service"}catch(e){console.warn("[BYOK] refreshDefaultModels threw:",e&&e.message||e)}}var btn=document.querySelector('[title="Refresh model list"]');if(btn&&typeof btn.click==="function"){btn.click();console.log("[BYOK] refresh triggered via DOM click fallback");return"click"}console.warn("[BYOK] no refresh mechanism available (aiService not captured, picker not visible)");return"none"};try{var _byokEs=new EventSource(_byokUrl+"/byok/events");_byokEs.addEventListener("open",function(){globalThis.__byokGlassStatus&&globalThis.__byokGlassStatus(true,_restPaths.length>2)});_byokEs.addEventListener("refresh",function(){console.log("[BYOK] refresh event received");globalThis.__byokRefreshModels&&globalThis.__byokRefreshModels()});_byokEs.addEventListener("routes",function(ev){try{var newPaths=JSON.parse(ev.data);_restPaths=newPaths;_restSet=new Set(newPaths);console.log("[BYOK] REST redirects hot-reloaded: "+newPaths.length+" paths");globalThis.__byokGlassStatus&&globalThis.__byokGlassStatus(void 0,newPaths.length>2)}catch(e){console.warn("[BYOK] routes event parse failed:",e&&e.message||e)}});_byokEs.addEventListener("error",function(){globalThis.__byokGlassStatus&&globalThis.__byokGlassStatus(false,void 0)})}catch(e){console.warn("[BYOK] EventSource init failed:",e&&e.message||e)}`;
 
   const payload = main + refreshLogic + pickerRefresh + glassStatus + `console.log("[BYOK] Hook loaded, collector="+_collectorUrl+", byok="+_byokUrl+", REST redirects="+_restPaths.length)})()`;
-  return patchLocalLoopHook(payload, routes.redirect.includes('agent.v1.AgentService/RunSSE'));
+  return patchModelCatalogHook(patchLocalLoopHook(payload, routes.redirect.includes('agent.v1.AgentService/RunSSE')));
 }
 
 // ---- AST fingerprinting + patch ----
@@ -623,10 +625,10 @@ function prepareWorkbenchPatch(code, label, paths, log) {
     return null;
   }
   if (hasCompleteHook(code)) {
-    const patched = patchLocalLoopGate(upgradeLocalLoopHook(code,
-      loadRoutes().redirect.includes('agent.v1.AgentService/RunSSE')));
-    if (!isInjectPatched(patched)) throw new Error(`local-loop verification failed for ${label}`);
-    log?.(`[inject] ${label}: upgraded local-loop protocol selection`);
+    const patched = upgradeModelCatalogHook(patchLocalLoopGate(upgradeLocalLoopHook(code,
+      loadRoutes().redirect.includes('agent.v1.AgentService/RunSSE'))));
+    if (!isInjectPatched(patched)) throw new Error(`renderer hook verification failed for ${label}`);
+    log?.(`[inject] ${label}: upgraded local-loop and model catalog synchronization`);
     return patched;
   }
   if (code.includes(HOOK_MARKER) || code.includes(HOOK_SOURCE_MARKER)) {

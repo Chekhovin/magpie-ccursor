@@ -9,17 +9,18 @@
  *   由上游 handler 转换为客户端可见的 "模型未找到" 错误响应 —
  *   绝不静默 fallback 到 anthropic 触发错误请求,避免调用者误以为模型可用。
  *
- *   不做任何前缀推断 — 用户必须在 ~/.ccursor/providers.json 里自行登记模型。
+ *   模型由 Magpie 的 Agent → CCursor 分配；不猜测供应商前缀。
+ *   Cursor 的内置 Auto 标识 default 使用 GetDefaultModel 相同的默认项。
  */
 import type { ProviderEntry, ProviderModel, ProviderType, ThinkingLevel } from '../../data/defaults'
-import { lookupModel } from '../../config/providersStore'
+import { flattenModels, lookupModel } from '../../config/providersStore'
 import { logger } from '../../logger'
 
 export class ModelNotFoundError extends Error {
   readonly code = 'MODEL_NOT_FOUND'
   readonly modelId: string
   constructor(modelId: string) {
-    super(`Model "${modelId}" not found in ~/.ccursor/providers.json — please add it first.`)
+    super(`Model "${modelId}" is not assigned to the Magpie CCursor Agent. Open Magpie → Agent → CCursor and assign a model.`)
     this.name = 'ModelNotFoundError'
     this.modelId = modelId
   }
@@ -53,8 +54,13 @@ const UNSET_CONTEXT_LIMIT = 0
  * 未登记直接抛 ModelNotFoundError, 不做前缀猜测, 也不 fallback 到 anthropic。
  * 上游 handler 应在 try/catch 中捕获此错, 构造对应的客户端错误响应。
  */
+export function defaultAssignedModel() {
+  return flattenModels().find(entry => entry.model.defaultOn !== false)
+}
+
 export function resolveModel(modelId: string): ResolvedModel {
-  const hit = lookupModel(modelId)
+  // Resolve explicit IDs first; only Cursor's reserved Auto ID has default semantics.
+  const hit = lookupModel(modelId) ?? (modelId === 'default' ? defaultAssignedModel() : undefined)
   if (!hit) {
     logger.warn({ modelId }, '[MODEL] not found in providers.json — rejecting request')
     throw new ModelNotFoundError(modelId)

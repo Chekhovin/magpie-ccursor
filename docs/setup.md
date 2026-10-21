@@ -60,6 +60,7 @@ Cursor 升级后，插件会重新检查客户端。当新版本的应用文件�
 | 现象 | 检查 |
 | --- | --- |
 | Agent 已连接，但 Cursor 没有模型 | 查看 Magpie 插件日志中的自动接入结果；已打开的 Cursor 需重启一次；确认 Agent 已分配模型 |
+| 普通窗口有模型，但 Agents 窗口只有 Auto | 更新到 `0.2.4` 或更高版本并重启 Cursor；新版为当前窗口同步模型目录与选择器显示配置。内置 Auto 也会使用 Magpie 分配的默认模型，不需要编辑 provider 文件 |
 | 模型可选，但发送后一直思考 | 更新插件至 `0.2.1` 或更高版本并重启 Cursor。此版本修复 Cursor 新版 local-loop 与桥接对话协议不匹配；`status` 的 `localLoop` 应为 `true` |
 | 日志提示找不到 Cursor | 安装 Cursor，或给 Magpie 设置指向 `resources/app` 的 `CCURSOR_CURSOR_ROOT` |
 | 日志提示权限不足 | 确认当前账户可写入 Cursor 应用目录 |

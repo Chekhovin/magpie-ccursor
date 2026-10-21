@@ -212,8 +212,8 @@ export function makeModelNotFoundError(modelId: string): ConnectError {
     errorCode: ErrorDetails_Error.BAD_MODEL_NAME,
     title: 'Model not registered',
     detail:
-      `Model \`${modelId}\` was not found in \`~/.ccursor/providers.json\`.\n\n`
-      + 'Open the Cursor++ side panel → Providers, add the model, then try again.',
+      `Model \`${modelId}\` is not assigned to the Magpie CCursor Agent.\n\n`
+      + 'Open Magpie → Agent → CCursor, enable the connection and assign a model, then select it in Cursor.',
     isRetryable: false,
     additionalInfo: { modelId },
   })

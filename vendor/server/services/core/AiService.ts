@@ -23,7 +23,7 @@
  *   - StreamChat / StreamUiApply / 其他被白名单覆盖的方法: 由各 stream 实现处理
  *   - 未列入白名单的方法: 不会到我们这里, 直通官方
  */
-import type { ConnectRouter } from '@connectrpc/connect'
+import type { ConnectRouter, HandlerContext } from '@connectrpc/connect'
 import { create } from '@bufbuild/protobuf'
 import {
   AiService,
@@ -40,6 +40,7 @@ import {
 } from '../../config/knowledgeBaseStore'
 import { buildByokAvailableModels } from '../../handlers/models/byokModelBuilder'
 import { flattenModels } from '../../config/providersStore'
+import { defaultAssignedModel } from '../../handlers/models/mapper'
 import { logger } from '../../logger'
 
 /**
@@ -49,20 +50,24 @@ import { logger } from '../../logger'
  * BYOK OFF 模式下,白名单不含 AvailableModels,这个 handler 根本不会被调用 ——
  * 客户端直接拿到官方真实订阅列表。
  */
-async function handleAvailableModels() {
+async function handleAvailableModels(_request: unknown, context: HandlerContext) {
+  context.responseHeader.set('x-magpie-ccursor-catalog', '1')
   const byok = buildByokAvailableModels()
+  const featureConfig = () => create(AvailableModelsResponse_FeatureModelConfigSchema, {
+    defaultModel: defaultAssignedModel()?.model.id ?? '',
+  })
   logger.info({ count: byok.length }, '[MODEL] availableModels (BYOK only)')
   return create(AvailableModelsResponseSchema, {
     models: byok,
     modelNames: byok.map(m => m.name),
-    // feature config 给空 stub,Cursor 客户端遇到空 config 会用内置默认行为
-    composerModelConfig: create(AvailableModelsResponse_FeatureModelConfigSchema, {}),
-    cmdKModelConfig: create(AvailableModelsResponse_FeatureModelConfigSchema, {}),
-    backgroundComposerModelConfig: create(AvailableModelsResponse_FeatureModelConfigSchema, {}),
+    // New conversations start from the same assigned default exposed by GetDefaultModel.
+    composerModelConfig: featureConfig(),
+    cmdKModelConfig: featureConfig(),
+    backgroundComposerModelConfig: featureConfig(),
     // subagentModelConfigs: map<string, FeatureModelConfig>
     // 提供 explore 条目让 Settings > Subagents 显示 "Explore subagent model" 选择器
     subagentModelConfigs: {
-      explore: create(AvailableModelsResponse_FeatureModelConfigSchema, {}),
+      explore: featureConfig(),
     },
     // displayConfiguration — 覆盖客户端 localStorage 缓存的官方配置:
     //   routedModelViewConfig.hideRoutedModelView = true
@@ -92,7 +97,7 @@ export default (router: ConnectRouter) => {
     // 返回空 {} = 不推送(客户端保留上次选择)
     getDefaultModel: async () => {
       const all = flattenModels().filter(x => x.model.defaultOn !== false)
-      const first = all[0]
+      const first = defaultAssignedModel()
       if (!first) return {}
       const thinkingModel = all.find(x => x.model.thinking)
       return {

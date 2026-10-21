@@ -5,7 +5,7 @@ import { createHash, randomUUID } from 'node:crypto'
 import { join, resolve } from 'node:path'
 import { dataDirectory, writePrivateJSON } from './connection'
 import { findCursorPathsDetailed, formatDiagnostic } from '../vendor/installer/detect.js'
-import { isInjectPatched, isLocalLoopCompatible, patchInject } from '../vendor/installer/patch-inject.js'
+import { isInjectPatched, isLocalLoopCompatible, isModelCatalogCompatible, patchInject } from '../vendor/installer/patch-inject.js'
 import { inspectAlwaysLocalPatch, patchAlwaysLocal } from '../vendor/installer/patch-always-local.js'
 import { findAgentHostNetworkTargets, getAgentHostBackupTargets, isAgentHostPatched, patchAgentHost } from '../vendor/installer/patch-agent-host.js'
 import { isProxy39Patched, needsProxy39Patch, patchProxy39 } from '../vendor/installer/patch-proxy-39.js'
@@ -211,6 +211,8 @@ export function cursorStatus(options: SetupOptions = {}) {
   const glass = glassSource ? isInjectPatched(glassSource) : !paths.hasGlass
   const localLoop = (renderer && glass)
     || (isLocalLoopCompatible(rendererSource) && (glassSource ? isLocalLoopCompatible(glassSource) : !paths.hasGlass))
+  const modelCatalog = (renderer && glass)
+    || (isModelCatalogCompatible(rendererSource) && (glassSource ? isModelCatalogCompatible(glassSource) : !paths.hasGlass))
   const agentRequired = Number(paths.cursorVersion.split('.')[0]) > 3
     || (Number(paths.cursorVersion.split('.')[0]) === 3 && Number(paths.cursorVersion.split('.')[1]) >= 13)
   const agent = (!agentRequired || existsSync(paths.agentHostMain)) && isAgentHostPatched(paths)
@@ -219,8 +221,8 @@ export function cursorStatus(options: SetupOptions = {}) {
   const signature = extensionHost.includes('if(!1)') && !/if\(!\w\.valid\)/.test(extensionHost)
   // Newer Cursor layouts can omit the legacy singleton entirely.
   const proxy = !needsProxy39Patch(paths) || isProxy39Patched(paths)
-  return { installed: true, root: paths.appRoot, version: paths.cursorVersion, renderer, glass, agent, alwaysLocal, signature, proxy, localLoop,
-    ready: renderer && glass && agent && alwaysLocal && signature && proxy && localLoop }
+  return { installed: true, root: paths.appRoot, version: paths.cursorVersion, renderer, glass, agent, alwaysLocal, signature, proxy, localLoop, modelCatalog,
+    ready: renderer && glass && agent && alwaysLocal && signature && proxy && localLoop && modelCatalog }
 }
 
 export async function setupCursor(options: SetupOptions = {}) {
@@ -252,7 +254,7 @@ async function setupCursorLocked(options: SetupOptions) {
       if (!cursorStatus({ paths }).ready) throw new Error('Upgraded Cursor renderer hooks did not pass verification.')
       if (digest(readFileSync(join(paths.appRoot, 'package.json'))) !== packageHash) throw new Error('Cursor changed version during setup.')
     }, { appRoot: paths.appRoot, version: paths.cursorVersion, packageHash }, true)
-    log('Cursor compatibility hooks updated. Restart any open Cursor window once to load the corrected chat protocol.')
+    log('Cursor compatibility hooks updated. Restart any open Cursor window once to load the model and chat compatibility fixes.')
     return { ...cursorStatus({ paths }), changed: true }
   }
   for (const file of files) {

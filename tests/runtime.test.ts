@@ -46,6 +46,8 @@ async function modelList(url: string) {
     method: 'POST', headers: { 'content-type': 'application/json', 'connect-protocol-version': '1' }, body: '{}',
   })
   expect(response.status).toBe(200)
+  expect(response.headers.get('x-magpie-ccursor-catalog')).toBe('1')
+  expect(response.headers.get('access-control-expose-headers')).toContain('x-magpie-ccursor-catalog')
   return response.json()
 }
 async function until(check: () => boolean | Promise<boolean>, timeout = 7000) {
@@ -148,17 +150,28 @@ test('BidiAppend accepts binary frames and rejects malformed input without a fal
   await expect(bidi.bidiAppend({ requestId: { requestId: 'no-data' } })).rejects.toThrow('requires requestId')
 })
 
-test('RunSSE + BidiAppend reach OpenAI SSE with the configured model/auth and return text', async () => {
+for (const selectedModel of ['fixture-picker', 'default']) {
+test(`RunSSE + BidiAppend resolve ${selectedModel} and return OpenAI SSE text`, async () => {
   const mock = mockOpenAI()
   const dir = await directory()
   await providers(dir, mock.url)
   const running = await runtime(dir)
   const transport = createConnectTransport({ baseUrl: running.url, httpVersion: '1.1' })
+  const catalog = await modelList(running.url)
+  const defaultResponse = await fetch(`${running.url}/aiserver.v1.AiService/GetDefaultModel`, {
+    method: 'POST', headers: { 'content-type': 'application/json', 'connect-protocol-version': '1' }, body: '{}',
+  })
+  expect(defaultResponse.status).toBe(200)
+  const defaultModel = (await defaultResponse.json()).model
+  expect(defaultModel).toBe('fixture-picker')
+  for (const config of [catalog.composerModelConfig, catalog.cmdKModelConfig,
+    catalog.backgroundComposerModelConfig, catalog.subagentModelConfigs.explore])
+    expect(config.defaultModel).toBe(defaultModel)
   const agent = createClient(AgentService, transport)
   const bidi = createClient(BidiService, transport)
   const requestId = 'fixture-run'
   const message = fromJson(AgentClientMessageSchema, { runRequest: {
-    conversationId: 'fixture-conversation', modelDetails: { modelId: 'fixture-picker' }, conversationState: {},
+    conversationId: 'fixture-conversation', modelDetails: { modelId: selectedModel }, conversationState: {},
     action: { userMessageAction: { userMessage: { text: 'ping', mode: 'AGENT_MODE_AGENT' }, requestContext: {} } },
   } })
   await bidi.bidiAppend({ requestId: { requestId }, appendSeqno: 0n, data: Buffer.from(toBinary(AgentClientMessageSchema, message)).toString('hex') })
@@ -173,6 +186,7 @@ test('RunSSE + BidiAppend reach OpenAI SSE with the configured model/auth and re
   expect(frames.length).toBeGreaterThan(2)
   expect(await getAgentDatabase().get('SELECT conversation_id FROM conversation_checkpoints WHERE conversation_id = ?', ['fixture-conversation'])).toEqual({ conversation_id: 'fixture-conversation' })
 }, 15000)
+}
 
 test('stop aborts a received OpenAI request before response data and isolates the next dataDir', async () => {
   const calls: any[] = []

@@ -25,7 +25,7 @@ export function createAutoSetup(options: SetupOptions & {
     // Manual restore/setup changes intent even if the Cursor installation itself is unchanged.
     const snapshot = await stat(join(dataDir, 'patch-manifest.json')).catch(() => undefined)
     const lock = await stat(join(dataDir, 'patch.lock')).catch(() => undefined)
-    return JSON.stringify(['renderer-connect-routing-v1', target, snapshot?.mtimeMs, snapshot?.ctimeMs, snapshot?.size, lock?.mtimeMs, lock?.size])
+    return JSON.stringify(['renderer-model-catalog-v1', target, snapshot?.mtimeMs, snapshot?.ctimeMs, snapshot?.size, lock?.mtimeMs, lock?.size])
   }
   return async function reconcileAutoSetup() {
     if (now() < nextCheck) return

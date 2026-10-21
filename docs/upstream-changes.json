@@ -812,8 +812,8 @@
       "path": "vendor/server/handlers/errors.ts",
       "upstream": "Cursor++/src/server/handlers/errors.ts",
       "upstreamSha256": "adc3cbaff22c39a7b94821681ae24e387b9d000d93b0b9fff485c4b79ee4f71f",
-      "sha256": "adc3cbaff22c39a7b94821681ae24e387b9d000d93b0b9fff485c4b79ee4f71f",
-      "modified": false
+      "sha256": "fe08e57b001558d12e3b147d55a4479fb4d5fa017ce622d4e773cc96fb9593fc",
+      "modified": true
     },
     {
       "path": "vendor/server/handlers/llm/anthropic.ts",
@@ -959,8 +959,8 @@
       "path": "vendor/server/handlers/models/mapper.ts",
       "upstream": "Cursor++/src/server/handlers/models/mapper.ts",
       "upstreamSha256": "bfe7cb1d31706f0d6062850d970f537bc10ddfc75ff9b4b3a9f52a5064988770",
-      "sha256": "bfe7cb1d31706f0d6062850d970f537bc10ddfc75ff9b4b3a9f52a5064988770",
-      "modified": false
+      "sha256": "1d426ec54b744bb343948c89fc9bdb168bb33d903d21e3101f0c5dac4b6e0632",
+      "modified": true
     },
     {
       "path": "vendor/server/handlers/models/upstream.ts",
@@ -980,7 +980,7 @@
       "path": "vendor/server/index.ts",
       "upstream": "Cursor++/src/server/index.ts",
       "upstreamSha256": "2cdd8b4dfde284e40abf27853c0ff6ab295548ede6c7c2a68e817ea0255dc106",
-      "sha256": "e79b9477799ef1727302e5d214181c33a23e698981a166164f79ba6b4a6be3dd",
+      "sha256": "94f20ef1067441c278c87abf1c0273687f83d2e1d42d2dd039922e66b0c639e1",
       "modified": true
     },
     {
@@ -1057,8 +1057,8 @@
       "path": "vendor/server/services/core/AiService.ts",
       "upstream": "Cursor++/src/server/services/core/AiService.ts",
       "upstreamSha256": "8549744f7bfe30f0b61484e65ad2a44b30acd08f9aaf1061a8a341222377a554",
-      "sha256": "8549744f7bfe30f0b61484e65ad2a44b30acd08f9aaf1061a8a341222377a554",
-      "modified": false
+      "sha256": "6e675ab5696a0105da42a139bf83af9b5bb44659a617fd890eae2359a68f013a",
+      "modified": true
     },
     {
       "path": "vendor/server/services/core/BackgroundComposerService.ts",
@@ -1582,7 +1582,7 @@
       "path": "vendor/installer/patch-inject.js",
       "upstream": "installer/src/patch-inject.js",
       "upstreamSha256": "50ea0118615bced1fecfbe0a0fd97cd3c493562bcaca56eac0e78a8d6f02c0a4",
-      "sha256": "b2024086447c74ba4f859593530b0c5b47ab1f61bfd13c6d37fdab4a0c4f0aa1",
+      "sha256": "0a2e0050f1d0d98ded704a5d8bd4ef6f9bde44ecb46993f074697be4a79b77d9",
       "modified": true
     },
     {
@@ -1606,6 +1606,14 @@
       "upstreamSha256": "a191fee8799459b5daa65b5599d18c5e257501a5ae9dc432f361ed697cd4428a",
       "sha256": "a191fee8799459b5daa65b5599d18c5e257501a5ae9dc432f361ed697cd4428a",
       "modified": false
+    },
+    {
+      "path": "vendor/installer/patch-model-catalog.js",
+      "upstream": null,
+      "upstreamSha256": null,
+      "sha256": "b8a40c9c593a41392e04be45a3f0ba8e4acbea905ee7471d20665e1a27da31f2",
+      "modified": true,
+      "added": true
     },
     {
       "path": "vendor/installer/patch-proxy-39.js",

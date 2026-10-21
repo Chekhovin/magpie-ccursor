@@ -10,7 +10,7 @@ Windows, using the actual Bun 1.4.3 binary shipped in the local Magpie cache:
 bun test ./tests
 ```
 
-Result for **0.2.3**: **55 tests passed, 0 failed**, with 345 assertions across six files.
+Result for **0.2.4**: **73 tests passed, 0 failed**, with 510 assertions across eight files.
 
 | Boundary | Evidence |
 | --- | --- |
@@ -28,6 +28,8 @@ Result for **0.2.3**: **55 tests passed, 0 failed**, with 345 assertions across 
 | Upgrade and recovery | Clean updates get separate snapshots; partial hooks, checksum mismatches and damaged backups are refused; manual restore pauses automatic setup |
 | Concurrent operations | Setup writes and restore share an exclusive patch lock; ready-only inspection preserves existing locks without acquiring one; abandoned locks are not reclaimed automatically; detected external version changes preserve the updater's files |
 | Protocol selection | Actual desktop/glass capability method shapes select Connect when BYOK is enabled and restore official gates when disabled; a single routes SSE connection updates the choice |
+| Default model | Cursor's reserved `default` uses the assigned default exposed by all feature configs and `GetDefaultModel`; explicit IDs retain precedence and unknown IDs are rejected. Both explicit and Auto requests traverse real RunSSE/BidiAppend to mock OpenAI SSE |
+| Window catalog | Captured services synchronize models, picker display and feature defaults from a marked bridge response; tests cover stale overwrite repair, shared storage, own-key cache, OFF/disconnect restoration, late replies, empty catalogs, malformed hooks and upgrade idempotency |
 | Plugin patch upgrade | Recorded old hooks upgrade without replacing clean backups; a failed upgrade restores the old patched files and manifest; malformed BidiAppend receives an error rather than a success ACK |
 
 An initial 0.1.0 full run failed in a rollback fixture, followed by 20 passing adapter reruns. During 0.2.0 integration, one full run also failed in the successful-restore/idempotency fixture; its filtered output did not retain the exception. The adapter suite then passed 30 consecutive runs, and the final 44-test run passed. During 0.2.3 verification the same restore/idempotency fixture failed once, followed by 20 passing targeted reruns and a passing 55-test run. No root cause is claimed for these intermittent failures.
@@ -47,6 +49,8 @@ The same official host was also tested against a separate copy of the actual **C
 For 0.2.1, live client logs identified `RunInference` / `local_loop` traffic being decoded as the older Agent protocol. A separate Cursor 3.26.13 file copy was patched with 0.2.0 and then upgraded through the new setup path. Both renderer gate methods selected Connect with BYOK enabled and preserved the official gate result with BYOK disabled. Repeated setup made no changes; restore returned all 9 original file hashes. This validates patch selection and migration, not a completed live model conversation.
 
 During local 0.2.1 deployment, a temporary plugin host exited while setup was running and left a patch lock from a dead process. The applied snapshot and all 60 target and backup hashes still matched. After archiving only that verified stale lock, the resident plugin completed the upgrade: desktop/glass compatibility, `localLoop`, and overall `ready` all passed. Version 0.2.2 waits for the active setup transaction before starting the runtime shutdown deadline, with the delayed-backup test above covering this case. Another short-lived command-line reload left a lock despite that graceful-shutdown fix; a forced termination source was not established. Version 0.2.3 performs snapshot validation and ready-only inspection without acquiring a write lock, and takes the lock only when changes are required. The new test confirms an existing lock and snapshot remain untouched by ready-only inspection.
+
+For 0.2.4, the ordinary IDE visibly showed 58 assigned models while the Agents window showed only Auto. Read-only DevTools inspection confirmed the Agents service and picker still held 46 official models; the active bridge and global database held 58 assigned models. This establishes stale window state, not which internal writer caused it. The renderer now synchronizes each captured service's catalog, display configuration and feature defaults using the normal reactive APIs. It only accepts a response carrying the bridge catalog header and BYOK display contract, and restores the earlier state on disconnect or BYOK OFF. A Cursor 3.26.13 copy with 0.2.3 hooks upgraded successfully, retained the original backups, made no changes on repeated setup, and restored all 9 original file hashes.
 
 Official `internal/agent/plugged.go` was inspected to verify `connect()` values are written and stashed/restored on disconnect; the desktop Agent UI was not exercised.
 

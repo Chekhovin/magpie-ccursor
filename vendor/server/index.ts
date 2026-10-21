@@ -224,7 +224,7 @@ export async function startServer(opts: StartServerOptions): Promise<{ host: str
       done()
     })
 
-    await server.register(cors, { origin: true })
+    await server.register(cors, { origin: true, exposedHeaders: ['x-magpie-ccursor-catalog'] })
     await server.register(fastifyConnectPlugin, { routes })
 
     // ── SSE 日志流 + 窗口注册 ──
