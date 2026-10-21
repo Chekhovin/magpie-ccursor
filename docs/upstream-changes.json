@@ -406,7 +406,7 @@
       "path": "vendor/server/handlers/agent/session.ts",
       "upstream": "Cursor++/src/server/handlers/agent/session.ts",
       "upstreamSha256": "539c8c2d298767097e2cad66cfb336ccb195706a1c3b6bb0e95c32ed97ef6040",
-      "sha256": "d847faf6581278c278f32606282d13b77d2421e082c83a4838f340a370f08e75",
+      "sha256": "e27639f9112c31d43e3cc651a862f2d93f49294921f0eb01b7358c88a20bb078",
       "modified": true
     },
     {
@@ -1071,8 +1071,8 @@
       "path": "vendor/server/services/core/BidiService.ts",
       "upstream": "Cursor++/src/server/services/core/BidiService.ts",
       "upstreamSha256": "feeeafc3f8e78634153ca5324d345192a123e3764b060dbdeaeed82f1ecf99eb",
-      "sha256": "feeeafc3f8e78634153ca5324d345192a123e3764b060dbdeaeed82f1ecf99eb",
-      "modified": false
+      "sha256": "4fa86b42cfb46b4dcd3009df8dd1067158e4fc09c5ed2753dcb983b7c1a8dd6a",
+      "modified": true
     },
     {
       "path": "vendor/server/services/core/ChatService.ts",
@@ -1582,8 +1582,8 @@
       "path": "vendor/installer/patch-inject.js",
       "upstream": "installer/src/patch-inject.js",
       "upstreamSha256": "50ea0118615bced1fecfbe0a0fd97cd3c493562bcaca56eac0e78a8d6f02c0a4",
-      "sha256": "50ea0118615bced1fecfbe0a0fd97cd3c493562bcaca56eac0e78a8d6f02c0a4",
-      "modified": false
+      "sha256": "b2024086447c74ba4f859593530b0c5b47ab1f61bfd13c6d37fdab4a0c4f0aa1",
+      "modified": true
     },
     {
       "path": "vendor/installer/patch-katex.js",
@@ -1591,6 +1591,14 @@
       "upstreamSha256": "3e0eef56ced95dbf22afe882478ae496df808141b2bf173fb4f6f808054edf9d",
       "sha256": "3e0eef56ced95dbf22afe882478ae496df808141b2bf173fb4f6f808054edf9d",
       "modified": false
+    },
+    {
+      "path": "vendor/installer/patch-local-loop.js",
+      "upstream": null,
+      "upstreamSha256": null,
+      "sha256": "694726bac4534e86d18f15e1b7080900327cc5eb51b8c1584b7fb21555186364",
+      "modified": true,
+      "added": true
     },
     {
       "path": "vendor/installer/patch-local-mode.js",

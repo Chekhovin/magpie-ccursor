@@ -197,6 +197,29 @@ test('automatic and manual operations share a lock and retry once its owner rele
   await expect(readFile(lockPath)).rejects.toThrow()
 })
 
+test('upgrading plugin hooks retains clean originals and rolls failure back to the previous plugin', async () => {
+  const f = await fixture()
+  await setupCursor(f)
+  const old = await manifest(f.dataDir)
+  const files = old.entries.map((entry: any) => entry.file)
+  const metadata = { appRoot: old.appRoot, version: old.version, packageHash: old.packageHash }
+  const oldRenderer = await readFile(f.paths.workbenchJs, 'utf8')
+  await expect(snapshotTransaction(files, f.dataDir, async () => {
+    await writeFile(f.paths.workbenchJs, 'incomplete new plugin patch')
+    throw new Error('upgrade failure')
+  }, metadata, true)).rejects.toThrow('upgrade failure')
+  expect(await manifest(f.dataDir)).toEqual(old)
+  expect(await readFile(f.paths.workbenchJs, 'utf8')).toBe(oldRenderer)
+  await snapshotTransaction(files, f.dataDir, async () => {
+    await writeFile(f.paths.workbenchJs, oldRenderer + '\n// upgraded compatibility hooks')
+  }, metadata, true)
+  const upgraded = await manifest(f.dataDir)
+  expect(upgraded.entries.map((entry: any) => [entry.file, entry.backup, entry.originalHash]))
+    .toEqual(old.entries.map((entry: any) => [entry.file, entry.backup, entry.originalHash]))
+  await restoreSnapshot(f.dataDir)
+  for (const [file, source] of f.sources) expect(await readFile(file, 'utf8')).toBe(source)
+})
+
 test('concurrent operations never reclaim an abandoned patch lock', async () => {
   const f = await fixture()
   await mkdir(f.dataDir)

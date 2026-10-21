@@ -8,7 +8,7 @@ export async function createCursorFixture(appRoot: string, version = '3.26.13') 
   await mkdir(appRoot, { recursive: true })
   await writeFile(join(appRoot, 'package.json'), JSON.stringify({ version }))
   const paths = resolveCursorPaths({ appRoot })
-  const renderer = `// callback-client.js\nfunction dispatch(service,transport){return [service.Unary,service.ServerStreaming,service.BiDiStreaming,transport]}\nfunction client(service,transport){return dispatch(service,transport)}`
+  const renderer = `// callback-client.js\nfunction dispatch(service,transport){return [service.Unary,service.ServerStreaming,service.BiDiStreaming,transport]}\nfunction client(service,transport){return dispatch(service,transport)}\nclass AgentCapabilities{readLocalLoopGate(){return this.experimentService.checkFeatureGate("agent_host_local_loop",{disableExposureLog:!0})}}`
   const sources = new Map([
     [paths.workbenchJs, renderer], [paths.glassJs, renderer],
     [paths.alwaysLocalMain, 'exports.activate=function(context){};exports.deactivate=function(){};'],

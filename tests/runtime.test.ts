@@ -133,6 +133,21 @@ test('restart with another dataDir clears blob and web-tools caches', async () =
   expect(await getAgentDatabase().get('SELECT * FROM agent_blobs WHERE blob_id = ?', ['directory-private-blob'])).toBeUndefined()
 })
 
+test('BidiAppend accepts binary frames and rejects malformed input without a false success ACK', async () => {
+  const running = await runtime(await directory())
+  const bidi = createClient(BidiService, createConnectTransport({ baseUrl: running.url, httpVersion: '1.1' }))
+  const requestId = 'binary-frame'
+  const message = fromJson(AgentClientMessageSchema, { clientHeartbeat: {} })
+  await bidi.bidiAppend({ requestId: { requestId }, dataBinary: toBinary(AgentClientMessageSchema, message) })
+  expect(getOrCreateSession(requestId).messages).toEqual([{ clientHeartbeat: {} }])
+  for (const data of ['a', 'not-hex', '0a05ff', 'f80101']) {
+    const session = getOrCreateSession('bad-frame')
+    await expect(bidi.bidiAppend({ requestId: { requestId: 'bad-frame' }, data })).rejects.toThrow('restart Cursor')
+    expect(session.closed).toBe(true)
+  }
+  await expect(bidi.bidiAppend({ requestId: { requestId: 'no-data' } })).rejects.toThrow('requires requestId')
+})
+
 test('RunSSE + BidiAppend reach OpenAI SSE with the configured model/auth and return text', async () => {
   const mock = mockOpenAI()
   const dir = await directory()

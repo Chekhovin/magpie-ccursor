@@ -10,7 +10,7 @@ Windows, using the actual Bun 1.4.3 binary shipped in the local Magpie cache:
 bun test ./tests
 ```
 
-Result for **0.2.0**: **44 tests passed, 0 failed**, with 228 assertions across five files.
+Result for **0.2.1**: **53 tests passed, 0 failed**, with 336 assertions across six files.
 
 | Boundary | Evidence |
 | --- | --- |
@@ -26,6 +26,8 @@ Result for **0.2.0**: **44 tests passed, 0 failed**, with 228 assertions across 
 | Automatic setup | A managed daemon installs hooks before Agent connection; complete hooks reuse one snapshot; failed targets wait for changes without stopping the bridge |
 | Upgrade and recovery | Clean updates get separate snapshots; partial hooks, checksum mismatches and damaged backups are refused; manual restore pauses automatic setup |
 | Concurrent operations | Setup and restore share an exclusive patch lock; abandoned locks are not reclaimed automatically; detected external version changes preserve the updater's files |
+| Protocol selection | Actual desktop/glass capability method shapes select Connect when BYOK is enabled and restore official gates when disabled; a single routes SSE connection updates the choice |
+| Plugin patch upgrade | Recorded old hooks upgrade without replacing clean backups; a failed upgrade restores the old patched files and manifest; malformed BidiAppend receives an error rather than a success ACK |
 
 An initial 0.1.0 full run failed in a rollback fixture, followed by 20 passing adapter reruns. During 0.2.0 integration, one full run also failed in the successful-restore/idempotency fixture; its filtered output did not retain the exception. The adapter suite then passed 30 consecutive runs, and the final 44-test run passed. No root cause is claimed for these intermittent failures.
 
@@ -40,6 +42,8 @@ bun scripts/host-smoke.ts /path/to/official/host.js
 It successfully loaded this package and installed fixture Cursor hooks **before any Agent configuration existed**. After writing a fixture connection, the bridge started on a random sandbox port, recovered after child termination without creating a duplicate snapshot, and stopped after host stdin closed. All subprocesses explicitly override the Cursor path and home directory. No live Magpie profile was modified by these tests.
 
 The same official host was also tested against a separate copy of the actual **Cursor 3.26.13** application files (9 files, approximately 106 MB). Automatic setup created one snapshot and reported `ready: true`; assigning one fixture model made it appear in `AvailableModels`. After the host and bridge exited, restore returned all 9 files to their original SHA-256 hashes. This version omits the legacy singleton file; a regression test covers that layout.
+
+For 0.2.1, live client logs identified `RunInference` / `local_loop` traffic being decoded as the older Agent protocol. A separate Cursor 3.26.13 file copy was patched with 0.2.0 and then upgraded through the new setup path. Both renderer gate methods selected Connect with BYOK enabled and preserved the official gate result with BYOK disabled. Repeated setup made no changes; restore returned all 9 original file hashes. This validates patch selection and migration, not a completed live model conversation.
 
 Official `internal/agent/plugged.go` was inspected to verify `connect()` values are written and stashed/restored on disconnect; the desktop Agent UI was not exercised.
 

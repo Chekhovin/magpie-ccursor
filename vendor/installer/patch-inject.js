@@ -10,15 +10,21 @@ import { updateChecksums } from './checksum.js';
 import { loadRoutes } from './routes.js';
 import { BASE_REDIRECT } from './defaults.js';
 import { DEFAULT_REDIRECT } from './defaults.js';
+import { isLocalLoopCompatible, patchLocalLoopGate, patchLocalLoopHook, upgradeLocalLoopHook } from './patch-local-loop.js';
+export { isLocalLoopCompatible } from './patch-local-loop.js';
 
 const HOOK_MARKER = '__byokWrapTransport';
 const HOOK_SOURCE_MARKER = 'CURSOR-BYOK-HOOK-START';
 const HOOK_CALL_SITE = `typeof globalThis.${HOOK_MARKER}==="function"?globalThis.${HOOK_MARKER}(`;
 
 /** Verify both the prepended payload and the active Connect transport call site. */
-export function isInjectPatched(code) {
+function hasCompleteHook(code) {
   return code.slice(0, 120000).includes(`/* ${HOOK_SOURCE_MARKER} */`)
     && code.includes(HOOK_CALL_SITE);
+}
+
+export function isInjectPatched(code) {
+  return hasCompleteHook(code) && isLocalLoopCompatible(code);
 }
 // ConnectRPC 客户端模块的 esbuild 注册键。
 //
@@ -170,7 +176,8 @@ function buildHookPayload(hasGlass) {
 
   const refreshLogic = `globalThis.__byokRefreshModels=function(){if(globalThis.__byokAiSvc&&typeof globalThis.__byokAiSvc.refreshDefaultModels==="function"){try{var p=globalThis.__byokAiSvc.refreshDefaultModels();console.log("[BYOK] refreshDefaultModels() invoked via captured aiService ref");if(p&&typeof p.then==="function")p.catch(function(e){console.warn("[BYOK] refreshDefaultModels failed:",e&&e.message||e)});return"service"}catch(e){console.warn("[BYOK] refreshDefaultModels threw:",e&&e.message||e)}}var btn=document.querySelector('[title="Refresh model list"]');if(btn&&typeof btn.click==="function"){btn.click();console.log("[BYOK] refresh triggered via DOM click fallback");return"click"}console.warn("[BYOK] no refresh mechanism available (aiService not captured, picker not visible)");return"none"};try{var _byokEs=new EventSource(_byokUrl+"/byok/events");_byokEs.addEventListener("open",function(){globalThis.__byokGlassStatus&&globalThis.__byokGlassStatus(true,_restPaths.length>2)});_byokEs.addEventListener("refresh",function(){console.log("[BYOK] refresh event received");globalThis.__byokRefreshModels&&globalThis.__byokRefreshModels()});_byokEs.addEventListener("routes",function(ev){try{var newPaths=JSON.parse(ev.data);_restPaths=newPaths;_restSet=new Set(newPaths);console.log("[BYOK] REST redirects hot-reloaded: "+newPaths.length+" paths");globalThis.__byokGlassStatus&&globalThis.__byokGlassStatus(void 0,newPaths.length>2)}catch(e){console.warn("[BYOK] routes event parse failed:",e&&e.message||e)}});_byokEs.addEventListener("error",function(){globalThis.__byokGlassStatus&&globalThis.__byokGlassStatus(false,void 0)})}catch(e){console.warn("[BYOK] EventSource init failed:",e&&e.message||e)}`;
 
-  return main + refreshLogic + pickerRefresh + glassStatus + `console.log("[BYOK] Hook loaded, collector="+_collectorUrl+", byok="+_byokUrl+", REST redirects="+_restPaths.length)})()`;
+  const payload = main + refreshLogic + pickerRefresh + glassStatus + `console.log("[BYOK] Hook loaded, collector="+_collectorUrl+", byok="+_byokUrl+", REST redirects="+_restPaths.length)})()`;
+  return patchLocalLoopHook(payload, routes.redirect.includes('agent.v1.AgentService/RunSSE'));
 }
 
 // ---- AST fingerprinting + patch ----
@@ -610,16 +617,22 @@ function patchGlassExtensionAllowlist(code, log) {
   return result;
 }
 
-function patchSingleWorkbench(filePath, label, paths, log) {
-  const code = readFileSync(filePath, 'utf-8');
-
+function prepareWorkbenchPatch(code, label, paths, log) {
   if (isInjectPatched(code)) {
     log?.(`[inject] ${label}: already patched`);
-    return;
+    return null;
+  }
+  if (hasCompleteHook(code)) {
+    const patched = patchLocalLoopGate(upgradeLocalLoopHook(code,
+      loadRoutes().redirect.includes('agent.v1.AgentService/RunSSE')));
+    if (!isInjectPatched(patched)) throw new Error(`local-loop verification failed for ${label}`);
+    log?.(`[inject] ${label}: upgraded local-loop protocol selection`);
+    return patched;
   }
   if (code.includes(HOOK_MARKER) || code.includes(HOOK_SOURCE_MARKER)) {
     throw new Error(`${label}: partial renderer hook detected (payload/call-site mismatch)`);
   }
+  code = patchLocalLoopGate(code);
 
   const target = findTarget(code, log);
   log?.(`  Target: function ${target.name}(${target.paramService}, ${target.paramTransport})`);
@@ -641,11 +654,8 @@ function patchSingleWorkbench(filePath, label, paths, log) {
   // 6. Glass Window (Agent Window) 扩展白名单放行
   patched = patchGlassExtensionAllowlist(patched, log);
 
-  if (!patched.includes(HOOK_MARKER)) throw new Error(`Verification failed for ${label}`);
-
-  createBackup(filePath, 'inject', log);
-  writeFileSync(filePath, patched);
-  updateChecksums(paths, [filePath], 'inject', log);
+  if (!isInjectPatched(patched)) throw new Error(`Verification failed for ${label}`);
+  return patched;
 }
 
 export function patchInject(paths, log) {
@@ -654,13 +664,21 @@ export function patchInject(paths, log) {
     { path: paths.glassJs, label: 'glass' },
   ];
 
+  // Validate every renderer before writing either one.
+  const prepared = [];
   for (const { path, label } of targets) {
     if (!existsSync(path)) {
       log?.(`[inject] ${label}: not found, skipping (pre-3.8)`);
       continue;
     }
     log?.(`[inject] Patching ${label} workbench.js...`);
-    patchSingleWorkbench(path, label, paths, log);
+    const patched = prepareWorkbenchPatch(readFileSync(path, 'utf-8'), label, paths, log);
+    if (patched !== null) prepared.push({ path, patched });
+  }
+  for (const { path, patched } of prepared) {
+    createBackup(path, 'inject', log);
+    writeFileSync(path, patched);
+    updateChecksums(paths, [path], 'inject', log);
   }
 
   log?.('[inject] Done');

@@ -5,7 +5,7 @@ import { createHash, randomUUID } from 'node:crypto'
 import { join, resolve } from 'node:path'
 import { dataDirectory, writePrivateJSON } from './connection'
 import { findCursorPathsDetailed, formatDiagnostic } from '../vendor/installer/detect.js'
-import { isInjectPatched, patchInject } from '../vendor/installer/patch-inject.js'
+import { isInjectPatched, isLocalLoopCompatible, patchInject } from '../vendor/installer/patch-inject.js'
 import { inspectAlwaysLocalPatch, patchAlwaysLocal } from '../vendor/installer/patch-always-local.js'
 import { findAgentHostNetworkTargets, getAgentHostBackupTargets, isAgentHostPatched, patchAgentHost } from '../vendor/installer/patch-agent-host.js'
 import { isProxy39Patched, needsProxy39Patch, patchProxy39 } from '../vendor/installer/patch-proxy-39.js'
@@ -111,7 +111,7 @@ async function readSnapshot(directory: string): Promise<Snapshot | undefined> {
 }
 
 export async function snapshotTransaction(files: string[], directory: string, action: () => Promise<void> | void,
-  metadata: Pick<Snapshot, 'appRoot' | 'version' | 'packageHash'> = {}) {
+  metadata: Pick<Snapshot, 'appRoot' | 'version' | 'packageHash'> = {}, upgrade = false) {
   const previous = await readSnapshot(directory)
   const backupDir = join(directory, `backup-${randomUUID()}`)
   await mkdir(backupDir, { recursive: true })
@@ -125,6 +125,11 @@ export async function snapshotTransaction(files: string[], directory: string, ac
     entries.push({ file, backup, originalHash, patchedHash: '' })
   }
   if (!entries.length) throw new Error('No Cursor files to back up.')
+  if (upgrade && (!previous || previous.state !== 'applied'
+    || previous.appRoot !== metadata.appRoot || previous.packageHash !== metadata.packageHash
+    || previous.entries.length !== entries.length
+    || entries.some(entry => previous.entries.find(old => old.file === entry.file)?.patchedHash !== entry.originalHash)))
+    throw new Error('Recorded Cursor hooks changed before upgrade; no application files were modified.')
   if (previous) await writePrivateJSON(join(directory, `patch-history-${randomUUID()}.json`), previous)
   const manifest: Snapshot = { ...metadata, state: 'applying', entries }
   const save = async () => {
@@ -141,8 +146,16 @@ export async function snapshotTransaction(files: string[], directory: string, ac
     await action()
     for (const entry of entries) entry.patchedHash = digest(await readFile(entry.file))
     manifest.state = 'applied'
+    if (upgrade) {
+      // Preserve the original clean installation, not the previous plugin's patched bytes.
+      manifest.entries = entries.map(entry => {
+        const original = previous!.entries.find(old => old.file === entry.file)!
+        return { ...entry, backup: original.backup, originalHash: original.originalHash }
+      })
+    }
     await save()
   } catch (error) {
+    manifest.entries = entries
     // An external updater owns the new version. Never copy this version's originals over it.
     if (metadata.appRoot && metadata.packageHash) {
       const currentPackage = await readFile(join(metadata.appRoot, 'package.json')).catch(() => null)
@@ -161,6 +174,7 @@ export async function snapshotTransaction(files: string[], directory: string, ac
     manifest.state = failures.length ? 'applying' : 'rolled-back'
     await save()
     if (failures.length) throw new Error(`Setup failed and rollback is incomplete; review backups for: ${failures.join(', ')}. Cause: ${error}`)
+    if (upgrade) await writePrivateJSON(join(directory, 'patch-manifest.json'), previous)
     throw error
   }
 }
@@ -191,8 +205,12 @@ export function cursorStatus(options: SetupOptions = {}) {
   let paths: CursorPaths
   try { paths = resolveCursorPaths(options) }
   catch (error) { return { installed: false, diagnostic: String(error) } }
-  const renderer = isInjectPatched(readFileSync(paths.workbenchJs, 'utf8'))
-  const glass = existsSync(paths.glassJs) ? isInjectPatched(readFileSync(paths.glassJs, 'utf8')) : !paths.hasGlass
+  const rendererSource = readFileSync(paths.workbenchJs, 'utf8')
+  const glassSource = existsSync(paths.glassJs) ? readFileSync(paths.glassJs, 'utf8') : undefined
+  const renderer = isInjectPatched(rendererSource)
+  const glass = glassSource ? isInjectPatched(glassSource) : !paths.hasGlass
+  const localLoop = (renderer && glass)
+    || (isLocalLoopCompatible(rendererSource) && (glassSource ? isLocalLoopCompatible(glassSource) : !paths.hasGlass))
   const agentRequired = Number(paths.cursorVersion.split('.')[0]) > 3
     || (Number(paths.cursorVersion.split('.')[0]) === 3 && Number(paths.cursorVersion.split('.')[1]) >= 13)
   const agent = (!agentRequired || existsSync(paths.agentHostMain)) && isAgentHostPatched(paths)
@@ -201,8 +219,8 @@ export function cursorStatus(options: SetupOptions = {}) {
   const signature = extensionHost.includes('if(!1)') && !/if\(!\w\.valid\)/.test(extensionHost)
   // Newer Cursor layouts can omit the legacy singleton entirely.
   const proxy = !needsProxy39Patch(paths) || isProxy39Patched(paths)
-  return { installed: true, root: paths.appRoot, version: paths.cursorVersion, renderer, glass, agent, alwaysLocal, signature, proxy,
-    ready: renderer && glass && agent && alwaysLocal && signature && proxy }
+  return { installed: true, root: paths.appRoot, version: paths.cursorVersion, renderer, glass, agent, alwaysLocal, signature, proxy, localLoop,
+    ready: renderer && glass && agent && alwaysLocal && signature && proxy && localLoop }
 }
 
 export async function setupCursor(options: SetupOptions = {}) {
@@ -217,6 +235,21 @@ async function setupCursorLocked(options: SetupOptions) {
   const status = cursorStatus({ paths })
   if (status.ready) return { ...status, changed: false }
   const files = cursorPatchFiles(paths).filter(existsSync)
+  const packageHash = digest(await readFile(join(paths.appRoot, 'package.json')))
+  // Upgrade only the renderer compatibility hooks of an intact installation recorded by us.
+  if (manifest?.state === 'applied' && manifest.appRoot === paths.appRoot
+    && manifest.packageHash === packageHash && status.agent && status.alwaysLocal && status.signature && status.proxy
+    && files.length === manifest.entries.length
+    && files.every(file => manifest.entries.some(entry => entry.file === file))
+    && manifest.entries.every(entry => digest(readFileSync(entry.file)) === entry.patchedHash)) {
+    await snapshotTransaction(files, directory, () => {
+      patchInject(paths, log)
+      if (!cursorStatus({ paths }).ready) throw new Error('Upgraded Cursor renderer hooks did not pass verification.')
+      if (digest(readFileSync(join(paths.appRoot, 'package.json'))) !== packageHash) throw new Error('Cursor changed version during setup.')
+    }, { appRoot: paths.appRoot, version: paths.cursorVersion, packageHash }, true)
+    log('Cursor compatibility hooks updated. Restart any open Cursor window once to load the corrected chat protocol.')
+    return { ...cursorStatus({ paths }), changed: true }
+  }
   for (const file of files) {
     if (!/\.(?:js|html)$/.test(file)) continue
     const source = readFileSync(file, 'utf8')
@@ -241,7 +274,6 @@ async function setupCursorLocked(options: SetupOptions) {
     const actual = createHash('sha256').update(await readFile(file)).digest('base64').replace(/=+$/, '')
     if (actual !== expected) throw new Error(`Cursor checksum mismatch (possibly an update in progress): ${file}. No files were changed.`)
   }
-  const packageHash = digest(await readFile(join(paths.appRoot, 'package.json')))
   await snapshotTransaction(files, directory, () => {
     patchInject(paths, log)
     patchAlwaysLocal(paths, log)

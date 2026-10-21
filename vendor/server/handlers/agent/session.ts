@@ -2,7 +2,7 @@
  * Agent Session 管理
  *
  * SSE 降级模式下，Client 通过两个独立通道通信:
- *   - BidiAppend (unary) — 发送 AgentClientMessage (data=base64 proto)
+ *   - BidiAppend (unary) — 发送 AgentClientMessage (hex data 或 data_binary)
  *   - RunSSE (server_streaming) — 接收 AgentServerMessage 流
  *
  * 两者通过 requestId 关联。Session 维护一个 per-requestId 的消息队列，
@@ -189,20 +189,22 @@ export function getOrCreateSession(requestId: string): AgentSession {
 }
 
 /** BidiAppend 调用时，将消息推入 session 队列 */
-export function appendMessage(requestId: string, data: string): void {
-    const session = getOrCreateSession(requestId);
-
-    // data 是 proto string 类型，实际承载的是 protobuf binary 的 hex 字符串表示。
-    // "0ad88200a00012..." → hex decode → protobuf bytes
+export function appendMessage(requestId: string, data: string | Uint8Array): void {
     try {
-        const bytes = Buffer.from(data, 'hex');
+        if (typeof data === 'string' && (!data.length || data.length % 2 !== 0 || !/^[\da-f]+$/i.test(data)))
+            throw new Error('BidiAppend data must be a nonempty hexadecimal protobuf message');
+        const bytes = typeof data === 'string' ? Buffer.from(data, 'hex') : data;
+        if (!bytes.length) throw new Error('Empty AgentClientMessage');
         const clientMsg = fromBinary(AgentClientMessageSchema, bytes);
         const json = toJson(AgentClientMessageSchema, clientMsg) as Record<string, unknown>;
         const keys = Object.keys(json);
+        if (!keys.length) throw new Error('Unrecognized AgentClientMessage');
         logger.info({ requestId, keys, protoBytes: bytes.length }, '[SESSION] appendMessage');
-        ingestSessionMessage(session, json);
+        ingestSessionMessage(getOrCreateSession(requestId), json);
     } catch (e) {
         logger.warn({ requestId, dataLen: data.length, error: (e as Error).message }, '[SESSION] proto decode failed');
+        closeSession(requestId);
+        throw new Error('Unsupported or malformed Cursor Agent message. Update the Magpie CCursor plugin and restart Cursor to reload its chat protocol hooks.');
     }
 }
 

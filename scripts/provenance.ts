@@ -20,8 +20,9 @@ for (const [local, original] of [['vendor/server', 'Cursor++/src/server'], ['ven
   for (const path of await walk(join(root, local))) {
     const suffix = relative(join(root, local), path)
     const source = join(upstream, original, suffix)
-    const upstreamHash = sha256(await readFile(source)), adaptedHash = sha256(await readFile(path))
-    files.push({ path: relative(root, path).replaceAll('\\', '/'), upstream: join(original, suffix).replaceAll('\\', '/'), upstreamSha256: upstreamHash, sha256: adaptedHash, modified: upstreamHash !== adaptedHash })
+    const sourceBytes = await readFile(source).catch((error) => { if (error.code === 'ENOENT') return null; throw error })
+    const upstreamHash = sourceBytes ? sha256(sourceBytes) : null, adaptedHash = sha256(await readFile(path))
+    files.push({ path: relative(root, path).replaceAll('\\', '/'), upstream: sourceBytes ? join(original, suffix).replaceAll('\\', '/') : null, upstreamSha256: upstreamHash, sha256: adaptedHash, modified: upstreamHash !== adaptedHash, ...(!sourceBytes ? { added: true } : {}) })
   }
 }
 await writeFile(join(root, 'docs/upstream-changes.json'), JSON.stringify({ upstream: 'https://github.com/CometixSpace/CCursor', commit: 'fcac85db793fc2c8cda3318b96ec5a41c24f5e26', adapted: '2026-10-21', files }, null, 2) + '\n')
