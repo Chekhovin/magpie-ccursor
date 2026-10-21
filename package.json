@@ -6,7 +6,7 @@
   "main": "./index.ts",
   "exports": { ".": "./index.ts", "./server": "./index.ts" },
   "bin": { "magpie-ccursor": "./cli.ts" },
-  "files": ["index.ts", "agent.mjs", "cli.ts", "src", "vendor", "page", "README.md", "CONTRIBUTING.md", "LICENSE", "NOTICE.md", "docs", "scripts", "tests"],
+  "files": ["index.ts", "agent.mjs", "cli.ts", "src", "vendor", "page", "README.md", "README.en.md", "CONTRIBUTING.md", "LICENSE", "NOTICE.md", "docs", "scripts", "tests"],
   "scripts": {
     "test": "bun test ./tests",
     "check": "bun run scripts/check.ts"

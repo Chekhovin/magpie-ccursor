@@ -1,5 +1,7 @@
 # Magpie CCursor
 
+[English](README.en.md) · **简体中文**
+
 让 **Cursor 使用 Magpie 中的模型**：在 Magpie 管理供应商和用量，在 Cursor 中选择模型、对话与使用 Agent。
 
 [AGPL-3.0-or-later](LICENSE) · 基于 [CometixSpace/CCursor](https://github.com/CometixSpace/CCursor) · 实验版本
