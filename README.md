@@ -2,43 +2,57 @@
 
 [English](README.en.md) · **简体中文**
 
-让 **Cursor 使用 Magpie 中的模型**：在 Magpie 管理供应商和用量，在 Cursor 中选择模型、对话与使用 Agent。
+在 **Cursor** 中直接使用你在 **Magpie** 配置的模型：由 Magpie 统一管理模型供应商、密钥与用量统计，在 Cursor 里自由切换模型、对话和运行 Agent 任务。
 
-[AGPL-3.0-or-later](LICENSE) · 基于 [CometixSpace/CCursor](https://github.com/CometixSpace/CCursor) · 实验版本
+[AGPL-3.0-or-later](LICENSE) · 基于 [CometixSpace/CCursor](https://github.com/CometixSpace/CCursor)
 
-这是 CCursor 的 Magpie **Agent 接入插件**。它在本机运行独立的 BYOK 协议桥，把 Cursor 请求送到 Magpie 网关。你需要已有可用模型的 Magpie 和 Cursor；模型费用按你在 Magpie 配置的供应商计算。
-
-## 使用
-
-安装后，在 Magpie 的 **Agent → CCursor** 打开连接，并为它提供模型，然后启动或重启 Cursor。在 Cursor 模型选择器里选择模型，发送一句：
-
-> 只回复「连接成功」。
-
-模型列表变化会自动同步。请求使用 Magpie 为 CCursor 分配的 Agent key，用量归到这个 Agent。关闭 Agent 连接后，桥接服务会停止；重新连接后恢复。使用期间请保持 Magpie 运行。
+`magpie-ccursor` 是适配 Magpie 的 CCursor Agent 插件。它在本机运行一个轻量协议桥（`127.0.0.1:39831`），把 Cursor 的模型请求转发到 Magpie 本地网关，再由 Magpie 调用你配置的供应商。模型费用按你在 Magpie 中接入的供应商计费。
 
 ```text
-Cursor → 本机 CCursor 协议桥 → Magpie 网关 → 你配置的模型供应商
+Cursor → 本机 CCursor 协议桥 (127.0.0.1:39831) → Magpie 网关 → 模型供应商
 ```
 
-## 安装
+## 快速上手
 
-在 Magpie 插件页添加：
+完成下方的[安装与接入](#安装与接入)后，日常使用只需三步：
+
+1. 在 Magpie 中打开 **Agent → CCursor**，启用连接并勾选要分配给 Cursor 的模型。
+2. 启动（或重启）Cursor，在模型选择器中切换到你刚分配的模型。
+3. 发送一条消息测试连通性：
+
+   > 只回复「连接成功」。
+
+使用 Cursor 期间请保持 Magpie 运行：
+
+- 在 Magpie 中调整分配的模型后，列表会自动同步到 Cursor。
+- 模型请求通过 Magpie 为 CCursor 分配的专属 Agent key 发送，用量也会单独统计在该 Agent 下。
+- 在 Magpie 中关闭 CCursor 连接会停止本机桥接服务，重新开启即可恢复。
+
+## 安装与接入
+
+使用前请准备支持 Agent 插件的 Magpie 与 Cursor 客户端。插件入口随仓库提供，由 Magpie 内置的 Bun 直接加载，无需单独安装 Bun。
+
+### 第一步：在 Magpie 中安装插件
+
+在 Magpie 的插件页面添加以下地址：
 
 ```text
 github:Chekhovin/magpie-ccursor
 ```
 
-或使用 Magpie CLI：
+或者通过 Magpie CLI 安装：
 
 ```sh
 magpie plugin add github:Chekhovin/magpie-ccursor
 ```
 
-入口源码已随仓库提交，Magpie 的 Bun 可直接加载，不需要 `postinstall` 或预先构建 `dist`。需要支持 Agent 插件和页面的新版 Magpie。
+### 第二步：接入 Cursor 客户端
 
-**已经使用 CCursor：** 停止原版 CCursor 服务并关闭它的自动启动，保留原文件与配置。如果现有补丁连接的是 `127.0.0.1:39831`，可以继续使用它。在 Magpie 连接 CCursor 后重启 Cursor。自定义端口、旧版或不完整补丁的兼容性见 [接入与恢复](docs/setup.md)。
+Cursor 需要通过本地客户端补丁将请求指向 `127.0.0.1:39831`。请根据你的当前环境选择对应方式：
 
-**尚未给 Cursor 安装补丁：** 安装插件后还需进行一次 Cursor 接入。在安装了 [Bun](https://bun.sh) 的终端下载本仓库，关闭全部 Cursor 窗口，然后执行：
+#### 情况 A：尚未安装过 CCursor（干净的 Cursor）
+
+首次使用需要对 Cursor 打一次本地接入补丁。请在安装了 [Bun](https://bun.sh)（`>= 1.3.0`）的环境中，先**关闭全部 Cursor 窗口**，然后在终端执行：
 
 ```sh
 git clone https://github.com/Chekhovin/magpie-ccursor.git
@@ -47,36 +61,42 @@ bun install --frozen-lockfile --ignore-scripts
 bun cli.ts setup --cursor-closed
 ```
 
-`setup` 会备份并修改 Cursor 应用文件，不安装原版 Cursor++ 扩展。完成后先在 Magpie 连接 CCursor，再启动 Cursor。Cursor 更新后可能需要重新接入，详见 [接入与恢复](docs/setup.md)。
+`setup` 会在修改前自动备份原文件，且不会安装原版 Cursor++ 扩展。完成后，先在 Magpie 中启用 CCursor 连接，再启动 Cursor。若日后升级了 Cursor 客户端，可能需要重新执行接入，详情请参阅 [接入与恢复指南](docs/setup.md)。
 
-## 配置与状态
+#### 情况 B：本机已经安装过原版 CCursor
 
-| 项目 | 位置或行为 |
+如果你之前配置过原版 CCursor，且补丁连接的是默认地址 `127.0.0.1:39831`，无需重新打补丁即可直接复用：
+
+1. **停止原版 CCursor 服务并关闭其自动启动**，避免与本插件争用 `39831` 端口（保留原有的补丁与文件即可）。
+2. 在 Magpie 中启用 **Agent → CCursor** 连接，然后重启 Cursor。
+
+关于已有安装、自定义端口及补丁兼容性说明，请参阅 [接入与恢复指南](docs/setup.md)。
+
+## 常用命令与配置
+
+在克隆的仓库目录中，你可以使用 `bun cli.ts`（需本机安装 [Bun](https://bun.sh) `>= 1.3.0`）检查运行状态、前台调试或还原客户端文件：
+
+| 操作或配置项 | 命令 / 说明 |
 | --- | --- |
-| 模型、供应商、Agent key | 由 Magpie 管理 |
-| 连接配置 | `~/.magpie-ccursor/connection.json`，由 Magpie 写入与还原 |
-| 派生配置和会话数据库 | `~/.magpie-ccursor/`，不导入原有 `~/.ccursor` |
-| 桥接地址 | `127.0.0.1:39831`，仅监听本机 |
-| 查看状态 | 在源码目录执行 `bun cli.ts status` |
-| 调试前台运行 | `bun cli.ts start`，按 Ctrl+C 停止 |
-| 恢复本插件写入的 Cursor 补丁 | 关闭 Cursor 后执行 `bun cli.ts restore --cursor-closed` |
+| 查看桥接与补丁状态 | `bun cli.ts status`（不显示任何密钥） |
+| 前台运行协议桥（调试） | `bun cli.ts start`，按 `Ctrl+C` 停止 |
+| 还原 Cursor 客户端补丁 | 关闭全部 Cursor 窗口后执行 `bun cli.ts restore --cursor-closed` |
+| 供应商、模型与 Agent key | 在 Magpie 中管理供应商与密钥，在 **Agent → CCursor** 连接并分配模型 |
+| 本地配置与会话数据目录 | `~/.magpie-ccursor/`（独立存储，不读取或导入 `~/.ccursor`） |
+| 连接配置文件 | `~/.magpie-ccursor/connection.json`（由 Magpie 自动写入与还原） |
 
-连接配置和派生 provider 配置包含网关密钥，请勿上传到仓库或贴进 issue。插件不会读取本机已安装 CCursor 的 provider 配置、登录凭据或历史会话。
+> **安全提示：** `~/.magpie-ccursor/` 下的连接配置与派生配置包含本地网关密钥。提交问题或分享日志时，请勿上传这些文件或贴出其中的密钥。
 
-## 当前边界
+## 故障排查与文档
 
-- 已用本地模拟网关验证完整文本协议链路、模型热更新、数据库持久化、服务退出与恢复；**尚未完成真实 Magpie 界面安装及 Cursor 交互联调**。具体证据见 [验证记录](docs/verification.md)。
-- 保留上游的 Agent、工具与图片处理代码；实际模型与客户端组合的兼容性需要测试。插件通过 OpenAI Chat Completions 接入 Magpie，由 Magpie 转换到供应商协议。
-- 原版 CCursor 服务与此插件不能同时占用默认端口。插件不会自动结束其他进程或卸载旧版。
-- 上游网页转换依赖 `supermarkdown` 的部分平台原生包下载返回 404；网页抓取转 Markdown 能力尚未验证。它不阻止已测试的文本对话链路。
-- Cursor 客户端补丁依赖上游对 Cursor 版本的适配。`setup` 尚未在真实客户端上执行；不完整补丁会拒绝继续，失败会尝试恢复备份。关闭插件不会自动还原 Cursor 应用文件。
+- **接入、恢复与常见问题排查：** [docs/setup.md](docs/setup.md)
+- **架构设计与模块说明：** [docs/architecture.md](docs/architecture.md)
+- **本地开发与检查流程：** [CONTRIBUTING.md](CONTRIBUTING.md)
 
-## 反馈与开发
+遇到问题？欢迎 [提交 Issue](https://github.com/Chekhovin/magpie-ccursor/issues)，反馈时请附上 Magpie、Bun 与 Cursor 的版本号、复现步骤以及脱敏后的日志输出。
 
-反馈问题请附 Magpie、Bun、Cursor 版本，复现步骤和脱敏日志：[提交 issue](https://github.com/Chekhovin/magpie-ccursor/issues)。
+## 致谢与许可证
 
-开发与验证说明见 [CONTRIBUTING.md](CONTRIBUTING.md)，接口和源码改动见 [架构说明](docs/architecture.md)。
+本项目的协议桥服务与客户端补丁逻辑移植自 [CometixSpace/CCursor (`fcac85d`)](https://github.com/CometixSpace/CCursor/tree/fcac85db793fc2c8cda3318b96ec5a41c24f5e26)，针对 Magpie Agent 插件机制的改造说明记录在 [NOTICE.md](NOTICE.md)。
 
-## 来源与许可证
-
-服务与补丁逻辑来自全新下载的 [CCursor `fcac85d`](https://github.com/CometixSpace/CCursor/tree/fcac85db793fc2c8cda3318b96ec5a41c24f5e26)。本项目保留 [AGPL-3.0-or-later](LICENSE)，移植说明见 [NOTICE.md](NOTICE.md)。本项目不是 Cursor、Magpie 或 CCursor 的官方发布，不提供任何保证。
+本项目遵循 [AGPL-3.0-or-later](LICENSE) 许可证开源。它是社区维护的第三方插件，非 Cursor、Magpie 或 CCursor 官方发布，按“原样”提供，不附带任何明示或暗示的担保。
