@@ -1,0 +1,46 @@
+{
+  "name": "magpie-ccursor",
+  "version": "0.1.0",
+  "description": "Connect Cursor to Magpie models with a standalone CCursor BYOK bridge.",
+  "type": "module",
+  "main": "./index.ts",
+  "exports": { ".": "./index.ts", "./server": "./index.ts" },
+  "bin": { "magpie-ccursor": "./cli.ts" },
+  "files": ["index.ts", "agent.mjs", "cli.ts", "src", "vendor", "page", "README.md", "CONTRIBUTING.md", "LICENSE", "NOTICE.md", "docs", "scripts", "tests"],
+  "scripts": {
+    "test": "bun test ./tests",
+    "check": "bun run scripts/check.ts"
+  },
+  "keywords": ["magpie-plugin", "opencode", "opencode-plugin", "cursor", "byok", "agent"],
+  "repository": { "type": "git", "url": "https://github.com/Chekhovin/magpie-ccursor.git" },
+  "bugs": { "url": "https://github.com/Chekhovin/magpie-ccursor/issues" },
+  "homepage": "https://github.com/Chekhovin/magpie-ccursor#readme",
+  "license": "AGPL-3.0-or-later",
+  "engines": { "bun": ">=1.3.0" },
+  "magpie": {
+    "agent": "./agent.mjs",
+    "page": { "title": "CCursor", "titles": { "zh": "CCursor 接入" }, "file": "page/index.html" }
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "0.111.0",
+    "@bufbuild/protobuf": "2.16.0",
+    "@connectrpc/connect": "2.2.0",
+    "@connectrpc/connect-fastify": "2.2.0",
+    "@connectrpc/connect-node": "2.2.0",
+    "@fastify/cors": "11.3.1",
+    "@google/genai": "2.30.0",
+    "@vakra-dev/supermarkdown": "0.0.6",
+    "acorn": "8.19.0",
+    "acorn-walk": "8.3.5",
+    "diff": "9.0.0",
+    "fastify": "5.12.7",
+    "fuse.js": "7.5.0",
+    "gpt-tokenizer": "3.4.0",
+    "hono": "4.13.13",
+    "openai": "6.49.0",
+    "pino": "10.4.0",
+    "undici": "8.12.3",
+    "ws": "8.22.0"
+  },
+  "devDependencies": { "@types/bun": "1.4.3" }
+}

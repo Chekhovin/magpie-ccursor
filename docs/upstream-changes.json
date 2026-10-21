@@ -1,0 +1,1638 @@
+{
+  "upstream": "https://github.com/CometixSpace/CCursor",
+  "commit": "fcac85db793fc2c8cda3318b96ec5a41c24f5e26",
+  "adapted": "2026-10-21",
+  "files": [
+    {
+      "path": "vendor/server/config/atomic.ts",
+      "upstream": "Cursor++/src/server/config/atomic.ts",
+      "upstreamSha256": "f87e206283a6677062be9f82ba03ac0622a031e1f67213c09e7f4222089ea400",
+      "sha256": "f87e206283a6677062be9f82ba03ac0622a031e1f67213c09e7f4222089ea400",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/config/catalogStore.ts",
+      "upstream": "Cursor++/src/server/config/catalogStore.ts",
+      "upstreamSha256": "f5136fae900cca294d59f4826d77e2aa45a9f4eee0c2d5a34b5362773ce19b5d",
+      "sha256": "f5136fae900cca294d59f4826d77e2aa45a9f4eee0c2d5a34b5362773ce19b5d",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/config/knowledgeBaseStore.ts",
+      "upstream": "Cursor++/src/server/config/knowledgeBaseStore.ts",
+      "upstreamSha256": "06f3c474d4e231ab483bb5ea15c9c9018eb95ec33fcd0db1bb93cbcfd82072da",
+      "sha256": "06f3c474d4e231ab483bb5ea15c9c9018eb95ec33fcd0db1bb93cbcfd82072da",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/config/managedSkillsStore.ts",
+      "upstream": "Cursor++/src/server/config/managedSkillsStore.ts",
+      "upstreamSha256": "a92f0578e29cdee11fb9ceed14151d08a9d4179c1ca6c47a975bfb70a2909779",
+      "sha256": "761438c0836f953b73e339b1916288ce6fd252a66e29caaae37a90efd5594994",
+      "modified": true
+    },
+    {
+      "path": "vendor/server/config/paths.ts",
+      "upstream": "Cursor++/src/server/config/paths.ts",
+      "upstreamSha256": "e6c7d0e29d9d87989eafdd1095a8d9ec1a710102412ae646a67192c1f4c3b5b5",
+      "sha256": "f549f1d59a6a940d3432897053a6c21fdf550f641af0cd41f7f5237f692a7475",
+      "modified": true
+    },
+    {
+      "path": "vendor/server/config/providersStore.ts",
+      "upstream": "Cursor++/src/server/config/providersStore.ts",
+      "upstreamSha256": "1b4cf8cc738d76f0cfde20a8d8ce28fa3ba0a5ab26d57b5d49d4e7d89499d43f",
+      "sha256": "1b4cf8cc738d76f0cfde20a8d8ce28fa3ba0a5ab26d57b5d49d4e7d89499d43f",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/config/routesStore.ts",
+      "upstream": "Cursor++/src/server/config/routesStore.ts",
+      "upstreamSha256": "94ea4bd03ac4eec83cb421aaa1aa6ef138b558e4983f697d5790c2653b1d4a8f",
+      "sha256": "94ea4bd03ac4eec83cb421aaa1aa6ef138b558e4983f697d5790c2653b1d4a8f",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/config/searchConfigStore.ts",
+      "upstream": "Cursor++/src/server/config/searchConfigStore.ts",
+      "upstreamSha256": "741f5dba4f247261fe68c5232bec4f0bb1c84c1510bb755b11078169d9e4a3e4",
+      "sha256": "8eb5c7a53d539b404808d7f079a74e28f4873092ce889ab96075e5470a13c754",
+      "modified": true
+    },
+    {
+      "path": "vendor/server/config.ts",
+      "upstream": "Cursor++/src/server/config.ts",
+      "upstreamSha256": "496218223cab7192c597a568f6c26f9a865165b3c751e15eab53b695890fedfd",
+      "sha256": "496218223cab7192c597a568f6c26f9a865165b3c751e15eab53b695890fedfd",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/data/defaults.ts",
+      "upstream": "Cursor++/src/server/data/defaults.ts",
+      "upstreamSha256": "d37ea0a95017acaa7aad8596a11e895ac6e306f7ee00ad20522f79c639a7629c",
+      "sha256": "d37ea0a95017acaa7aad8596a11e895ac6e306f7ee00ad20522f79c639a7629c",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/database/blobs.ts",
+      "upstream": "Cursor++/src/server/database/blobs.ts",
+      "upstreamSha256": "131af08e98661c0787a6d5d3db0278972d73022b1ee85bf62af555e3bccc0b93",
+      "sha256": "131af08e98661c0787a6d5d3db0278972d73022b1ee85bf62af555e3bccc0b93",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/database/chatSummaries.ts",
+      "upstream": "Cursor++/src/server/database/chatSummaries.ts",
+      "upstreamSha256": "a7a36a71e4c7ee731cd4b5d22ec0c045894188b1dea77e0b783b7d7a123ee5b5",
+      "sha256": "a7a36a71e4c7ee731cd4b5d22ec0c045894188b1dea77e0b783b7d7a123ee5b5",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/database/checkpoints.ts",
+      "upstream": "Cursor++/src/server/database/checkpoints.ts",
+      "upstreamSha256": "1a84efddbdd1611d172f6d0d49fcad433ba231e940b06d260cb840115e73280d",
+      "sha256": "1a84efddbdd1611d172f6d0d49fcad433ba231e940b06d260cb840115e73280d",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/database/sqlite.ts",
+      "upstream": "Cursor++/src/server/database/sqlite.ts",
+      "upstreamSha256": "73cce67a0cf1d49bee2157549d46b3193ec1f5735594d1dca08b1e88300fbadf",
+      "sha256": "ad471e33b7e12d94866b47be2afa7b7fa3771553ede9fe9d5dfcda0b9182f79e",
+      "modified": true
+    },
+    {
+      "path": "vendor/server/gen/agent_v1_pb.ts",
+      "upstream": "Cursor++/src/server/gen/agent_v1_pb.ts",
+      "upstreamSha256": "4691e586d1dbb0c14070a2895b1c196dd12d8b339e49ec7a1d78bd3239f20ad2",
+      "sha256": "4691e586d1dbb0c14070a2895b1c196dd12d8b339e49ec7a1d78bd3239f20ad2",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/gen/aiserver_v1_pb.ts",
+      "upstream": "Cursor++/src/server/gen/aiserver_v1_pb.ts",
+      "upstreamSha256": "aa9961c10ad735ec07ad5c5d00ac99a56e68b800d7758602f83e06d0fef1e4c0",
+      "sha256": "aa9961c10ad735ec07ad5c5d00ac99a56e68b800d7758602f83e06d0fef1e4c0",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/gen/aiserver_v1_shared_pb.ts",
+      "upstream": "Cursor++/src/server/gen/aiserver_v1_shared_pb.ts",
+      "upstreamSha256": "38096443dd39278ce9ece353e675cb869cef484428a7239aa992b751d7d7841f",
+      "sha256": "38096443dd39278ce9ece353e675cb869cef484428a7239aa992b751d7d7841f",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/gen/anyrun_v1_pb.ts",
+      "upstream": "Cursor++/src/server/gen/anyrun_v1_pb.ts",
+      "upstreamSha256": "72f3cf5d04a5507c73cb4955ec63b765ab144aaf93d8a26dab85b676a618b79f",
+      "sha256": "72f3cf5d04a5507c73cb4955ec63b765ab144aaf93d8a26dab85b676a618b79f",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/gen/google_rpc_pb.ts",
+      "upstream": "Cursor++/src/server/gen/google_rpc_pb.ts",
+      "upstreamSha256": "454cd9257f8e6b67c550fe4da687420d91fc72c084b87bc7202e859244a06147",
+      "sha256": "454cd9257f8e6b67c550fe4da687420d91fc72c084b87bc7202e859244a06147",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/gen/internapi_v1_pb.ts",
+      "upstream": "Cursor++/src/server/gen/internapi_v1_pb.ts",
+      "upstreamSha256": "99b23d2b3d49a0ccb2bf1384eee06e17a928aac1d835e1a658a4ff77473bfab3",
+      "sha256": "99b23d2b3d49a0ccb2bf1384eee06e17a928aac1d835e1a658a4ff77473bfab3",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/agentOrchestrator.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/agentOrchestrator.ts",
+      "upstreamSha256": "24a346f693fcafc55e90de2148894eabcafd104eba72a3c306baa1234be53479",
+      "sha256": "24a346f693fcafc55e90de2148894eabcafd104eba72a3c306baa1234be53479",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/blob.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/blob.ts",
+      "upstreamSha256": "fce31dae69944d599e409abd6fc3e8d7ef0ca8aa0a2d95b42e8ed2a43681b4d5",
+      "sha256": "fce31dae69944d599e409abd6fc3e8d7ef0ca8aa0a2d95b42e8ed2a43681b4d5",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/blobStore.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/blobStore.ts",
+      "upstreamSha256": "5b19536e45faa091c97cacd5c95fae109a87aeadc85105be11ce45233e5f1f6a",
+      "sha256": "5b19536e45faa091c97cacd5c95fae109a87aeadc85105be11ce45233e5f1f6a",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/checkpointManager.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/checkpointManager.ts",
+      "upstreamSha256": "f727d8e6b7558e36636243e9f3d9fea38ca86d830976eeeb69d51fa2e0639024",
+      "sha256": "f727d8e6b7558e36636243e9f3d9fea38ca86d830976eeeb69d51fa2e0639024",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/cloneRegistry.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/cloneRegistry.ts",
+      "upstreamSha256": "bf9820c68e9acbef6075956cc79b9037cbc91b08e8f5a8e7aefd9dde10785a33",
+      "sha256": "bf9820c68e9acbef6075956cc79b9037cbc91b08e8f5a8e7aefd9dde10785a33",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/compactionStrategy.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/compactionStrategy.ts",
+      "upstreamSha256": "1627aed40b2f6d75b3a16ee52954d0baff4241d6871013a269bc2572c4a72925",
+      "sha256": "1627aed40b2f6d75b3a16ee52954d0baff4241d6871013a269bc2572c4a72925",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/compactLocal.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/compactLocal.ts",
+      "upstreamSha256": "9c5bdcf533cfcdd4c077466e9fdfe05a54703b4632d42afa54d45723530ce7ec",
+      "sha256": "9c5bdcf533cfcdd4c077466e9fdfe05a54703b4632d42afa54d45723530ce7ec",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/compactRemote.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/compactRemote.ts",
+      "upstreamSha256": "d1c8203a4566794196f8a24c1a6e39fdc561257678df778eb0b5e434f0a578b5",
+      "sha256": "d1c8203a4566794196f8a24c1a6e39fdc561257678df778eb0b5e434f0a578b5",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/constants.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/constants.ts",
+      "upstreamSha256": "18133124f095319b81077849ad921051cef10d2c7ff8654b1e3b35e60446a562",
+      "sha256": "18133124f095319b81077849ad921051cef10d2c7ff8654b1e3b35e60446a562",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/contextCatalog.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/contextCatalog.ts",
+      "upstreamSha256": "c36141bc553aed48ffcda969b7dfb42b250bc9010478cc8459e76114750f61b7",
+      "sha256": "c36141bc553aed48ffcda969b7dfb42b250bc9010478cc8459e76114750f61b7",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/conversation.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/conversation.ts",
+      "upstreamSha256": "4f24c437b300a5678547c52c93ba1e10f38ada133642ff74a454cc3af0aa25fa",
+      "sha256": "4f24c437b300a5678547c52c93ba1e10f38ada133642ff74a454cc3af0aa25fa",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/conversationRuntime.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/conversationRuntime.ts",
+      "upstreamSha256": "1a79cbc66308d2e59d6fc7d7a9dcb1ef8b288f174547714483aec1a74ac25b1c",
+      "sha256": "988b8ce1c06429035fdf2d554915ec87f718d3088521cbbc2926cb96636aad7a",
+      "modified": true
+    },
+    {
+      "path": "vendor/server/handlers/agent/cursorTools.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/cursorTools.ts",
+      "upstreamSha256": "68c09a70accb081ff87c88cffbbe24580bd5b8378456dbc818a81b390bd39a24",
+      "sha256": "68c09a70accb081ff87c88cffbbe24580bd5b8378456dbc818a81b390bd39a24",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/database/blobs.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/database/blobs.ts",
+      "upstreamSha256": "73518ed2f472b706c66edbaeaa46ddf7f1fdb69aca5220518c139518c57de03a",
+      "sha256": "73518ed2f472b706c66edbaeaa46ddf7f1fdb69aca5220518c139518c57de03a",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/database/checkpoints.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/database/checkpoints.ts",
+      "upstreamSha256": "7ec3c41822f13b912a3b0eb532a2c04045af6eab1c7326f2f66064656950690d",
+      "sha256": "7ec3c41822f13b912a3b0eb532a2c04045af6eab1c7326f2f66064656950690d",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/database/sqlite.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/database/sqlite.ts",
+      "upstreamSha256": "049a8d4aa963b9ed6e7cf169841aa12185b9a8b6c984e3d88eb877df3e88a788",
+      "sha256": "049a8d4aa963b9ed6e7cf169841aa12185b9a8b6c984e3d88eb877df3e88a788",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/dynamicTools.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/dynamicTools.ts",
+      "upstreamSha256": "2baf161c983028a7e0f4ce810766f17efcbeee3551305e95a1a6b3126048be94",
+      "sha256": "2baf161c983028a7e0f4ce810766f17efcbeee3551305e95a1a6b3126048be94",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/editRuntime.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/editRuntime.ts",
+      "upstreamSha256": "74d1f777608d538cd4b09dc02591c9bcf6ef04fcebbf5e437bc95856e449da6b",
+      "sha256": "74d1f777608d538cd4b09dc02591c9bcf6ef04fcebbf5e437bc95856e449da6b",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/execRuntime.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/execRuntime.ts",
+      "upstreamSha256": "367575365ebc7550c2b2caec5a52045c33fc82fb4151b01ff618dccf89d385a6",
+      "sha256": "367575365ebc7550c2b2caec5a52045c33fc82fb4151b01ff618dccf89d385a6",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/historyManager.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/historyManager.ts",
+      "upstreamSha256": "fe1673e1df14d27bc743ce0bc0f0e3a8b0c3e40dfd82f65ab96d9076b16420d6",
+      "sha256": "fe1673e1df14d27bc743ce0bc0f0e3a8b0c3e40dfd82f65ab96d9076b16420d6",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/hookRuntime.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/hookRuntime.ts",
+      "upstreamSha256": "470416c9ff7e5add0de9881bd41247e80ed70e573a8b10e2eaf6423b7e13f123",
+      "sha256": "470416c9ff7e5add0de9881bd41247e80ed70e573a8b10e2eaf6423b7e13f123",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/index.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/index.ts",
+      "upstreamSha256": "3b83c316206f39e9196ae63c74ccf41f2a804432a4d7b3770826f1581902c9d7",
+      "sha256": "3b83c316206f39e9196ae63c74ccf41f2a804432a4d7b3770826f1581902c9d7",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/interactionRuntime.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/interactionRuntime.ts",
+      "upstreamSha256": "0e2e202d77d8951f236840b79dde526b5a403b04abfe68add733f037e8362e11",
+      "sha256": "0e2e202d77d8951f236840b79dde526b5a403b04abfe68add733f037e8362e11",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/mcpState.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/mcpState.ts",
+      "upstreamSha256": "e97d3f89c18fb9bca37cb27b071d854fbf244414d73eec2178611c3d48f7ad1f",
+      "sha256": "e97d3f89c18fb9bca37cb27b071d854fbf244414d73eec2178611c3d48f7ad1f",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/persistence.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/persistence.ts",
+      "upstreamSha256": "832e86a4ef8374e982701f359a64fbd1a274b2ca82308d7ae619068187e3f8f3",
+      "sha256": "832e86a4ef8374e982701f359a64fbd1a274b2ca82308d7ae619068187e3f8f3",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/protocol/blobResolve.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/protocol/blobResolve.ts",
+      "upstreamSha256": "0bcb48e2c4536498e49a2baf131ec68c70faa094ffa13ea127a28e9445f9482c",
+      "sha256": "0bcb48e2c4536498e49a2baf131ec68c70faa094ffa13ea127a28e9445f9482c",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/protocol/messageBuilder.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/protocol/messageBuilder.ts",
+      "upstreamSha256": "0726c646977dc4954c93bbbb608fa9b3d71b374f4f12a0c1c6d90f41cbed1532",
+      "sha256": "0726c646977dc4954c93bbbb608fa9b3d71b374f4f12a0c1c6d90f41cbed1532",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/protocol/parseRunRequest.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/protocol/parseRunRequest.ts",
+      "upstreamSha256": "c0c13a50b122b37870e8cb0f650d2654460c5e53fc2178c37d5763592f11d98d",
+      "sha256": "c0c13a50b122b37870e8cb0f650d2654460c5e53fc2178c37d5763592f11d98d",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/protocol/prompts/anthropicSystem.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/protocol/prompts/anthropicSystem.ts",
+      "upstreamSha256": "7059c0d03f2f254314540bb52c820bde3e150bbbb8357241447d0c01ea493dff",
+      "sha256": "7059c0d03f2f254314540bb52c820bde3e150bbbb8357241447d0c01ea493dff",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/protocol/prompts/composerFallback.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/protocol/prompts/composerFallback.ts",
+      "upstreamSha256": "1a054b293ad58435b977b6e930d9a8dbe24f30e05e1fb3e07ab590c4697cbb54",
+      "sha256": "1a054b293ad58435b977b6e930d9a8dbe24f30e05e1fb3e07ab590c4697cbb54",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/protocol/prompts/modeReminders.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/protocol/prompts/modeReminders.ts",
+      "upstreamSha256": "6c6535550016fbbc21c40cb734a54b9e26e9dc31f43e24f129f484baf4da77f8",
+      "sha256": "6c6535550016fbbc21c40cb734a54b9e26e9dc31f43e24f129f484baf4da77f8",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/protocol/prompts/openaiSystem.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/protocol/prompts/openaiSystem.ts",
+      "upstreamSha256": "9762b0a891ae7219c47b68236c77c20b48393156d3cd6848d51d7f6828a0d606",
+      "sha256": "9762b0a891ae7219c47b68236c77c20b48393156d3cd6848d51d7f6828a0d606",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/protocol/shared.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/protocol/shared.ts",
+      "upstreamSha256": "f299458c9f96dfc0e13a6cde0ff0005da75c9565e321494002efddca07def24a",
+      "sha256": "f299458c9f96dfc0e13a6cde0ff0005da75c9565e321494002efddca07def24a",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/protocol/types.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/protocol/types.ts",
+      "upstreamSha256": "eff498beca25a162b11ef59d43f99232ae2bf9991bab605ed8ddf781db0fa502",
+      "sha256": "eff498beca25a162b11ef59d43f99232ae2bf9991bab605ed8ddf781db0fa502",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/protocol.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/protocol.ts",
+      "upstreamSha256": "c5efd328bffd7511666c2eb45ee00c380a28fd0523e73b9e4299d734a1bb1b77",
+      "sha256": "c5efd328bffd7511666c2eb45ee00c380a28fd0523e73b9e4299d734a1bb1b77",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/protoValue.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/protoValue.ts",
+      "upstreamSha256": "594dbf39f1a07e19e291a39fa8bb3901dde6c1b51275872b4e16503613cb6291",
+      "sha256": "594dbf39f1a07e19e291a39fa8bb3901dde6c1b51275872b4e16503613cb6291",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/requestContextParts.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/requestContextParts.ts",
+      "upstreamSha256": "94509df912059cb23ec7e9f8332c8215273433bdd5d911c418bb4ea2e564f5ce",
+      "sha256": "94509df912059cb23ec7e9f8332c8215273433bdd5d911c418bb4ea2e564f5ce",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/session.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/session.ts",
+      "upstreamSha256": "539c8c2d298767097e2cad66cfb336ccb195706a1c3b6bb0e95c32ed97ef6040",
+      "sha256": "d847faf6581278c278f32606282d13b77d2421e082c83a4838f340a370f08e75",
+      "modified": true
+    },
+    {
+      "path": "vendor/server/handlers/agent/stream.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/stream.ts",
+      "upstreamSha256": "7b55640367258be3f5e1319e15bb572331f1dc70e009bd0a61302174f3b0b864",
+      "sha256": "7b55640367258be3f5e1319e15bb572331f1dc70e009bd0a61302174f3b0b864",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/subagentCatalog.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/subagentCatalog.ts",
+      "upstreamSha256": "bcc78a2b87f552209a1d814516567eff7cc70eab1057f1b62ad42a35a32a999a",
+      "sha256": "bcc78a2b87f552209a1d814516567eff7cc70eab1057f1b62ad42a35a32a999a",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/summarizeRuntime.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/summarizeRuntime.ts",
+      "upstreamSha256": "c65d6a8584855de5d5f11a51f1466820f67acf534aed6c82bba9af3b359f3b4a",
+      "sha256": "c65d6a8584855de5d5f11a51f1466820f67acf534aed6c82bba9af3b359f3b4a",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/summaryPrompt.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/summaryPrompt.ts",
+      "upstreamSha256": "48f822fb9f33886fcb9f9a9f6d404209b5435428d6a750282d3bb238633f1325",
+      "sha256": "48f822fb9f33886fcb9f9a9f6d404209b5435428d6a750282d3bb238633f1325",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/supermarkdown.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/supermarkdown.ts",
+      "upstreamSha256": "9ce4a4d9502beaa820d20a1e889caa2a606fe0b3cedfb8ea0242b65072e875c9",
+      "sha256": "9ce4a4d9502beaa820d20a1e889caa2a606fe0b3cedfb8ea0242b65072e875c9",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/tokenCounter.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/tokenCounter.ts",
+      "upstreamSha256": "336170733256b6085e772ab7540c6b226470a5092570f75f8c52ae13d246966e",
+      "sha256": "336170733256b6085e772ab7540c6b226470a5092570f75f8c52ae13d246966e",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolBuilders.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolBuilders.ts",
+      "upstreamSha256": "6d80f16e8e14b759f5d334e137e0bc2f5b519c83a8466b63d0120ce8878456a3",
+      "sha256": "6d80f16e8e14b759f5d334e137e0bc2f5b519c83a8466b63d0120ce8878456a3",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/definitions/ApplyPatch.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/definitions/ApplyPatch.ts",
+      "upstreamSha256": "b2cd93d3fe23cc4c580b52e18dd548f50e6e94b1a9fd4dc34518a3c1d64a267f",
+      "sha256": "b2cd93d3fe23cc4c580b52e18dd548f50e6e94b1a9fd4dc34518a3c1d64a267f",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/definitions/AskQuestion.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/definitions/AskQuestion.ts",
+      "upstreamSha256": "84923606427fccc61d02b6c4b3ba91512d8bcb92045eb67a1852c79c11553a7d",
+      "sha256": "84923606427fccc61d02b6c4b3ba91512d8bcb92045eb67a1852c79c11553a7d",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/definitions/Await.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/definitions/Await.ts",
+      "upstreamSha256": "e7665fe3fb18d822b79b3c827f9e18ce57b67f470a9a1350ffa538d2da1cf2c6",
+      "sha256": "e7665fe3fb18d822b79b3c827f9e18ce57b67f470a9a1350ffa538d2da1cf2c6",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/definitions/CallMcpTool.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/definitions/CallMcpTool.ts",
+      "upstreamSha256": "cc8a5d1e5106e171feacd93ccdcab7bc832f09bb01d3a92de882351e3116d4ac",
+      "sha256": "cc8a5d1e5106e171feacd93ccdcab7bc832f09bb01d3a92de882351e3116d4ac",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/definitions/CreatePlan.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/definitions/CreatePlan.ts",
+      "upstreamSha256": "51e34649061fff90f26460c84e49781593a88c66c2d84bc61b2d27e66d689e85",
+      "sha256": "51e34649061fff90f26460c84e49781593a88c66c2d84bc61b2d27e66d689e85",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/definitions/Delete.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/definitions/Delete.ts",
+      "upstreamSha256": "8ae484d773fed3fadd582d9960cd4524e019b151f37a627b402b607b7eb62c1c",
+      "sha256": "8ae484d773fed3fadd582d9960cd4524e019b151f37a627b402b607b7eb62c1c",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/definitions/Edit.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/definitions/Edit.ts",
+      "upstreamSha256": "47762dcb3f5c1183ae10ac3557646868fe46655698a55f1cd3fb0cfabd405479",
+      "sha256": "47762dcb3f5c1183ae10ac3557646868fe46655698a55f1cd3fb0cfabd405479",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/definitions/EditNotebook.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/definitions/EditNotebook.ts",
+      "upstreamSha256": "abd958e41bfbb994e522c7969b3c03db501f1a6553d33d33ba29bf3ad4e4848b",
+      "sha256": "abd958e41bfbb994e522c7969b3c03db501f1a6553d33d33ba29bf3ad4e4848b",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/definitions/FetchMcpResource.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/definitions/FetchMcpResource.ts",
+      "upstreamSha256": "729a9d5a710a28ef8e1e7c5757b7d5ef22ae9af64ecf87fffb74876e218339c4",
+      "sha256": "729a9d5a710a28ef8e1e7c5757b7d5ef22ae9af64ecf87fffb74876e218339c4",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/definitions/GenerateImage.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/definitions/GenerateImage.ts",
+      "upstreamSha256": "b29a1f43b98d399811c2b0439a0ea22afca3867babca6d6311713fddedaf9aca",
+      "sha256": "b29a1f43b98d399811c2b0439a0ea22afca3867babca6d6311713fddedaf9aca",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/definitions/GetDynamicTools.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/definitions/GetDynamicTools.ts",
+      "upstreamSha256": "b89795f9a6add6f76c0040cf3905deb80cd6f223356d0f5647797b84ac0a77a2",
+      "sha256": "b89795f9a6add6f76c0040cf3905deb80cd6f223356d0f5647797b84ac0a77a2",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/definitions/Glob.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/definitions/Glob.ts",
+      "upstreamSha256": "dbdf85880bc59515d15cdde2e1c8b64693b7382bcf8f8a4046f484063520ec28",
+      "sha256": "dbdf85880bc59515d15cdde2e1c8b64693b7382bcf8f8a4046f484063520ec28",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/definitions/Grep.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/definitions/Grep.ts",
+      "upstreamSha256": "d529a230d8b34276ab90f0c36a0c4bde50c7ed546676b6dd74ce4f91854a32d1",
+      "sha256": "d529a230d8b34276ab90f0c36a0c4bde50c7ed546676b6dd74ce4f91854a32d1",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/definitions/ListMcpResources.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/definitions/ListMcpResources.ts",
+      "upstreamSha256": "2b7941a6cd6fdaf1425dbb349f1f01a38c0e2a33f3a894fd672f6b0789a81ea2",
+      "sha256": "2b7941a6cd6fdaf1425dbb349f1f01a38c0e2a33f3a894fd672f6b0789a81ea2",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/definitions/Read.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/definitions/Read.ts",
+      "upstreamSha256": "5fbeeed4cd4718d2d7b5077c14ae5f64a5e8bdd860d0dcdc6f5f252a1704672d",
+      "sha256": "5fbeeed4cd4718d2d7b5077c14ae5f64a5e8bdd860d0dcdc6f5f252a1704672d",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/definitions/ReadLints.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/definitions/ReadLints.ts",
+      "upstreamSha256": "ef324476b64a1ccdc4c73bc8d4fb9f1a56db21282dcffa964dbeb471e2d2801a",
+      "sha256": "ef324476b64a1ccdc4c73bc8d4fb9f1a56db21282dcffa964dbeb471e2d2801a",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/definitions/SemanticSearch.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/definitions/SemanticSearch.ts",
+      "upstreamSha256": "8f5d0b89cc0042504685052d8a7ea8bf141827c4856123f13c19bb4b33569df9",
+      "sha256": "8f5d0b89cc0042504685052d8a7ea8bf141827c4856123f13c19bb4b33569df9",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/definitions/Shell.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/definitions/Shell.ts",
+      "upstreamSha256": "fcddac3c80e837db026dcfee2478e4faffd7a974c3fd74e3f019899b9adf48a2",
+      "sha256": "fcddac3c80e837db026dcfee2478e4faffd7a974c3fd74e3f019899b9adf48a2",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/definitions/SwitchMode.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/definitions/SwitchMode.ts",
+      "upstreamSha256": "bbc0700376fb14db64e02da86bf4ef4cfe8fe90f81b4b96b52ff7f0b8d4f0fc0",
+      "sha256": "bbc0700376fb14db64e02da86bf4ef4cfe8fe90f81b4b96b52ff7f0b8d4f0fc0",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/definitions/Task.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/definitions/Task.ts",
+      "upstreamSha256": "db64e7a02f8d69fcf4ab7c5ca5307f0184923cc9655641a4542b7641bdf2f736",
+      "sha256": "db64e7a02f8d69fcf4ab7c5ca5307f0184923cc9655641a4542b7641bdf2f736",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/definitions/TodoWrite.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/definitions/TodoWrite.ts",
+      "upstreamSha256": "9932bc5499240cf0f633bcb9a542e2eee498b3c1893c66e8b6fb1dbe80c1b1d1",
+      "sha256": "9932bc5499240cf0f633bcb9a542e2eee498b3c1893c66e8b6fb1dbe80c1b1d1",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/definitions/UpdateCurrentStep.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/definitions/UpdateCurrentStep.ts",
+      "upstreamSha256": "078388f5ca009b6f167e2ad9064ff7e6416fe6ae2394b9fa3bdcae6bf53c0f8d",
+      "sha256": "078388f5ca009b6f167e2ad9064ff7e6416fe6ae2394b9fa3bdcae6bf53c0f8d",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/definitions/WebFetch.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/definitions/WebFetch.ts",
+      "upstreamSha256": "765d239ae8d5c8fb2d961a61792fe02f83a133b4b4d2d8478606520035cd3d6d",
+      "sha256": "765d239ae8d5c8fb2d961a61792fe02f83a133b4b4d2d8478606520035cd3d6d",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/definitions/WebSearch.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/definitions/WebSearch.ts",
+      "upstreamSha256": "4f2ee0aa89008cc8e2b577ec8e8a45891e6cc6ab88d6ac6453ea37c278a7855b",
+      "sha256": "4f2ee0aa89008cc8e2b577ec8e8a45891e6cc6ab88d6ac6453ea37c278a7855b",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/definitions/Write.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/definitions/Write.ts",
+      "upstreamSha256": "b767e8aacff01f524c82d22c359ebba2943b93f340c65d155eae18a932bb4317",
+      "sha256": "b767e8aacff01f524c82d22c359ebba2943b93f340c65d155eae18a932bb4317",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/editPlans.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/editPlans.ts",
+      "upstreamSha256": "43bf242a7fda413bb938a6aa8bda7f9ac7e0c387d2d423e3f948128e2789fb71",
+      "sha256": "43bf242a7fda413bb938a6aa8bda7f9ac7e0c387d2d423e3f948128e2789fb71",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/pathUtils.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/pathUtils.ts",
+      "upstreamSha256": "35f462b8667a7d245c6995d7004f8953c5792ea1f2ceda3a4fbea4c113541597",
+      "sha256": "35f462b8667a7d245c6995d7004f8953c5792ea1f2ceda3a4fbea4c113541597",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/registry.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/registry.ts",
+      "upstreamSha256": "529070c3cfedef10bcc8c32a919b2876005d442e3577146b651666c926c0635c",
+      "sha256": "529070c3cfedef10bcc8c32a919b2876005d442e3577146b651666c926c0635c",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/results/awaitToolResults.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/results/awaitToolResults.ts",
+      "upstreamSha256": "f3233ad80cd1e198b49377556d2ab52b17d25fba868123d8a79d76e1342598c4",
+      "sha256": "f3233ad80cd1e198b49377556d2ab52b17d25fba868123d8a79d76e1342598c4",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/results/fileToolResults.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/results/fileToolResults.ts",
+      "upstreamSha256": "5005c546307b199a1f0230b547d7bf80cbedbfae1bf4ad5fd8384aa60b268623",
+      "sha256": "5005c546307b199a1f0230b547d7bf80cbedbfae1bf4ad5fd8384aa60b268623",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/results/interactionToolResults.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/results/interactionToolResults.ts",
+      "upstreamSha256": "47f2cb1b60089ef77f307ccc680a45ada729cbfdfa493abbaf6992264967233e",
+      "sha256": "47f2cb1b60089ef77f307ccc680a45ada729cbfdfa493abbaf6992264967233e",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/results/mcpToolResults.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/results/mcpToolResults.ts",
+      "upstreamSha256": "c036f5c6b8ca946d41bed1ec011067d80b7b44bbebc66474faa12b4f4ef2c0e2",
+      "sha256": "c036f5c6b8ca946d41bed1ec011067d80b7b44bbebc66474faa12b4f4ef2c0e2",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/results/searchToolResults.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/results/searchToolResults.ts",
+      "upstreamSha256": "5b2060346ba72ec478c988612f68e7806cd4fec779757803725a9b9c204d0f41",
+      "sha256": "5b2060346ba72ec478c988612f68e7806cd4fec779757803725a9b9c204d0f41",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/results/shared.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/results/shared.ts",
+      "upstreamSha256": "65ec1678c9faaef61e0499274649d2cb4de83997a8c59217beba66398f52d233",
+      "sha256": "65ec1678c9faaef61e0499274649d2cb4de83997a8c59217beba66398f52d233",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/results/shellToolResults.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/results/shellToolResults.ts",
+      "upstreamSha256": "33cd4cae486275216d5ba3cd26760086be0552bd9c50a9bc7b55791dced9ed55",
+      "sha256": "33cd4cae486275216d5ba3cd26760086be0552bd9c50a9bc7b55791dced9ed55",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/results/taskToolResults.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/results/taskToolResults.ts",
+      "upstreamSha256": "6f765749c858090a76da0fb51fdbe58d845df3adb90cc1290dcb21a4343c3dd5",
+      "sha256": "6f765749c858090a76da0fb51fdbe58d845df3adb90cc1290dcb21a4343c3dd5",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/shared.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/shared.ts",
+      "upstreamSha256": "b79dc5c543a1409e2f32a8d6509f4d31775e8091ec6b6965def1c6b20c704169",
+      "sha256": "b79dc5c543a1409e2f32a8d6509f4d31775e8091ec6b6965def1c6b20c704169",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolkit/types.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolkit/types.ts",
+      "upstreamSha256": "e71d49ef325abe86cac5780501800c075af1bb15d33aeb3f957d20aa4c38601e",
+      "sha256": "e71d49ef325abe86cac5780501800c075af1bb15d33aeb3f957d20aa4c38601e",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolLifecycle.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolLifecycle.ts",
+      "upstreamSha256": "05983405506947b9eedf13a94f4f8aabe3d200440a4b9f5697e36f02bc77bcfc",
+      "sha256": "05983405506947b9eedf13a94f4f8aabe3d200440a4b9f5697e36f02bc77bcfc",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolRegistry.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolRegistry.ts",
+      "upstreamSha256": "3a09ed98f19fbe21cb95a29dccb8874015059eb1c246bfbc9a4d713e43cf8bf7",
+      "sha256": "3a09ed98f19fbe21cb95a29dccb8874015059eb1c246bfbc9a4d713e43cf8bf7",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolResults.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolResults.ts",
+      "upstreamSha256": "61dc064bbb7e8243c495cb414f5a86d5ad997da5c1eec02da13d967b02feed18",
+      "sha256": "61dc064bbb7e8243c495cb414f5a86d5ad997da5c1eec02da13d967b02feed18",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/toolRuntime.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/toolRuntime.ts",
+      "upstreamSha256": "0edb55b825ea0a0931859c9ae004e12f09c9a6de2feca7f37bfc4a0e1db13b19",
+      "sha256": "0edb55b825ea0a0931859c9ae004e12f09c9a6de2feca7f37bfc4a0e1db13b19",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/tools.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/tools.ts",
+      "upstreamSha256": "b97832a5f43f87cf99d8761bea5d96b5ea113543a098e665b7ac7b1197e6f407",
+      "sha256": "b97832a5f43f87cf99d8761bea5d96b5ea113543a098e665b7ac7b1197e6f407",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/transcript.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/transcript.ts",
+      "upstreamSha256": "1c6231f15401e8adcb31013d4eae0e058b07ff1cdb1ca7aa97497684aa2a412d",
+      "sha256": "1c6231f15401e8adcb31013d4eae0e058b07ff1cdb1ca7aa97497684aa2a412d",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/turnTracker.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/turnTracker.ts",
+      "upstreamSha256": "e2e178b90caf1d6c0f0887e1100254f85e51761393e4d3beb051a4618dba4e4a",
+      "sha256": "e2e178b90caf1d6c0f0887e1100254f85e51761393e4d3beb051a4618dba4e4a",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/usage.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/usage.ts",
+      "upstreamSha256": "2e10a9f455a67b1ff3b373a03788b59ccd3c5b9a8827ac071993ac9f072cbbff",
+      "sha256": "2e10a9f455a67b1ff3b373a03788b59ccd3c5b9a8827ac071993ac9f072cbbff",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/wait.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/wait.ts",
+      "upstreamSha256": "7731f7fb5068c34f6c90f782d3ef0db40689a515e72327f2c9dca09707ed7845",
+      "sha256": "7731f7fb5068c34f6c90f782d3ef0db40689a515e72327f2c9dca09707ed7845",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/agent/web.ts",
+      "upstream": "Cursor++/src/server/handlers/agent/web.ts",
+      "upstreamSha256": "8e156c8593f5f943e3e2bdf03361578b23e2dc09042c8ba3ecfbef42e03923d6",
+      "sha256": "8e156c8593f5f943e3e2bdf03361578b23e2dc09042c8ba3ecfbef42e03923d6",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/canvas/canvasStore.ts",
+      "upstream": "Cursor++/src/server/handlers/canvas/canvasStore.ts",
+      "upstreamSha256": "d6300b5d02f4274a3625ad399c731e86ea0f9332589ffad6703315d77d2077f8",
+      "sha256": "d6300b5d02f4274a3625ad399c731e86ea0f9332589ffad6703315d77d2077f8",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/chat/summary.ts",
+      "upstream": "Cursor++/src/server/handlers/chat/summary.ts",
+      "upstreamSha256": "519abda13cf913101776bc2452ef26635c8566eba54ff7e4ca63a89fc2ba8d94",
+      "sha256": "519abda13cf913101776bc2452ef26635c8566eba54ff7e4ca63a89fc2ba8d94",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/errors.ts",
+      "upstream": "Cursor++/src/server/handlers/errors.ts",
+      "upstreamSha256": "adc3cbaff22c39a7b94821681ae24e387b9d000d93b0b9fff485c4b79ee4f71f",
+      "sha256": "adc3cbaff22c39a7b94821681ae24e387b9d000d93b0b9fff485c4b79ee4f71f",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/llm/anthropic.ts",
+      "upstream": "Cursor++/src/server/handlers/llm/anthropic.ts",
+      "upstreamSha256": "41cb2505c4e282deb8563cd8df7a644826e3a0a86b8e438e15fb94fad6ab04f2",
+      "sha256": "41cb2505c4e282deb8563cd8df7a644826e3a0a86b8e438e15fb94fad6ab04f2",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/llm/anthropicContract.ts",
+      "upstream": "Cursor++/src/server/handlers/llm/anthropicContract.ts",
+      "upstreamSha256": "18c98e53f870bfb89f6069d50e5898cc629369ee0b5f9965bd0ac9b41e9feb17",
+      "sha256": "18c98e53f870bfb89f6069d50e5898cc629369ee0b5f9965bd0ac9b41e9feb17",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/llm/conversationCodec.ts",
+      "upstream": "Cursor++/src/server/handlers/llm/conversationCodec.ts",
+      "upstreamSha256": "7aa677ecd07f591bb7976f02a5d93adeeda91b742bd0c5496b28b5df4ec82f72",
+      "sha256": "7aa677ecd07f591bb7976f02a5d93adeeda91b742bd0c5496b28b5df4ec82f72",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/llm/conversationPolicy.ts",
+      "upstream": "Cursor++/src/server/handlers/llm/conversationPolicy.ts",
+      "upstreamSha256": "8cae5f297380c17a929b3738948382b76c7e5fca4b9da4ef4e29c391f01d12f1",
+      "sha256": "8cae5f297380c17a929b3738948382b76c7e5fca4b9da4ef4e29c391f01d12f1",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/llm/gemini.ts",
+      "upstream": "Cursor++/src/server/handlers/llm/gemini.ts",
+      "upstreamSha256": "b54780abe449067001088efb5a2c74cb789e9d0f156746910a1be651a6101ba0",
+      "sha256": "b54780abe449067001088efb5a2c74cb789e9d0f156746910a1be651a6101ba0",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/llm/index.ts",
+      "upstream": "Cursor++/src/server/handlers/llm/index.ts",
+      "upstreamSha256": "e3ff910ba7f0cc84f757b78a8b81982e73ceeb6db09b20fa227784aae527c55d",
+      "sha256": "e3ff910ba7f0cc84f757b78a8b81982e73ceeb6db09b20fa227784aae527c55d",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/llm/openai-chat.ts",
+      "upstream": "Cursor++/src/server/handlers/llm/openai-chat.ts",
+      "upstreamSha256": "5c5a5caae9451e72c3faa02d4ec6cef6b08d008a3b90288ccdd8830e0e64323e",
+      "sha256": "440bc9c9f3bd7af7fd3979b479e1e1d85a3c7b33ba93e5253d41a9f43b2f7f6f",
+      "modified": true
+    },
+    {
+      "path": "vendor/server/handlers/llm/openai-responses.ts",
+      "upstream": "Cursor++/src/server/handlers/llm/openai-responses.ts",
+      "upstreamSha256": "9d05ec64ed6520a5c3cee7f65646ab26a58cde4f0796d54e94c8b4c82b7b8222",
+      "sha256": "9d05ec64ed6520a5c3cee7f65646ab26a58cde4f0796d54e94c8b4c82b7b8222",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/llm/promptProfile.ts",
+      "upstream": "Cursor++/src/server/handlers/llm/promptProfile.ts",
+      "upstreamSha256": "b0fa663758ee841f35a9c59d5a4dd03c08481f957ff8133e6d66896486f85d22",
+      "sha256": "b0fa663758ee841f35a9c59d5a4dd03c08481f957ff8133e6d66896486f85d22",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/llm/providerRuntime.ts",
+      "upstream": "Cursor++/src/server/handlers/llm/providerRuntime.ts",
+      "upstreamSha256": "a2cb13fcd815b6103d42a0595606458eb6ff196adc52a413cd11306082e30d7f",
+      "sha256": "a2cb13fcd815b6103d42a0595606458eb6ff196adc52a413cd11306082e30d7f",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/llm/proxyFetch.ts",
+      "upstream": "Cursor++/src/server/handlers/llm/proxyFetch.ts",
+      "upstreamSha256": "288e66d3ab91e4a9b58444affa9c4d46a09e353308e0ea8bb91ed15e44dd615b",
+      "sha256": "288e66d3ab91e4a9b58444affa9c4d46a09e353308e0ea8bb91ed15e44dd615b",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/llm/router.ts",
+      "upstream": "Cursor++/src/server/handlers/llm/router.ts",
+      "upstreamSha256": "83b1475d03d5d32212906b463797c280da1eceead6f36944ae4488d5e38d7a3e",
+      "sha256": "83b1475d03d5d32212906b463797c280da1eceead6f36944ae4488d5e38d7a3e",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/llm/semanticConversation.ts",
+      "upstream": "Cursor++/src/server/handlers/llm/semanticConversation.ts",
+      "upstreamSha256": "2e74d0dbbae0a8a47675d9f110f27c4d033ded7ced52fb90dfb6929e8cdeda8e",
+      "sha256": "2e74d0dbbae0a8a47675d9f110f27c4d033ded7ced52fb90dfb6929e8cdeda8e",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/llm/stateStrategy.ts",
+      "upstream": "Cursor++/src/server/handlers/llm/stateStrategy.ts",
+      "upstreamSha256": "67b96249c604a8dc1c13d41c2979b6b05e3a03cbe054c2fed3ffb422289aa5f6",
+      "sha256": "67b96249c604a8dc1c13d41c2979b6b05e3a03cbe054c2fed3ffb422289aa5f6",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/llm/storedTranscript.ts",
+      "upstream": "Cursor++/src/server/handlers/llm/storedTranscript.ts",
+      "upstreamSha256": "6937610179821660546999e680e6dd22e56fcc5b2b219bb20ea649b7f654e9d3",
+      "sha256": "6937610179821660546999e680e6dd22e56fcc5b2b219bb20ea649b7f654e9d3",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/llm/toolCatalog.ts",
+      "upstream": "Cursor++/src/server/handlers/llm/toolCatalog.ts",
+      "upstreamSha256": "a7533cd15de1b5b84a161ab0a1276f6678476d23980c67006f6cf10363cc6448",
+      "sha256": "a7533cd15de1b5b84a161ab0a1276f6678476d23980c67006f6cf10363cc6448",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/llm/transformMessages.ts",
+      "upstream": "Cursor++/src/server/handlers/llm/transformMessages.ts",
+      "upstreamSha256": "74487998ac2a1d4287102d6023b3630f9ff051d9dff49b7b00a60473e9cb977a",
+      "sha256": "74487998ac2a1d4287102d6023b3630f9ff051d9dff49b7b00a60473e9cb977a",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/llm/types.ts",
+      "upstream": "Cursor++/src/server/handlers/llm/types.ts",
+      "upstreamSha256": "0c249cc74ba3ab18b394cf1438ede904535af95267b710c7819a8c7726a4be23",
+      "sha256": "c6ec8be7f7f7b5a8d97e82a68f8a324efef0f57551578691e749698e02593bb9",
+      "modified": true
+    },
+    {
+      "path": "vendor/server/handlers/llm/userAgent.ts",
+      "upstream": "Cursor++/src/server/handlers/llm/userAgent.ts",
+      "upstreamSha256": "1c40f61ccfafecfc791df5c2bd0e53af977cc9ae80db15bf235df5a7b2fcd6b1",
+      "sha256": "1c40f61ccfafecfc791df5c2bd0e53af977cc9ae80db15bf235df5a7b2fcd6b1",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/models/byokModelBuilder.ts",
+      "upstream": "Cursor++/src/server/handlers/models/byokModelBuilder.ts",
+      "upstreamSha256": "1877d0bc503d293df24c5a4e8bc4393acb38246185239ec02aaefe097838f9b2",
+      "sha256": "1877d0bc503d293df24c5a4e8bc4393acb38246185239ec02aaefe097838f9b2",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/models/mapper.ts",
+      "upstream": "Cursor++/src/server/handlers/models/mapper.ts",
+      "upstreamSha256": "bfe7cb1d31706f0d6062850d970f537bc10ddfc75ff9b4b3a9f52a5064988770",
+      "sha256": "bfe7cb1d31706f0d6062850d970f537bc10ddfc75ff9b4b3a9f52a5064988770",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/models/upstream.ts",
+      "upstream": "Cursor++/src/server/handlers/models/upstream.ts",
+      "upstreamSha256": "dec36dc3cdc58663d50dbb5e3f52d9fb90cc72608dbb6869cda190f599daca03",
+      "sha256": "dec36dc3cdc58663d50dbb5e3f52d9fb90cc72608dbb6869cda190f599daca03",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/handlers/server/config.ts",
+      "upstream": "Cursor++/src/server/handlers/server/config.ts",
+      "upstreamSha256": "63348d4c8d6fbfeb00c5a9595ce9e7d6c642e92932e2f6a8d5bd4b9b915295e0",
+      "sha256": "63348d4c8d6fbfeb00c5a9595ce9e7d6c642e92932e2f6a8d5bd4b9b915295e0",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/index.ts",
+      "upstream": "Cursor++/src/server/index.ts",
+      "upstreamSha256": "2cdd8b4dfde284e40abf27853c0ff6ab295548ede6c7c2a68e817ea0255dc106",
+      "sha256": "e79b9477799ef1727302e5d214181c33a23e698981a166164f79ba6b4a6be3dd",
+      "modified": true
+    },
+    {
+      "path": "vendor/server/logger.ts",
+      "upstream": "Cursor++/src/server/logger.ts",
+      "upstreamSha256": "b8f5278243cbdce04eb6be3e4a2bede79b86f73023656f73f77bd216d3d4d025",
+      "sha256": "906c8fea3d9fc838cd4134d009970dea5ba1f13a81ef88e25bc231f003681836",
+      "modified": true
+    },
+    {
+      "path": "vendor/server/routes.ts",
+      "upstream": "Cursor++/src/server/routes.ts",
+      "upstreamSha256": "9fedde6f589c986169b83c039721e35ee489d07c2ff3b1aa75dffdd3c86a5cd8",
+      "sha256": "9fedde6f589c986169b83c039721e35ee489d07c2ff3b1aa75dffdd3c86a5cd8",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/runtime-config.ts",
+      "upstream": "Cursor++/src/server/runtime-config.ts",
+      "upstreamSha256": "ddca7a63556c6ded25f8a7255828c194cd84345ea3b4a5d32f1fc9bda6b74359",
+      "sha256": "ddca7a63556c6ded25f8a7255828c194cd84345ea3b4a5d32f1fc9bda6b74359",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/account/AuthService.ts",
+      "upstream": "Cursor++/src/server/services/account/AuthService.ts",
+      "upstreamSha256": "0f76eec6eb70151ddea8f4646af18069224aab2685f62e41455754f6c66ed33d",
+      "sha256": "0f76eec6eb70151ddea8f4646af18069224aab2685f62e41455754f6c66ed33d",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/account/DashboardService.ts",
+      "upstream": "Cursor++/src/server/services/account/DashboardService.ts",
+      "upstreamSha256": "53515ab3154ebd1515abd739050538dbe46ffb4ce46ae8b05d468f4af77f83b9",
+      "sha256": "53515ab3154ebd1515abd739050538dbe46ffb4ce46ae8b05d468f4af77f83b9",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/account/InAppAdService.ts",
+      "upstream": "Cursor++/src/server/services/account/InAppAdService.ts",
+      "upstreamSha256": "fc9d6abcb67e5ab530a0869b7d6776f736ed1dc1759b549d8855a4c85f15f837",
+      "sha256": "fc9d6abcb67e5ab530a0869b7d6776f736ed1dc1759b549d8855a4c85f15f837",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/completion/CmdKService.ts",
+      "upstream": "Cursor++/src/server/services/completion/CmdKService.ts",
+      "upstreamSha256": "734ea641e61dfc2ba5e01231d31bf81756c3f64cce9096a35e04c524866eb168",
+      "sha256": "734ea641e61dfc2ba5e01231d31bf81756c3f64cce9096a35e04c524866eb168",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/completion/CppService.ts",
+      "upstream": "Cursor++/src/server/services/completion/CppService.ts",
+      "upstreamSha256": "4aaf964e3caf40846d40181a75948a8c90d6bd969044f14ac0a1fcc66b48a486",
+      "sha256": "4aaf964e3caf40846d40181a75948a8c90d6bd969044f14ac0a1fcc66b48a486",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/completion/FileSyncService.ts",
+      "upstream": "Cursor++/src/server/services/completion/FileSyncService.ts",
+      "upstreamSha256": "9cfbf49652a87778186eabdf93bbb9cb6759ac356ba0918950c99fef720d15d5",
+      "sha256": "9cfbf49652a87778186eabdf93bbb9cb6759ac356ba0918950c99fef720d15d5",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/core/AgentService.ts",
+      "upstream": "Cursor++/src/server/services/core/AgentService.ts",
+      "upstreamSha256": "c58907f4c556f53a4290f9779c20b9368e9e4e382a95c5d664f46f7ff7d7bd9a",
+      "sha256": "c58907f4c556f53a4290f9779c20b9368e9e4e382a95c5d664f46f7ff7d7bd9a",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/core/AiService.ts",
+      "upstream": "Cursor++/src/server/services/core/AiService.ts",
+      "upstreamSha256": "8549744f7bfe30f0b61484e65ad2a44b30acd08f9aaf1061a8a341222377a554",
+      "sha256": "8549744f7bfe30f0b61484e65ad2a44b30acd08f9aaf1061a8a341222377a554",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/core/BackgroundComposerService.ts",
+      "upstream": "Cursor++/src/server/services/core/BackgroundComposerService.ts",
+      "upstreamSha256": "f89a9ed758cad1cca218cd2b676cad98bec2671bca7ba327d700d6fdcdc4c382",
+      "sha256": "f89a9ed758cad1cca218cd2b676cad98bec2671bca7ba327d700d6fdcdc4c382",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/core/BidiService.ts",
+      "upstream": "Cursor++/src/server/services/core/BidiService.ts",
+      "upstreamSha256": "feeeafc3f8e78634153ca5324d345192a123e3764b060dbdeaeed82f1ecf99eb",
+      "sha256": "feeeafc3f8e78634153ca5324d345192a123e3764b060dbdeaeed82f1ecf99eb",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/core/ChatService.ts",
+      "upstream": "Cursor++/src/server/services/core/ChatService.ts",
+      "upstreamSha256": "47b5cd008a7ffcfa3bc4d72636c3f354c1e4e927146ded89693ccacb3caa3a03",
+      "sha256": "47b5cd008a7ffcfa3bc4d72636c3f354c1e4e927146ded89693ccacb3caa3a03",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/core/ReplayChatService.ts",
+      "upstream": "Cursor++/src/server/services/core/ReplayChatService.ts",
+      "upstreamSha256": "d422b40d9da84d20890b034082cc86e476c06aba001d17919c5615482b42fbff",
+      "sha256": "d422b40d9da84d20890b034082cc86e476c06aba001d17919c5615482b42fbff",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/index.ts",
+      "upstream": "Cursor++/src/server/services/index.ts",
+      "upstreamSha256": "d44c4bbcc0015f4400dac95a9bfd48317b586d879340904c66c565fe9cf08137",
+      "sha256": "d44c4bbcc0015f4400dac95a9bfd48317b586d879340904c66c565fe9cf08137",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/infra/HealthService.ts",
+      "upstream": "Cursor++/src/server/services/infra/HealthService.ts",
+      "upstreamSha256": "4037f705a4626e669197479297ae279afcf1a792e91165414f23db4e3b84d8ac",
+      "sha256": "4037f705a4626e669197479297ae279afcf1a792e91165414f23db4e3b84d8ac",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/infra/NetworkService.ts",
+      "upstream": "Cursor++/src/server/services/infra/NetworkService.ts",
+      "upstreamSha256": "39381b566dad7064f001013bb1bb0d67791a28dc2ab86d44a813a78319f10a53",
+      "sha256": "39381b566dad7064f001013bb1bb0d67791a28dc2ab86d44a813a78319f10a53",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/infra/ServerConfigService.ts",
+      "upstream": "Cursor++/src/server/services/infra/ServerConfigService.ts",
+      "upstreamSha256": "6eeec61e3419042fa6fef8d1f271d6ac0d936204076a203e5f4f7269eecb800d",
+      "sha256": "6eeec61e3419042fa6fef8d1f271d6ac0d936204076a203e5f4f7269eecb800d",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/mcp/MCPRegistryService.ts",
+      "upstream": "Cursor++/src/server/services/mcp/MCPRegistryService.ts",
+      "upstreamSha256": "03c65c94a31e257274458890cad4c24cd2a93198fd029109c4627478e4c2bf30",
+      "sha256": "03c65c94a31e257274458890cad4c24cd2a93198fd029109c4627478e4c2bf30",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/repo/GitIndexService.ts",
+      "upstream": "Cursor++/src/server/services/repo/GitIndexService.ts",
+      "upstreamSha256": "f91cdb3a0030ad741f9fce786c1bd460b00b3d3806cbbb40aa5211c7f1b738d3",
+      "sha256": "f91cdb3a0030ad741f9fce786c1bd460b00b3d3806cbbb40aa5211c7f1b738d3",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/repo/RepositoryService.ts",
+      "upstream": "Cursor++/src/server/services/repo/RepositoryService.ts",
+      "upstreamSha256": "35581476964af1a5cbe1546f88db45f63ff58641c82ecc9dba9a77822aeb67b0",
+      "sha256": "35581476964af1a5cbe1546f88db45f63ff58641c82ecc9dba9a77822aeb67b0",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/repo/UploadService.ts",
+      "upstream": "Cursor++/src/server/services/repo/UploadService.ts",
+      "upstreamSha256": "b26b2c0cf164ac5c2d6cefb8494c9aa1874c143956f5da1d5c60fab7aa00421b",
+      "sha256": "b26b2c0cf164ac5c2d6cefb8494c9aa1874c143956f5da1d5c60fab7aa00421b",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/telemetry/AnalyticsService.ts",
+      "upstream": "Cursor++/src/server/services/telemetry/AnalyticsService.ts",
+      "upstreamSha256": "15cceb0beabc2880680add11450abe76deebc4feb1bbdb8d30e7f0ba5832eadd",
+      "sha256": "15cceb0beabc2880680add11450abe76deebc4feb1bbdb8d30e7f0ba5832eadd",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/telemetry/ChatRequestEventService.ts",
+      "upstream": "Cursor++/src/server/services/telemetry/ChatRequestEventService.ts",
+      "upstreamSha256": "a766bf7d934656374e97604b3833449a09d9b5b65a16b9e1bd071b435b5c4587",
+      "sha256": "a766bf7d934656374e97604b3833449a09d9b5b65a16b9e1bd071b435b5c4587",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/telemetry/MetricsService.ts",
+      "upstream": "Cursor++/src/server/services/telemetry/MetricsService.ts",
+      "upstreamSha256": "497afaab3fa056edfc5b76b34e3672acb02fa1b6b53097399014bae18ee605a4",
+      "sha256": "497afaab3fa056edfc5b76b34e3672acb02fa1b6b53097399014bae18ee605a4",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/telemetry/PerformanceEventService.ts",
+      "upstream": "Cursor++/src/server/services/telemetry/PerformanceEventService.ts",
+      "upstreamSha256": "dc4f8218803fd48b9a1d92f0e20712b8235da774e480d3a985cb5b0c05781250",
+      "sha256": "dc4f8218803fd48b9a1d92f0e20712b8235da774e480d3a985cb5b0c05781250",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/telemetry/ProfilingService.ts",
+      "upstream": "Cursor++/src/server/services/telemetry/ProfilingService.ts",
+      "upstreamSha256": "b9b89ad5f064d0ccba7a86f5409c63f98166465a52ced98d75be1738e6b74b99",
+      "sha256": "b9b89ad5f064d0ccba7a86f5409c63f98166465a52ced98d75be1738e6b74b99",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/telemetry/ToolCallEventService.ts",
+      "upstream": "Cursor++/src/server/services/telemetry/ToolCallEventService.ts",
+      "upstreamSha256": "cffa2c68f25088c3ca8b6c98ce86e397ce3eda51837024d72587e31ebbf8972d",
+      "sha256": "cffa2c68f25088c3ca8b6c98ce86e397ce3eda51837024d72587e31ebbf8972d",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/telemetry/TraceService.ts",
+      "upstream": "Cursor++/src/server/services/telemetry/TraceService.ts",
+      "upstreamSha256": "ab5f3f0c2e771dfd8014db14f791610a9082da505c60aff529dc9d6c6b20842d",
+      "sha256": "ab5f3f0c2e771dfd8014db14f791610a9082da505c60aff529dc9d6c6b20842d",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/services/telemetry/WebProfilingService.ts",
+      "upstream": "Cursor++/src/server/services/telemetry/WebProfilingService.ts",
+      "upstreamSha256": "d015c2d12cd38e116b08f3381b5cba8bda43ffbe8bbe4ce8206ec280e827f7c6",
+      "sha256": "d015c2d12cd38e116b08f3381b5cba8bda43ffbe8bbe4ce8206ec280e827f7c6",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/agentOrchestrator.integration.test.ts",
+      "upstream": "Cursor++/src/server/tests/agentOrchestrator.integration.test.ts",
+      "upstreamSha256": "f2e64a3b7358743493874f92cc0d3049a998e4149fdddfa628d8402f27bb943b",
+      "sha256": "f2e64a3b7358743493874f92cc0d3049a998e4149fdddfa628d8402f27bb943b",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/anthropicContract.test.ts",
+      "upstream": "Cursor++/src/server/tests/anthropicContract.test.ts",
+      "upstreamSha256": "a0cd477bab337715a6173cee6eec62e68d19345a20401003c784a4a0dfd79a8a",
+      "sha256": "a0cd477bab337715a6173cee6eec62e68d19345a20401003c784a4a0dfd79a8a",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/anthropicCurrentPathVsExternalFixes.test.ts",
+      "upstream": "Cursor++/src/server/tests/anthropicCurrentPathVsExternalFixes.test.ts",
+      "upstreamSha256": "71ab13e6d8029c8cca8a0c80b3eec3f3c4db2b25d4e40db235db3cf0515cd995",
+      "sha256": "71ab13e6d8029c8cca8a0c80b3eec3f3c4db2b25d4e40db235db3cf0515cd995",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/anthropicToolAdjacency.test.ts",
+      "upstream": "Cursor++/src/server/tests/anthropicToolAdjacency.test.ts",
+      "upstreamSha256": "785f917b6ee4cc0205493e53653cba26901d06f67c9749716b12ec9377d3df98",
+      "sha256": "785f917b6ee4cc0205493e53653cba26901d06f67c9749716b12ec9377d3df98",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/anthropicToolContractMatrix.test.ts",
+      "upstream": "Cursor++/src/server/tests/anthropicToolContractMatrix.test.ts",
+      "upstreamSha256": "2dd5dcae1ed2f853dda04729d4d81fd52f3c86bee48c0fd15fd6b07fd2de8599",
+      "sha256": "2dd5dcae1ed2f853dda04729d4d81fd52f3c86bee48c0fd15fd6b07fd2de8599",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/anthropicToolOrdering.test.ts",
+      "upstream": "Cursor++/src/server/tests/anthropicToolOrdering.test.ts",
+      "upstreamSha256": "bb707a8a0b495718afab7fc490641e10da52de7705035d7bfc28eb197a003a57",
+      "sha256": "bb707a8a0b495718afab7fc490641e10da52de7705035d7bfc28eb197a003a57",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/autoSummarize.test.ts",
+      "upstream": "Cursor++/src/server/tests/autoSummarize.test.ts",
+      "upstreamSha256": "8cbe16ed78617bf5804cd4d0c1b460f65571af7053cb5569b870492ca442eba5",
+      "sha256": "8cbe16ed78617bf5804cd4d0c1b460f65571af7053cb5569b870492ca442eba5",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/callMcpToolRouting.test.ts",
+      "upstream": "Cursor++/src/server/tests/callMcpToolRouting.test.ts",
+      "upstreamSha256": "37bec24eacce3d115bad97daff30de68ccc0a66ee485594b8c5fe3c07a089863",
+      "sha256": "37bec24eacce3d115bad97daff30de68ccc0a66ee485594b8c5fe3c07a089863",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/chatSummary.test.ts",
+      "upstream": "Cursor++/src/server/tests/chatSummary.test.ts",
+      "upstreamSha256": "e689c6a6b697ed91176f722f147168cd0c3168fdc682d59462e5fd7a32fb3d26",
+      "sha256": "e689c6a6b697ed91176f722f147168cd0c3168fdc682d59462e5fd7a32fb3d26",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/cloneRegistry.test.ts",
+      "upstream": "Cursor++/src/server/tests/cloneRegistry.test.ts",
+      "upstreamSha256": "a90b3f1f79bfba9a01863e6dfa1fb663c229fb1df930008ce670c26985f63872",
+      "sha256": "a90b3f1f79bfba9a01863e6dfa1fb663c229fb1df930008ce670c26985f63872",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/compactionRepair.integration.test.ts",
+      "upstream": "Cursor++/src/server/tests/compactionRepair.integration.test.ts",
+      "upstreamSha256": "b2365a94ee1d394791ba6d40e1d188472173cc0e393704b38576e8cfb421fb08",
+      "sha256": "b2365a94ee1d394791ba6d40e1d188472173cc0e393704b38576e8cfb421fb08",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/contextBreakdown.test.ts",
+      "upstream": "Cursor++/src/server/tests/contextBreakdown.test.ts",
+      "upstreamSha256": "aebf961c2077256350dde0c423fe185a7c126b53049149f331621f552dc63e9c",
+      "sha256": "aebf961c2077256350dde0c423fe185a7c126b53049149f331621f552dc63e9c",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/contextInjection.test.ts",
+      "upstream": "Cursor++/src/server/tests/contextInjection.test.ts",
+      "upstreamSha256": "b1990f1dce72e64e6f0d6da35c7394516c0e594c19452d565a5e78c5481bc355",
+      "sha256": "b1990f1dce72e64e6f0d6da35c7394516c0e594c19452d565a5e78c5481bc355",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/conversationCodec.test.ts",
+      "upstream": "Cursor++/src/server/tests/conversationCodec.test.ts",
+      "upstreamSha256": "72ff7f991275283b7fe7ed09e07ca0d4661d78701898327d40703eade7b08d9f",
+      "sha256": "72ff7f991275283b7fe7ed09e07ca0d4661d78701898327d40703eade7b08d9f",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/dynamicTools.test.ts",
+      "upstream": "Cursor++/src/server/tests/dynamicTools.test.ts",
+      "upstreamSha256": "335bce19c7a7262f93bdd075da3cc19b168267e7e7d337984ca0938019cfaaa8",
+      "sha256": "335bce19c7a7262f93bdd075da3cc19b168267e7e7d337984ca0938019cfaaa8",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/editPathDetection.test.ts",
+      "upstream": "Cursor++/src/server/tests/editPathDetection.test.ts",
+      "upstreamSha256": "5eec6a1b0a7ae3d7e973feffb039bfcbe60936f060cd15f33de4dfcb2e0e920f",
+      "sha256": "5eec6a1b0a7ae3d7e973feffb039bfcbe60936f060cd15f33de4dfcb2e0e920f",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/imageSupport.test.ts",
+      "upstream": "Cursor++/src/server/tests/imageSupport.test.ts",
+      "upstreamSha256": "d26f9840db1df7aa4366c4bc53c37e29985fd69120ca94dc7b69279d5ac101e7",
+      "sha256": "d26f9840db1df7aa4366c4bc53c37e29985fd69120ca94dc7b69279d5ac101e7",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/knowledgeBaseStore.test.ts",
+      "upstream": "Cursor++/src/server/tests/knowledgeBaseStore.test.ts",
+      "upstreamSha256": "330112c16d45ab4dff244746ec4e26c06a65f3f25a6dc63033cb340335c69c1e",
+      "sha256": "330112c16d45ab4dff244746ec4e26c06a65f3f25a6dc63033cb340335c69c1e",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/mcpOutputSpill.test.ts",
+      "upstream": "Cursor++/src/server/tests/mcpOutputSpill.test.ts",
+      "upstreamSha256": "03d76e08f04adae543bafaa3296640fbf101a586c67136a0dfaa057f8630e0f9",
+      "sha256": "03d76e08f04adae543bafaa3296640fbf101a586c67136a0dfaa057f8630e0f9",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/observedToolProblemPoints.test.ts",
+      "upstream": "Cursor++/src/server/tests/observedToolProblemPoints.test.ts",
+      "upstreamSha256": "cb44c70c5d6a9b40b98afd63c0ebd528f1e4a8eac3c83a28451368b4dc2d5388",
+      "sha256": "cb44c70c5d6a9b40b98afd63c0ebd528f1e4a8eac3c83a28451368b4dc2d5388",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/pathResolution.test.ts",
+      "upstream": "Cursor++/src/server/tests/pathResolution.test.ts",
+      "upstreamSha256": "959f034b2e0cd48d6bd355d33387e1ee3c337cd5a0b2a602effdc53e07cc0839",
+      "sha256": "959f034b2e0cd48d6bd355d33387e1ee3c337cd5a0b2a602effdc53e07cc0839",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/protocol.test.ts",
+      "upstream": "Cursor++/src/server/tests/protocol.test.ts",
+      "upstreamSha256": "ae1896dd756005cb107998950736ce333387f72301785b09cf7c3fd64c5510fd",
+      "sha256": "ae1896dd756005cb107998950736ce333387f72301785b09cf7c3fd64c5510fd",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/protocolKnowledgeBase.test.ts",
+      "upstream": "Cursor++/src/server/tests/protocolKnowledgeBase.test.ts",
+      "upstreamSha256": "3e489a5cae0127011bdd6f373fa3f0cba90fd68e9cb9f6b123f3cca78a126aec",
+      "sha256": "3e489a5cae0127011bdd6f373fa3f0cba90fd68e9cb9f6b123f3cca78a126aec",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/protocolStep1.test.ts",
+      "upstream": "Cursor++/src/server/tests/protocolStep1.test.ts",
+      "upstreamSha256": "6e610b5728828dd5d65997cef237d37a16087d0067534babfd94a185ffb33ffb",
+      "sha256": "6e610b5728828dd5d65997cef237d37a16087d0067534babfd94a185ffb33ffb",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/protocolStep2Preamble.test.ts",
+      "upstream": "Cursor++/src/server/tests/protocolStep2Preamble.test.ts",
+      "upstreamSha256": "5ab9a0d4fe16c687ef4ef447d356d6a3bf92dc4da0d3bd6c0131c5913e24d0f0",
+      "sha256": "5ab9a0d4fe16c687ef4ef447d356d6a3bf92dc4da0d3bd6c0131c5913e24d0f0",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/protocolStep4Blobs.test.ts",
+      "upstream": "Cursor++/src/server/tests/protocolStep4Blobs.test.ts",
+      "upstreamSha256": "4193792c109ff82a1dce853530ceedaaf3abd85e0eda1ddaaab89f1be3135908",
+      "sha256": "4193792c109ff82a1dce853530ceedaaf3abd85e0eda1ddaaab89f1be3135908",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/protoFrameSerialization.test.ts",
+      "upstream": "Cursor++/src/server/tests/protoFrameSerialization.test.ts",
+      "upstreamSha256": "441f13b30375bd84eb3ecd45071c824016bae50e79b237353dd6eb254db28ca9",
+      "sha256": "441f13b30375bd84eb3ecd45071c824016bae50e79b237353dd6eb254db28ca9",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/providerRuntime.test.ts",
+      "upstream": "Cursor++/src/server/tests/providerRuntime.test.ts",
+      "upstreamSha256": "cfed4b8e5b4ec7443d3fe4d72c1e36105dc108939a55ee3a9a11a7b98b52b9ba",
+      "sha256": "cfed4b8e5b4ec7443d3fe4d72c1e36105dc108939a55ee3a9a11a7b98b52b9ba",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/requestContextParts.test.ts",
+      "upstream": "Cursor++/src/server/tests/requestContextParts.test.ts",
+      "upstreamSha256": "1ce771f326eb739e1af09edf4eba03bb1d6f29fc786017d28b55ab39421c17ab",
+      "sha256": "1ce771f326eb739e1af09edf4eba03bb1d6f29fc786017d28b55ab39421c17ab",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/runCancellation.test.ts",
+      "upstream": "Cursor++/src/server/tests/runCancellation.test.ts",
+      "upstreamSha256": "e05cec3fcb00d0485e78febc04a8796564d4ece666d1da4bd2c9b023d6158bf0",
+      "sha256": "e05cec3fcb00d0485e78febc04a8796564d4ece666d1da4bd2c9b023d6158bf0",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/session.test.ts",
+      "upstream": "Cursor++/src/server/tests/session.test.ts",
+      "upstreamSha256": "a20bf4672314ffa499d40485e111b5c94554ac0cd7b1d369ac80cd7e57abf639",
+      "sha256": "a20bf4672314ffa499d40485e111b5c94554ac0cd7b1d369ac80cd7e57abf639",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/setup.ts",
+      "upstream": "Cursor++/src/server/tests/setup.ts",
+      "upstreamSha256": "c089f7bb7f064649f1c8a734fee1990984a214b5ecfcfdd6e283f8c18145318e",
+      "sha256": "c089f7bb7f064649f1c8a734fee1990984a214b5ecfcfdd6e283f8c18145318e",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/shellOutputTruncation.test.ts",
+      "upstream": "Cursor++/src/server/tests/shellOutputTruncation.test.ts",
+      "upstreamSha256": "4434739612d219650b78cfdddb00c6e396f6566c2f5200d883ece8020fd5a689",
+      "sha256": "4434739612d219650b78cfdddb00c6e396f6566c2f5200d883ece8020fd5a689",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/subagentCatalog.test.ts",
+      "upstream": "Cursor++/src/server/tests/subagentCatalog.test.ts",
+      "upstreamSha256": "90d91c2af870deefd0a35ef424e5b69e154207501c32a0ff0478109c46849a87",
+      "sha256": "90d91c2af870deefd0a35ef424e5b69e154207501c32a0ff0478109c46849a87",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/toolBuilders.test.ts",
+      "upstream": "Cursor++/src/server/tests/toolBuilders.test.ts",
+      "upstreamSha256": "426bff063a443aaea704b8d688d0bf9ece1495aba8e123d2c17eba1c1f9fe992",
+      "sha256": "426bff063a443aaea704b8d688d0bf9ece1495aba8e123d2c17eba1c1f9fe992",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/toolLifecycle.test.ts",
+      "upstream": "Cursor++/src/server/tests/toolLifecycle.test.ts",
+      "upstreamSha256": "ffca27030be8797110be7941a371b8401172853bc6d519036da603f15b0abce2",
+      "sha256": "ffca27030be8797110be7941a371b8401172853bc6d519036da603f15b0abce2",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/transformMessages.test.ts",
+      "upstream": "Cursor++/src/server/tests/transformMessages.test.ts",
+      "upstreamSha256": "5ae28cf9a89762464daf91f2d4bd38c478b8bc883b5c582e940c8d0537da274e",
+      "sha256": "5ae28cf9a89762464daf91f2d4bd38c478b8bc883b5c582e940c8d0537da274e",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/turnTracker.test.ts",
+      "upstream": "Cursor++/src/server/tests/turnTracker.test.ts",
+      "upstreamSha256": "3ea616a231e78fda2dbdf63f6eb0be45d8a615e60105eba7f5b736be221cf172",
+      "sha256": "3ea616a231e78fda2dbdf63f6eb0be45d8a615e60105eba7f5b736be221cf172",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/vscodeSqliteProbe.test.ts",
+      "upstream": "Cursor++/src/server/tests/vscodeSqliteProbe.test.ts",
+      "upstreamSha256": "33f1e98006ea6b7c10214859aaf6e3215ed1884d57a553ea0570937ec1022080",
+      "sha256": "33f1e98006ea6b7c10214859aaf6e3215ed1884d57a553ea0570937ec1022080",
+      "modified": false
+    },
+    {
+      "path": "vendor/installer/agent-websocket-guard.js",
+      "upstream": "installer/src/agent-websocket-guard.js",
+      "upstreamSha256": "4f33efc0e1ff3153e6f5bf4db38b2d15e01e9471a615a4cdd9ce39ec2968bf6d",
+      "sha256": "4f33efc0e1ff3153e6f5bf4db38b2d15e01e9471a615a4cdd9ce39ec2968bf6d",
+      "modified": false
+    },
+    {
+      "path": "vendor/installer/backup.js",
+      "upstream": "installer/src/backup.js",
+      "upstreamSha256": "cd9851366626c017c3c0c04a9ae625006ef404a044e29a27e38c4e8b20975087",
+      "sha256": "072dd0bc0fe5cb8689ea3679ed30a8c2ca1817a21dc571d033ed03f45a63a11d",
+      "modified": true
+    },
+    {
+      "path": "vendor/installer/build-vsix.js",
+      "upstream": "installer/src/build-vsix.js",
+      "upstreamSha256": "b7270ef8684de359d10098bd41f474d3c8e90f9752924f4e3d4ab096e300ab70",
+      "sha256": "b7270ef8684de359d10098bd41f474d3c8e90f9752924f4e3d4ab096e300ab70",
+      "modified": false
+    },
+    {
+      "path": "vendor/installer/check.js",
+      "upstream": "installer/src/check.js",
+      "upstreamSha256": "b35eac78b662be7b8f5b4311139499fd52b1248c65671ced3ddefe4bc5e74409",
+      "sha256": "b35eac78b662be7b8f5b4311139499fd52b1248c65671ced3ddefe4bc5e74409",
+      "modified": false
+    },
+    {
+      "path": "vendor/installer/checksum.js",
+      "upstream": "installer/src/checksum.js",
+      "upstreamSha256": "8e584942b34808553d639c09583d84ccea69e565e7089ffe1ee8ca9a77b4a6f6",
+      "sha256": "8e584942b34808553d639c09583d84ccea69e565e7089ffe1ee8ca9a77b4a6f6",
+      "modified": false
+    },
+    {
+      "path": "vendor/installer/cli.js",
+      "upstream": "installer/src/cli.js",
+      "upstreamSha256": "d1b9f54be9f6d35d00eb7b6e3254fd2dd98d96cfdefcab621762b6e7940f30bf",
+      "sha256": "d1b9f54be9f6d35d00eb7b6e3254fd2dd98d96cfdefcab621762b6e7940f30bf",
+      "modified": false
+    },
+    {
+      "path": "vendor/installer/defaults.js",
+      "upstream": "installer/src/defaults.js",
+      "upstreamSha256": "43d601f2664a2dd74d3f53cbc8bf0bbade9210b27b4db012831b78f1c0b58101",
+      "sha256": "a716a7264a708fed161130e8ad0baadf60a9cdfb0f8d51511ac18423212c3fef",
+      "modified": true
+    },
+    {
+      "path": "vendor/installer/detect.js",
+      "upstream": "installer/src/detect.js",
+      "upstreamSha256": "85c57a05886c6fe3e2bbd158f5ee6737e9218f777fa1d79853dfae45f72ef9d7",
+      "sha256": "85c57a05886c6fe3e2bbd158f5ee6737e9218f777fa1d79853dfae45f72ef9d7",
+      "modified": false
+    },
+    {
+      "path": "vendor/installer/extension-embed.js",
+      "upstream": "installer/src/extension-embed.js",
+      "upstreamSha256": "2f4f3abb8683a07d98a851a3f96b9cbe6f6aa677830d3927e1756c2092db3080",
+      "sha256": "2f4f3abb8683a07d98a851a3f96b9cbe6f6aa677830d3927e1756c2092db3080",
+      "modified": false
+    },
+    {
+      "path": "vendor/installer/install.js",
+      "upstream": "installer/src/install.js",
+      "upstreamSha256": "c576357fdb5c15c837c71906b3d644c8ec68f0857024d3a922ab6b5e005ba847",
+      "sha256": "c576357fdb5c15c837c71906b3d644c8ec68f0857024d3a922ab6b5e005ba847",
+      "modified": false
+    },
+    {
+      "path": "vendor/installer/node-http11-router.js",
+      "upstream": "installer/src/node-http11-router.js",
+      "upstreamSha256": "7f6d773bf59c5975370148cd75505f56264bbee64a2ed64c1fcdc5f00c6e76dc",
+      "sha256": "7f6d773bf59c5975370148cd75505f56264bbee64a2ed64c1fcdc5f00c6e76dc",
+      "modified": false
+    },
+    {
+      "path": "vendor/installer/obfuscate.js",
+      "upstream": "installer/src/obfuscate.js",
+      "upstreamSha256": "7f57ace68ac07247f7a0becb92f77a7375f5b77053a4cc196400dbf9817d4d73",
+      "sha256": "7f57ace68ac07247f7a0becb92f77a7375f5b77053a4cc196400dbf9817d4d73",
+      "modified": false
+    },
+    {
+      "path": "vendor/installer/patch-agent-host.js",
+      "upstream": "installer/src/patch-agent-host.js",
+      "upstreamSha256": "30524ad6f2729125d65b765d9898741eb321b7fff868a2b828d63a321c8f2ddb",
+      "sha256": "30524ad6f2729125d65b765d9898741eb321b7fff868a2b828d63a321c8f2ddb",
+      "modified": false
+    },
+    {
+      "path": "vendor/installer/patch-always-local.js",
+      "upstream": "installer/src/patch-always-local.js",
+      "upstreamSha256": "168edafced8181ba90a8a40a6a5d4cc624f3b3ed1a888368658e04eee018765b",
+      "sha256": "168edafced8181ba90a8a40a6a5d4cc624f3b3ed1a888368658e04eee018765b",
+      "modified": false
+    },
+    {
+      "path": "vendor/installer/patch-delete-fix.js",
+      "upstream": "installer/src/patch-delete-fix.js",
+      "upstreamSha256": "71c5c406f71cbbec7748a79cd8bcc02463b5ed4b6f30083a5f43bb8d87030879",
+      "sha256": "71c5c406f71cbbec7748a79cd8bcc02463b5ed4b6f30083a5f43bb8d87030879",
+      "modified": false
+    },
+    {
+      "path": "vendor/installer/patch-inject.js",
+      "upstream": "installer/src/patch-inject.js",
+      "upstreamSha256": "50ea0118615bced1fecfbe0a0fd97cd3c493562bcaca56eac0e78a8d6f02c0a4",
+      "sha256": "50ea0118615bced1fecfbe0a0fd97cd3c493562bcaca56eac0e78a8d6f02c0a4",
+      "modified": false
+    },
+    {
+      "path": "vendor/installer/patch-katex.js",
+      "upstream": "installer/src/patch-katex.js",
+      "upstreamSha256": "3e0eef56ced95dbf22afe882478ae496df808141b2bf173fb4f6f808054edf9d",
+      "sha256": "3e0eef56ced95dbf22afe882478ae496df808141b2bf173fb4f6f808054edf9d",
+      "modified": false
+    },
+    {
+      "path": "vendor/installer/patch-local-mode.js",
+      "upstream": "installer/src/patch-local-mode.js",
+      "upstreamSha256": "a191fee8799459b5daa65b5599d18c5e257501a5ae9dc432f361ed697cd4428a",
+      "sha256": "a191fee8799459b5daa65b5599d18c5e257501a5ae9dc432f361ed697cd4428a",
+      "modified": false
+    },
+    {
+      "path": "vendor/installer/patch-proxy-39.js",
+      "upstream": "installer/src/patch-proxy-39.js",
+      "upstreamSha256": "9497a0c7d1c3e1785f9fa59535e74ef4fa32579f297b766a8f95d6c4c15b441d",
+      "sha256": "9497a0c7d1c3e1785f9fa59535e74ef4fa32579f297b766a8f95d6c4c15b441d",
+      "modified": false
+    },
+    {
+      "path": "vendor/installer/release-defaults.js",
+      "upstream": "installer/src/release-defaults.js",
+      "upstreamSha256": "efaad5bbf84e913297e7b7de7ebb0e2b3cdfbb6202c7233fd3f6625cc765f8bd",
+      "sha256": "efaad5bbf84e913297e7b7de7ebb0e2b3cdfbb6202c7233fd3f6625cc765f8bd",
+      "modified": false
+    },
+    {
+      "path": "vendor/installer/routes.js",
+      "upstream": "installer/src/routes.js",
+      "upstreamSha256": "f051787472e3b7e47bdec917e855ef7f15cd3fe81afb8c84d59c4b83b9bcccd9",
+      "sha256": "f051787472e3b7e47bdec917e855ef7f15cd3fe81afb8c84d59c4b83b9bcccd9",
+      "modified": false
+    },
+    {
+      "path": "vendor/installer/status.js",
+      "upstream": "installer/src/status.js",
+      "upstreamSha256": "5e74e57ee1329da5a0b1abeb33677e25e24d55df7ee3faaea60cd523348fbba0",
+      "sha256": "5e74e57ee1329da5a0b1abeb33677e25e24d55df7ee3faaea60cd523348fbba0",
+      "modified": false
+    },
+    {
+      "path": "vendor/installer/uninstall.js",
+      "upstream": "installer/src/uninstall.js",
+      "upstreamSha256": "4b572b6e486c518fa5c1236844340d338acbd15dd828e848282520365ca0897e",
+      "sha256": "4b572b6e486c518fa5c1236844340d338acbd15dd828e848282520365ca0897e",
+      "modified": false
+    }
+  ]
+}
