@@ -10,7 +10,7 @@ Windows, using the actual Bun 1.4.3 binary shipped in the local Magpie cache:
 bun test ./tests
 ```
 
-Result for **0.2.1**: **53 tests passed, 0 failed**, with 336 assertions across six files.
+Result for **0.2.2**: **54 tests passed, 0 failed**, with 342 assertions across six files.
 
 | Boundary | Evidence |
 | --- | --- |
@@ -24,6 +24,7 @@ Result for **0.2.1**: **53 tests passed, 0 failed**, with 336 assertions across 
 | Supervision | Parent pipe shutdown, dual-process handover, stale empty lock recovery, disconnect/reconnect, malformed config shutdown and retry after spawn/exit failures |
 | Patches | Failed operation restores originals; interrupted multi-file restore resumes; later unrelated file changes block restore |
 | Automatic setup | A managed daemon installs hooks before Agent connection; complete hooks reuse one snapshot; failed targets wait for changes without stopping the bridge |
+| Shutdown during setup | A real daemon with its first backup copy delayed by 5.5 seconds completes setup after parent stdin closes, exits successfully, and releases both patch and bridge locks |
 | Upgrade and recovery | Clean updates get separate snapshots; partial hooks, checksum mismatches and damaged backups are refused; manual restore pauses automatic setup |
 | Concurrent operations | Setup and restore share an exclusive patch lock; abandoned locks are not reclaimed automatically; detected external version changes preserve the updater's files |
 | Protocol selection | Actual desktop/glass capability method shapes select Connect when BYOK is enabled and restore official gates when disabled; a single routes SSE connection updates the choice |
@@ -44,6 +45,8 @@ It successfully loaded this package and installed fixture Cursor hooks **before 
 The same official host was also tested against a separate copy of the actual **Cursor 3.26.13** application files (9 files, approximately 106 MB). Automatic setup created one snapshot and reported `ready: true`; assigning one fixture model made it appear in `AvailableModels`. After the host and bridge exited, restore returned all 9 files to their original SHA-256 hashes. This version omits the legacy singleton file; a regression test covers that layout.
 
 For 0.2.1, live client logs identified `RunInference` / `local_loop` traffic being decoded as the older Agent protocol. A separate Cursor 3.26.13 file copy was patched with 0.2.0 and then upgraded through the new setup path. Both renderer gate methods selected Connect with BYOK enabled and preserved the official gate result with BYOK disabled. Repeated setup made no changes; restore returned all 9 original file hashes. This validates patch selection and migration, not a completed live model conversation.
+
+During local 0.2.1 deployment, a temporary plugin host exited while setup was running and left a patch lock from a dead process. The applied snapshot and all 60 target and backup hashes still matched. After archiving only that verified stale lock, the resident plugin completed the upgrade: desktop/glass compatibility, `localLoop`, and overall `ready` all passed. Version 0.2.2 waits for the active setup transaction before starting the runtime shutdown deadline, with the delayed-backup test above covering this case.
 
 Official `internal/agent/plugged.go` was inspected to verify `connect()` values are written and stashed/restored on disconnect; the desktop Agent UI was not exercised.
 

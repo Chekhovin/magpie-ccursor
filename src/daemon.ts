@@ -93,9 +93,11 @@ async function shutdown() {
   if (stopped) return
   stopped = true
   clearInterval(timer)
+  // Never force-exit while setup owns patch.lock or is writing its recovery snapshot.
+  // Queued ticks observe stopped and return; the active transaction must finish first.
+  await queue
   const deadline = setTimeout(() => process.exit(1), 4000)
   try {
-    await queue
     await runtime?.stop()
     if (ownsLock) await unlink(lockPath).catch(() => {})
   } finally { clearTimeout(deadline); process.exit(0) }

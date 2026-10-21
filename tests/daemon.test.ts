@@ -23,8 +23,9 @@ async function freePort() {
   await new Promise<void>(resolve => server.close(() => resolve()))
   return port
 }
-function launch(dir: string, port: number, autoSetup = false) {
-  const child = spawn(process.execPath, [fileURLToPath(new URL('../src/daemon.ts', import.meta.url)), '--managed', dir, String(port)], {
+function launch(dir: string, port: number, autoSetup = false, slowBackup = false) {
+  const preload = slowBackup ? ['--preload', fileURLToPath(new URL('./fixtures/slow-backup.ts', import.meta.url))] : []
+  const child = spawn(process.execPath, [...preload, fileURLToPath(new URL('../src/daemon.ts', import.meta.url)), '--managed', dir, String(port)], {
     env: { ...sandboxEnvironment(dir), MAGPIE_CCURSOR_SKIP_AUTO_SETUP: autoSetup ? '0' : '1' },
     stdio: ['pipe', 'ignore', 'pipe'], windowsHide: true })
   let logs = ''
@@ -84,6 +85,21 @@ test('daemon installs Cursor hooks without Agent configuration and keeps one sna
   expect(running.logs().match(/Cursor hooks installed/g)).toHaveLength(1)
   expect(running.child.exitCode).toBeNull()
 }, 15000)
+
+test('parent exit during a slow backup lets the patch transaction finish and release its locks', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'magpie-auto-shutdown-')); dirs.push(dir)
+  const { paths } = await createCursorFixture(join(dir, 'cursor'))
+  const running = launch(dir, await freePort(), true, true); children.push(running)
+  await until(async () => !!await readFile(join(dir, 'patch.lock'), 'utf8').catch(() => ''), 'setup never acquired patch lock')
+  const started = Date.now()
+  running.child.stdin.end()
+  expect(await running.exit).toBe(0)
+  expect(Date.now() - started).toBeGreaterThan(4000)
+  expect(JSON.parse(await readFile(join(dir, 'patch-manifest.json'), 'utf8')).state).toBe('applied')
+  expect(await readFile(paths.workbenchJs, 'utf8')).toContain('__magpieCcursorConnectMode')
+  await expect(readFile(join(dir, 'patch.lock'))).rejects.toThrow()
+  await expect(readFile(join(dir, 'bridge.lock'))).rejects.toThrow()
+}, 20000)
 
 for (const failure of ['missing Cursor', 'patch failure']) {
   test(`daemon keeps bridge running after ${failure} and does not retry each tick`, async () => {
