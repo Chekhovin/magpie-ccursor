@@ -4,7 +4,7 @@ import { agent, connect } from '../agent.mjs'
 
 const root = resolve(import.meta.dir, '..')
 const pkg = JSON.parse(await readFile(join(root, 'package.json'), 'utf8'))
-const required = [pkg.main, pkg.exports['./server'], pkg.magpie.agent, pkg.magpie.page.file, 'README.md', 'LICENSE', 'NOTICE.md']
+const required = [pkg.main, pkg.exports['./server'], pkg.magpie.agent, 'README.md', 'README.en.md', 'LICENSE', 'NOTICE.md']
 for (const file of required) if (!(await stat(join(root, file))).isFile()) throw new Error(`Missing package entry: ${file}`)
 if (pkg.scripts.postinstall || pkg.scripts.prepare) throw new Error('Installation must not require lifecycle scripts.')
 if (agent.id !== 'ccursor' || 'model' in agent) throw new Error('Agent must allow model selection inside Cursor.')

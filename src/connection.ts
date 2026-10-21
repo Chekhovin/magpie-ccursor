@@ -36,7 +36,7 @@ export function toProviders(connection: any) {
   return {
     $schemaVersion: 1,
     providers: [{ id: 'magpie', name: 'Magpie', type: 'openai-chat', baseUrl: gateway.v1.replace(/\/$/, ''),
-      auth: { kind: 'apiKey', value: gateway.key }, headers: { 'User-Agent': 'magpie-ccursor/0.2.4' }, models }],
+      auth: { kind: 'apiKey', value: gateway.key }, headers: { 'User-Agent': 'magpie-ccursor/0.2.5' }, models }],
   }
 }
 

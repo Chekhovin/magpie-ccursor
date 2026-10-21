@@ -14,17 +14,18 @@ Cursor → Local CCursor bridge (127.0.0.1:39831) → Magpie gateway → Model p
 
 ## Quick start
 
-Installing the plugin in Magpie also installs the Cursor client hooks automatically. You do not need to clone the repository or run setup commands:
+Installing the plugin in Magpie also sets up the Cursor client hooks automatically—no need to clone the repository or run `setup` commands for normal use. Everything is configured right under **Agent → CCursor** in Magpie, with no separate CCursor setup page:
 
 1. Add `github:Chekhovin/magpie-ccursor` on Magpie's plugin page.
-2. Open **Agent → CCursor**, enable the connection, and select the models you want to use.
-3. Start Cursor and choose a model from the model picker. If Cursor was open when you installed the plugin, restart it once to load the hooks, then send a test message:
+2. Open **Agent → CCursor**, enable the connection, and select the models to assign to Cursor.
+3. Open Cursor and pick a model from the model picker (if Cursor was running while you installed or updated the plugin, quit it completely and reopen it so the hooks load), then send a test message:
 
    > Reply only with "Connected successfully".
 
 Keep Magpie running while you use Cursor:
 
-- Whenever you update the assigned models in Magpie, the model list in Cursor updates automatically.
+- Assigned models sync to both the standard IDE window and the Agents Window. Changing model assignments in Magpie updates Cursor automatically, and updating the plugin keeps your existing model selections.
+- Cursor's **Auto** uses the default model assigned by Magpie. You can also choose a specific model in the picker.
 - Model requests authenticate with the dedicated Agent key Magpie assigns to CCursor, so usage is tracked specifically under that Agent.
 - Disabling the CCursor connection in Magpie stops the local bridge; re-enabling it starts the bridge again.
 
@@ -48,19 +49,19 @@ magpie plugin add github:Chekhovin/magpie-ccursor
 
 ### Step 2: Enable the Agent and open Cursor
 
-When Magpie first loads the plugin, it finds your local Cursor installation, backs up the original files, and installs the client hooks. Existing complete hooks are reused. Once setup finishes, enable **Agent → CCursor** in Magpie, assign models, and start Cursor. If Cursor is already open, restart it once.
+When Magpie first loads the plugin, it locates your local Cursor installation, backs up the original files, and installs the client hooks. All configuration lives in **Agent → CCursor**—once enabled with models assigned, open Cursor to start using them. If Cursor was running during plugin installation or update, quit Cursor completely and reopen it.
 
-If setup fails, the plugin rolls back the changes and reports the reason in Magpie's plugin logs. After a Cursor update, it checks the hooks again and creates a new backup before patching an eligible clean version. For custom installation paths or write permissions, see the [Setup and recovery guide (Chinese)](docs/setup.md).
+Earlier hooks backed up and managed by this plugin are upgraded automatically. If setup fails, the plugin rolls back the changes and reports the reason in Magpie's plugin logs. After a Cursor update, it checks the installation again and backs up and patches an eligible clean version. For custom installation paths or write permissions, see the [Setup and recovery guide (Chinese)](docs/setup.md).
 
 #### Already using upstream CCursor
 
-Stop the original CCursor server and disable its auto-start to prevent a conflict on port `39831`. You can keep the original installation files. Complete client hooks that point to the default `127.0.0.1:39831` address can still be used.
+Stop the original CCursor server and disable its auto-start to avoid a conflict on port `39831`; you can keep its installation files. Upstream client patches may not be compatible with this plugin. If the logs report incomplete patches or an upgrade that cannot proceed safely, restore them using the original installation's recovery method, or use a clean Cursor installation, then let this plugin set it up automatically.
 
-For details on existing installations, custom ports, and patch compatibility, see the [Setup and recovery guide (Chinese)](docs/setup.md).
+For details on existing upstream installations, custom ports, patch compatibility, and recovery, see the [Setup and recovery guide (Chinese)](docs/setup.md).
 
 ## Commands and configuration
 
-From a local clone of this repository, you can use `bun cli.ts` (requires [Bun](https://bun.sh) `>= 1.3.0`) to check status, debug in the foreground, or restore modified Cursor files:
+You do not need the CLI for everyday use. For troubleshooting, foreground debugging, or manual recovery from a local clone of this repository, use `bun cli.ts` (requires [Bun](https://bun.sh) `>= 1.3.0`):
 
 | Action or setting | Command / details |
 | --- | --- |

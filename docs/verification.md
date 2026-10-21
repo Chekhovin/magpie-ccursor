@@ -64,3 +64,10 @@ Official `internal/agent/plugged.go` was inspected to verify `connect()` values 
 - Full upstream test suite. It contains installed-Cursor probes and is intentionally excluded from this package's test command.
 
 The GitHub CI checks Windows and Linux after publication; its results must be read separately from the local results above. Unit tests and fixture success do not establish real-client compatibility.
+
+## 0.2.5 documentation and page removal
+
+After the 0.2.4 deployment, the user confirmed that the reported Agents-window problem was resolved. This is user-reported confirmation; it does not add coverage for every model or tool.
+
+Version 0.2.5 updates both READMEs and removes the standalone Magpie page registration and all three page assets. Agent and server registration remain. Package-entry and documentation-link checks, bilingual structure/command/link parity, and a package dry run passed; the package contains both READMEs and no page files. The official host smoke test passed without a page registration, including automatic Cursor setup, bridge recovery and shutdown. Runtime behavior is unchanged apart from the versioned User-Agent string; the 73-test result above belongs to 0.2.4.
+

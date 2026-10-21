@@ -19,7 +19,7 @@ flowchart LR
 - `index.ts` exports one OpenCode v1 plugin function. Its `config` hook starts a supervisor. Automatic client setup runs in the supervised daemon rather than an install script.
 - `src/supervisor.ts` starts a dedicated Bun child with its own stdin pipe, forwards diagnostic stderr, and restarts unexpected exits with bounded backoff. Parent exit closes the pipe.
 - `src/daemon.ts` owns the standalone process and a PID lock. After acquiring the lock, it checks and installs Cursor hooks even before the Agent is connected. It observes connection changes, writes derived providers, and runs the protocol server only while connected. An absent or malformed connection stops the server. No gateway request is made merely by connecting.
-- `page/` uses the official `_magpie/bridge.js`. It displays setup instructions and requests no privileged read permissions.
+- The package registers the Agent and server entry only. Connection and model assignment use Magpie's **Agent → CCursor** controls; no plugin page is registered.
 
 Magpie's documented mixed Agent/server entry support is checked against `internal/plugin/agent.go` and `internal/plugin/host.js`. Its `internal/agent/plugged.go` writes each `connect` key using `edit.KV`, stashes prior values, and restores/deletes them on disconnect.
 
