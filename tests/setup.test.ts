@@ -64,6 +64,17 @@ for (const target of ['alwaysLocalMain', 'glassJs', 'alwaysLocalSingletonJs', 'a
   })
 }
 
+test('ready inspection does not acquire or modify a patch write lock', async () => {
+  const f = await fixture()
+  await setupCursor(f)
+  const saved = await readFile(join(f.dataDir, 'patch-manifest.json'), 'utf8')
+  const lock = JSON.stringify({ pid: process.pid, token: 'inspection-must-not-touch' })
+  await writeFile(join(f.dataDir, 'patch.lock'), lock)
+  expect((await setupCursor(f)).changed).toBe(false)
+  expect(await readFile(join(f.dataDir, 'patch.lock'), 'utf8')).toBe(lock)
+  expect(await readFile(join(f.dataDir, 'patch-manifest.json'), 'utf8')).toBe(saved)
+})
+
 test('current Cursor layouts without the legacy singleton still become ready', async () => {
   const f = await fixture()
   await rm(f.paths.alwaysLocalSingletonJs)

@@ -225,6 +225,11 @@ export function cursorStatus(options: SetupOptions = {}) {
 
 export async function setupCursor(options: SetupOptions = {}) {
   const directory = options.dataDir ?? dataDirectory()
+  // No-op inspection does not own a write lock: transient hosts may exit during a large scan.
+  // Keep damaged/interrupted snapshot validation before reporting a ready installation.
+  await readSnapshot(directory)
+  const status = cursorStatus(options)
+  if (status.ready) return { ...status, changed: false }
   return withPatchLock(directory, () => setupCursorLocked({ ...options, dataDir: directory }))
 }
 

@@ -1,6 +1,6 @@
 {
   "name": "magpie-ccursor",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Connect Cursor to Magpie models with a standalone CCursor BYOK bridge.",
   "type": "module",
   "main": "./index.ts",
