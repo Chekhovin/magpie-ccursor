@@ -17,7 +17,7 @@ Cursor → 本机 CCursor 协议桥 (127.0.0.1:39831) → Magpie 网关 → 模�
 在 Magpie 安装插件后，Cursor 的接入补丁会自动安装，日常使用无需单独克隆仓库或手动执行 `setup` 命令。所有配置统一在 Magpie 的 **Agent → CCursor** 中完成，无需额外的独立接入页面：
 
 1. 在 Magpie 的插件页面添加 `github:Chekhovin/magpie-ccursor`。
-2. 打开 **Agent → CCursor**，启用连接并勾选要分配给 Cursor 的模型。
+2. 打开 **Agent → CCursor**，启用连接并勾选要分配给 Cursor 的模型。如果安装后还未显示 CCursor，请先手动刷新一下 Magpie 页面。
 3. 打开 Cursor，在模型选择器中选择模型（如果安装或更新插件时 Cursor 正在运行，请先完全退出再重新打开以加载补丁），然后发送一条测试消息：
 
    > 只回复「连接成功」。
@@ -48,6 +48,8 @@ magpie plugin add github:Chekhovin/magpie-ccursor
 ```
 
 ### 第二步：启用 Agent，打开 Cursor
+
+如果安装完成后，Magpie 的 Agent 页面没有立即出现 CCursor，请手动刷新一下页面，再启用连接并分配模型，无需重新安装插件。
 
 插件首次加载时会查找本机 Cursor，备份原文件并自动安装接入补丁。配置集中在 **Agent → CCursor** 完成，启用连接并分配模型后打开 Cursor 即可使用；如果安装或更新插件时 Cursor 正在运行，请完全退出后再重新打开。
 

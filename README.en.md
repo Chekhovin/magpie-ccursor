@@ -17,7 +17,7 @@ Cursor → Local CCursor bridge (127.0.0.1:39831) → Magpie gateway → Model p
 Installing the plugin in Magpie also sets up the Cursor client hooks automatically—no need to clone the repository or run `setup` commands for normal use. Everything is configured right under **Agent → CCursor** in Magpie, with no separate CCursor setup page:
 
 1. Add `github:Chekhovin/magpie-ccursor` on Magpie's plugin page.
-2. Open **Agent → CCursor**, enable the connection, and select the models to assign to Cursor.
+2. Open **Agent → CCursor**, enable the connection, and select the models to assign to Cursor. If CCursor does not appear after installation, manually refresh the Magpie page first.
 3. Open Cursor and pick a model from the model picker (if Cursor was running while you installed or updated the plugin, quit it completely and reopen it so the hooks load), then send a test message:
 
    > Reply only with "Connected successfully".
@@ -48,6 +48,8 @@ magpie plugin add github:Chekhovin/magpie-ccursor
 ```
 
 ### Step 2: Enable the Agent and open Cursor
+
+If CCursor does not appear on Magpie's Agent page immediately after installation, manually refresh the page, then enable the connection and assign models. You do not need to reinstall the plugin.
 
 When Magpie first loads the plugin, it locates your local Cursor installation, backs up the original files, and installs the client hooks. All configuration lives in **Agent → CCursor**—once enabled with models assigned, open Cursor to start using them. If Cursor was running during plugin installation or update, quit Cursor completely and reopen it.
 
