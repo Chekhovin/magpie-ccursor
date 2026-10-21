@@ -1,60 +1,74 @@
 # 接入与恢复
 
+## 安装后自动接入
+
+在 Magpie 添加 `github:Chekhovin/magpie-ccursor` 后，插件首次加载就会检查本机 Cursor，备份原文件并安装接入补丁。这个步骤不依赖 Agent 开关，也不需要单独安装 Bun 或克隆源码。
+
+接入完成后，在 **Agent → CCursor** 中启用连接、分配模型，再打开 Cursor。如果安装插件时 Cursor 已经运行，保存工作并重启一次即可加载新补丁。插件不会替你关闭或重启 Cursor。
+
+补丁结果和错误会出现在 Magpie 插件日志中。已有完整补丁会直接复用，不会反复生成备份。安装前保存原文件和 SHA-256 摘要，失败时回滚；若安装中途被强制退出，请保留 `~/.magpie-ccursor/patch-manifest.json` 及备份，先检查中断原因，不要叠加安装。
+
+Cursor 在自定义目录时，可给 Magpie 设置 `CCURSOR_CURSOR_ROOT` 环境变量，指向 Cursor 的 `resources/app` 目录。自动接入需要对 Cursor 应用目录有写权限；不会自动提权。Linux 的只读 AppImage 挂载目录需先换成可写的安装目录。
+
 ## 已有 CCursor
 
-本插件的**服务代码**来自全新下载的上游。已有 Cursor 客户端补丁可以作为协议客户端使用，但插件不加载原版安装目录中的服务代码，也不导入 `~/.ccursor/providers.json`。
+本插件的服务代码来自全新下载的上游。已有 Cursor 客户端补丁可以继续连接默认地址 `127.0.0.1:39831`，但本插件不加载原版安装目录中的服务代码，也不导入 `~/.ccursor/providers.json`。
 
-兼容条件：现有 renderer、always-local / Agent Host 补丁指向 `127.0.0.1:39831`，且原版 CCursor 服务已停止。原版 Cursor++ 扩展可能在 Cursor 重启时自动启动服务；在其设置中关闭 `cursor2plus.server.autoStart`，并用 **Cursor++: Toggle BYOK Server** 停止当前服务。若原扩展的多窗口接管仍会重新启动服务，可在 Cursor 中禁用扩展，但保留安装文件。
+请先停止原版 CCursor 服务，避免争用端口。原版 Cursor++ 扩展可能在重启时自动启动服务；在其设置中关闭 `cursor2plus.server.autoStart`，并用 **Cursor++: Toggle BYOK Server** 停止当前服务。若原扩展的多窗口接管仍会重新启动服务，可在 Cursor 中禁用扩展，保留安装文件。
 
-插件不会自动修改原配置、停止原进程或删除扩展。原补丁若使用自定义端口，必须先按其原安装方式调整或在干净 Cursor 安装上运行本项目的 `setup`。不要将两套不完整补丁叠加；`setup` 会拒绝检测到的不完整 renderer 补丁。
+插件不会自动修改原配置、停止原进程或删除原版扩展。原补丁若使用自定义端口，先按原安装方式调整为默认端口，或使用干净的 Cursor 安装。不完整或无法确认来源的补丁不会被自动覆盖。
 
-原版设置面板读写的是旧目录，它的 provider 编辑和开关不能作为新桥接配置界面。新模型从 Magpie 的 CCursor Agent 同步。已有补丁读取旧 routes 的行为仍由该补丁控制；本插件不宣称任意历史版本都兼容。
+原版设置面板管理的是旧配置；新模型从 Magpie 的 CCursor Agent 同步。已有补丁读取旧 routes 的行为仍由该补丁控制。
 
-## 干净 Cursor 的首次接入
+## 手动检查与重试
 
-先在 Magpie 添加 `github:Chekhovin/magpie-ccursor`，确认 Agent 页出现 CCursor。
-
-在新下载的项目目录安装依赖并检查状态：
+正常安装不需要以下命令。需要排查时，可在安装了 [Bun](https://bun.sh)（`>= 1.3.0`）的环境中克隆仓库：
 
 ```sh
+git clone https://github.com/Chekhovin/magpie-ccursor.git
+cd magpie-ccursor
 bun install --frozen-lockfile --ignore-scripts
 bun cli.ts status
 ```
 
-关闭全部 Cursor 窗口，再运行：
+关闭全部 Cursor 窗口后，可以手动重试接入：
 
 ```sh
 bun cli.ts setup --cursor-closed
 ```
 
-`--cursor-closed` 表示你已关闭客户端，并同意此命令修改 Cursor 应用文件。该标记不代替操作系统权限；若 Cursor 在受保护目录中，请使用有该目录写入权限的终端。
+`--cursor-closed` 表示你已关闭客户端，并同意命令修改 Cursor 应用文件。该标记不代替操作系统写入权限。手动接入与自动接入使用同一套备份和检查。
 
-自定义 Cursor 安装位置可以通过上游支持的 `CCURSOR_CURSOR_ROOT` 环境变量指定，它必须指向 `resources/app`。新补丁会读取 `~/.magpie-ccursor/routes.json`，默认端口仍为 39831。
-
-安装不会写入 Cursor++ 扩展，不会启动真实模型请求。操作前会保存完整原文件和 SHA-256 摘要，补丁验证失败会尝试还原。若系统在安装中途强制退出，`patch-manifest.json` 会保持 `applying`，应先检查备份，不能直接叠加安装。
+新补丁读取 `~/.magpie-ccursor/routes.json`，默认端口为 39831。插件不安装原版 Cursor++ 扩展，也不会因为安装补丁而发送模型请求。
 
 ## 恢复与升级
 
-关闭 Cursor 后，在相同项目版本执行：
+关闭 Cursor 后，在项目目录执行：
 
 ```sh
 bun cli.ts restore --cursor-closed
 ```
 
-恢复只处理 `~/.magpie-ccursor/patch-manifest.json` 记录的文件，备份和数据保留。已恢复的文件会跳过，便于从中断的恢复继续；若文件既不匹配补丁摘要也不匹配原摘要，命令会停止，避免覆盖 Cursor 更新或用户修改。
+恢复只处理 `~/.magpie-ccursor/patch-manifest.json` 记录的文件，保留备份与会话数据。主动恢复后，自动接入会暂停，避免立即把补丁装回去。想重新接入时，关闭 Cursor，再运行 `bun cli.ts setup --cursor-closed`。
 
-若 Cursor 已升级导致摘要不同，请保留备份，在更新后的干净安装上重新接入；不要强制将旧版本应用文件覆盖回去。原版 CCursor 补丁不属于本插件记录，`restore` 不会卸载它。
+已恢复的文件会跳过，便于从中断的恢复继续；若文件既不匹配补丁摘要也不匹配原摘要，恢复会停止，避免覆盖 Cursor 更新或用户修改。原版 CCursor 补丁不属于本插件记录，`restore` 不会卸载它。
+
+Cursor 升级后，插件会重新检查客户端。当新版本的应用文件完整且没有遗留的部分补丁时，会保留旧版本备份，为新版本建立快照并重新接入。更新期间的混合文件、不完整补丁或中断快照需要先处理日志中的问题。不要将旧版本备份强制写回新版 Cursor。
 
 ## 故障排查
 
 | 现象 | 检查 |
 | --- | --- |
+| Agent 已连接，但 Cursor 没有模型 | 查看 Magpie 插件日志中的自动接入结果；已打开的 Cursor 需重启一次；确认 Agent 已分配模型 |
+| 日志提示找不到 Cursor | 安装 Cursor，或给 Magpie 设置指向 `resources/app` 的 `CCURSOR_CURSOR_ROOT` |
+| 日志提示权限不足 | 确认当前账户可写入 Cursor 应用目录 |
 | 端口 39831 被占用 | 停止原 CCursor；`status` 会区分新桥接与其他服务 |
-| Agent 列表没有 CCursor | 更新 Magpie，检查插件加载错误及仓库根目录 `package.json` |
-| 模型列表为空 | 连接 Agent，确认 Magpie 已向它分配模型，重启 Cursor 或刷新模型列表 |
+| Agent 列表没有 CCursor | 更新 Magpie，检查插件加载错误 |
 | 原版侧栏仍显示旧模型 | 原版面板管理的是旧配置；新配置由 Magpie 管理 |
 | 模型请求报 401/403 | 检查 Magpie 网关及供应商登录状态；不要粘贴配置文件中的密钥 |
-| 关闭 Magpie 后不能对话 | 桥接随插件宿主退出，这是预期行为 |
-| setup 失败或提示旧补丁不完整 | 保留错误和备份，先修复原版安装或使用干净 Cursor；不要反复叠加补丁 |
+| 关闭 Magpie 后不能对话 | 请保持 Magpie 运行；桥接随插件宿主退出 |
+| 提示旧补丁不完整或快照中断 | 保留错误和备份，修复原版安装或使用干净 Cursor，不要反复叠加补丁 |
+| 提示 `patch.lock` 被占用 | 等待正在进行的接入或恢复结束；若上次操作被强制中断，先确认没有接入或恢复进程并检查快照，再移除遗留锁后重试 |
+| 恢复后不再自动接入 | 这是主动恢复的预期行为；需要接入时手动运行一次 `setup` |
 
-插件页面只是使用说明，不会读取或显示账号密钥。它的“已连接 Magpie 页面”只表示页面 bridge 正常，不表示模型连接已成功。
+插件页面不读取或显示账号密钥。“已连接 Magpie 页面”只表示页面通信正常，不代表客户端补丁或模型连接已经成功。

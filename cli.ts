@@ -1,6 +1,8 @@
 #!/usr/bin/env bun
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { dataDirectory, PORT } from './src/connection'
+import { readFile } from 'node:fs/promises'
+import { join } from 'node:path'
 
 const command = process.argv[2] || 'help'
 try {
@@ -12,7 +14,10 @@ try {
     else { await restoreSnapshot(); console.log('Plugin patches restored; CCursor data and backups retained.') }
   } else if (command === 'status') {
     const { cursorStatus } = await import('./src/setup')
-    const result = { cursor: cursorStatus(), dataDir: dataDirectory(), bridge: 'offline' as any }
+    const dataDir = dataDirectory()
+    const auto = JSON.parse(await readFile(join(dataDir, 'auto-setup.json'), 'utf8').catch(() => 'null'))
+    const result = { cursor: cursorStatus(), dataDir, bridge: 'offline' as any,
+      autoSetup: auto ? { state: auto.state, updatedAt: auto.updatedAt, message: auto.message } : null }
     try {
       const health = await fetch(`http://127.0.0.1:${PORT}/health`, { signal: AbortSignal.timeout(1000) }).then(r => r.json()) as any
       result.bridge = health.magpieCcursor ? 'magpie-ccursor' : 'another service occupies the port'
@@ -29,7 +34,9 @@ bun cli.ts restore --cursor-closed  Restore only this plugin's patches
 bun cli.ts start                    Run bridge in foreground; Ctrl+C to stop
 
 Install the plugin in Magpie with github:Chekhovin/magpie-ccursor.
-Connect the CCursor Agent there before starting Cursor.
+Cursor hooks install automatically. Enable the CCursor Agent and assign models.
+If Cursor was already open during setup, restart it once.
+Manual restore pauses automatic setup until you run setup again.
 Source and license: https://github.com/Chekhovin/magpie-ccursor (AGPL-3.0-or-later)`)
   } else throw new Error(`Unknown command: ${command}. Run bun cli.ts --help.`)
 } catch (error) {

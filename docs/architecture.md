@@ -16,9 +16,9 @@ flowchart LR
 ## Magpie boundaries
 
 - `agent.mjs` exports `agent` and `connect`. The Agent has no `model` field: Cursor chooses from the full `models` list supplied by Magpie. Magpie writes and restores `~/.magpie-ccursor/connection.json`. The top-level `apiKey` string lets Magpie track connection ownership; an initially empty model list is allowed.
-- `index.ts` exports one OpenCode v1 plugin function. Its `config` hook starts a supervisor; it does not register a model provider or make Cursor patches.
+- `index.ts` exports one OpenCode v1 plugin function. Its `config` hook starts a supervisor. Automatic client setup runs in the supervised daemon rather than an install script.
 - `src/supervisor.ts` starts a dedicated Bun child with its own stdin pipe, forwards diagnostic stderr, and restarts unexpected exits with bounded backoff. Parent exit closes the pipe.
-- `src/daemon.ts` owns the standalone process and a PID lock, observes connection changes, writes derived providers, and runs the protocol server only while connected. An absent or malformed connection stops the server. No gateway request is made merely by connecting.
+- `src/daemon.ts` owns the standalone process and a PID lock. After acquiring the lock, it checks and installs Cursor hooks even before the Agent is connected. It observes connection changes, writes derived providers, and runs the protocol server only while connected. An absent or malformed connection stops the server. No gateway request is made merely by connecting.
 - `page/` uses the official `_magpie/bridge.js`. It displays setup instructions and requests no privileged read permissions.
 
 Magpie's documented mixed Agent/server entry support is checked against `internal/plugin/agent.go` and `internal/plugin/host.js`. Its `internal/agent/plugged.go` writes each `connect` key using `edit.KV`, stashes prior values, and restores/deletes them on disconnect.
@@ -35,11 +35,13 @@ Only `127.0.0.1` is bound. Provider changes clear SDK clients and push model-ref
 
 `connection.json` is Magpie-owned. `providers.json` is derived; it contains only the Magpie gateway key and assigned model metadata. The standalone server never reads `~/.ccursor` or dynamically loads code from an installed Cursor application. Conversation storage and runtime logs stay below `~/.magpie-ccursor`.
 
-The retained Cursor patch code may inspect a Cursor application only when the user explicitly runs `status`, `setup`, or `restore`. Existing hooks can connect on the upstream default port; new hooks use the separate data directory. The original installer entry points remain vendored for provenance, but the plugin CLI does not execute their extension installer, uninstall routine or defaults-release routine.
+The daemon inspects the local Cursor application for automatic setup and update recovery. The CLI also exposes `status`, `setup`, and `restore`. Existing complete hooks can connect on the upstream default port; new hooks use the separate data directory. The original installer entry points remain vendored for provenance, but the plugin does not execute their extension installer, uninstall routine or defaults-release routine.
 
 ## Patches
 
-`src/setup.ts` wraps selected upstream patch functions in an additional snapshot transaction. The complete pre-edit files and hashes are retained. Restore tolerates already-restored files and refuses unrelated changes. It does not remove the original CCursor extension or use its existing backups.
+`src/setup.ts` wraps selected upstream patch functions in an additional snapshot transaction. The complete pre-edit files and hashes are retained, including independent Agent Host network chunks. Restore tolerates already-restored files and refuses unrelated changes. It does not remove the original CCursor extension or use its existing backups.
+
+Automatic setup is independent of Agent connection state and is idempotent for a fully patched installation. Setup and restore share an exclusive `patch.lock`; an abandoned lock needs review rather than automatic deletion. A clean newer Cursor version gets its own snapshot; prior backups remain available. Unknown partial hooks and interrupted snapshots are not overwritten automatically. If the package version changes during patching, rollback is skipped to avoid copying old files over the updater's files. Manual restore pauses automatic setup until a subsequent manual setup. Patching changes files on disk and never closes Cursor: an already-running client must be restarted once to load the hooks. Errors are reported in `auto-setup.json` and logs without stopping the model bridge.
 
 ## Sources
 

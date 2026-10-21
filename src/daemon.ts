@@ -3,6 +3,7 @@ import { mkdir, readFile, open, unlink, stat } from 'node:fs/promises'
 import { join } from 'node:path'
 import { dataDirectory, PORT, readConnection, toProviders, writePrivateJSON } from './connection'
 import { startRuntime } from './runtime'
+import { createAutoSetup } from './auto-setup'
 
 const managed = process.argv[2] === '--managed'
 const dataDir = managed ? process.argv[3] : dataDirectory()
@@ -17,6 +18,7 @@ let stopped = false
 let previous = ''
 let lastError = ''
 let queue = Promise.resolve()
+const autoSetup = createAutoSetup({ dataDir })
 
 async function lock() {
   if (ownsLock) return true
@@ -48,6 +50,11 @@ async function lock() {
 
 async function reconcile() {
   if (stopped || !(await lock())) return
+  // Setup errors must never tear down a healthy bridge or depend on Agent credentials.
+  if (process.env.MAGPIE_CCURSOR_SKIP_AUTO_SETUP !== '1') {
+    try { await autoSetup() }
+    catch (error) { console.error(`Automatic Cursor setup error: ${error}`) }
+  }
   try {
     const providers = toProviders(await readConnection(dataDir))
     if (!providers) {

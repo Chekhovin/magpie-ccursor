@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { connect } from '../agent.mjs'
+import { createCursorFixture, sandboxEnvironment } from './fixtures/cursor'
 
 const children: ReturnType<typeof launch>[] = []
 const dirs: string[] = []
@@ -22,8 +23,10 @@ async function freePort() {
   await new Promise<void>(resolve => server.close(() => resolve()))
   return port
 }
-function launch(dir: string, port: number) {
-  const child = spawn(process.execPath, [fileURLToPath(new URL('../src/daemon.ts', import.meta.url)), '--managed', dir, String(port)], { stdio: ['pipe', 'ignore', 'pipe'], windowsHide: true })
+function launch(dir: string, port: number, autoSetup = false) {
+  const child = spawn(process.execPath, [fileURLToPath(new URL('../src/daemon.ts', import.meta.url)), '--managed', dir, String(port)], {
+    env: { ...sandboxEnvironment(dir), MAGPIE_CCURSOR_SKIP_AUTO_SETUP: autoSetup ? '0' : '1' },
+    stdio: ['pipe', 'ignore', 'pipe'], windowsHide: true })
   let logs = ''
   child.stderr.on('data', d => { logs += String(d) })
   const exit = new Promise<number | null>((resolve, reject) => { child.once('exit', resolve); child.once('error', reject) })
@@ -65,3 +68,41 @@ test('managed daemon connects, hands over, disconnects and exits with its parent
   second.child.stdin.end()
   expect(await second.exit).toBe(0)
 }, 45000)
+
+test('daemon installs Cursor hooks without Agent configuration and keeps one snapshot', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'magpie-auto-daemon-')); dirs.push(dir)
+  const { paths } = await createCursorFixture(join(dir, 'cursor'))
+  const running = launch(dir, await freePort(), true); children.push(running)
+  const statusFile = join(dir, 'auto-setup.json')
+  await until(async () => JSON.parse(await readFile(statusFile, 'utf8').catch(() => '{}')).state === 'ready', 'automatic setup did not complete')
+  expect(await readFile(paths.workbenchJs, 'utf8')).toContain('CURSOR-BYOK-HOOK-START')
+  expect(await readFile(join(paths.agentHostDist, 'network.js'), 'utf8')).toContain('__byokAgentWebSocketGateDisabled')
+  expect(JSON.parse(await readFile(statusFile, 'utf8')).restartRequired).toBe(true)
+  const manifest = await readFile(join(dir, 'patch-manifest.json'), 'utf8')
+  await sleep(2200)
+  expect(await readFile(join(dir, 'patch-manifest.json'), 'utf8')).toBe(manifest)
+  expect(running.logs().match(/Cursor hooks installed/g)).toHaveLength(1)
+  expect(running.child.exitCode).toBeNull()
+}, 15000)
+
+for (const failure of ['missing Cursor', 'patch failure']) {
+  test(`daemon keeps bridge running after ${failure} and does not retry each tick`, async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'magpie-auto-failure-')); dirs.push(dir)
+    if (failure === 'patch failure') {
+      const { paths } = await createCursorFixture(join(dir, 'cursor'))
+      await writeFile(paths.productJson, '{}')
+      await writeFile(paths.alwaysLocalMain, 'exports.activate=123;')
+    }
+    await writeFile(join(dir, 'connection.json'), JSON.stringify(connect({
+      gateway: { v1: 'http://127.0.0.1:1/v1', key: 'sandbox-only' }, models: [{ id: 'fixture/one' }],
+    })))
+    const port = await freePort(), running = launch(dir, port, true); children.push(running)
+    await until(async () => JSON.parse(await readFile(join(dir, 'auto-setup.json'), 'utf8').catch(() => '{}')).state === 'failed', 'failure status missing')
+    expect((await fetch(`http://127.0.0.1:${port}/health`).then(r => r.json()) as any).magpieCcursor).toBe(true)
+    const status = await readFile(join(dir, 'auto-setup.json'), 'utf8')
+    await sleep(2200)
+    expect(await readFile(join(dir, 'auto-setup.json'), 'utf8')).toBe(status)
+    expect(running.logs().match(/Automatic Cursor setup failed/g)).toHaveLength(1)
+    expect(running.child.exitCode).toBeNull()
+  }, 15000)
+}

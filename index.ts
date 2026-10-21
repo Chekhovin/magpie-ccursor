@@ -6,6 +6,7 @@ import { superviseBridge } from './src/supervisor'
 export default async function CCursorPlugin() {
   let supervisor: ReturnType<typeof superviseBridge> | undefined
   return {
-    config: async () => { supervisor ??= superviseBridge({ dataDir: dataDirectory() }) },
+    config: async () => { supervisor ??= superviseBridge({ dataDir: dataDirectory(),
+      port: process.env.MAGPIE_CCURSOR_PORT ? Number(process.env.MAGPIE_CCURSOR_PORT) : undefined }) },
   }
 }

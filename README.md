@@ -14,11 +14,11 @@ Cursor → 本机 CCursor 协议桥 (127.0.0.1:39831) → Magpie 网关 → 模�
 
 ## 快速上手
 
-完成下方的[安装与接入](#安装与接入)后，日常使用只需三步：
+在 Magpie 安装插件后，Cursor 的接入补丁也会自动安装，无需另外下载源码或运行安装命令：
 
-1. 在 Magpie 中打开 **Agent → CCursor**，启用连接并勾选要分配给 Cursor 的模型。
-2. 启动（或重启）Cursor，在模型选择器中切换到你刚分配的模型。
-3. 发送一条消息测试连通性：
+1. 在 Magpie 的插件页面添加 `github:Chekhovin/magpie-ccursor`。
+2. 打开 **Agent → CCursor**，启用连接并勾选要分配给 Cursor 的模型。
+3. 启动 Cursor，在模型选择器中选择模型。如果安装插件时 Cursor 已经打开，重启一次 Cursor 让补丁生效，然后发送一条测试消息：
 
    > 只回复「连接成功」。
 
@@ -46,29 +46,15 @@ github:Chekhovin/magpie-ccursor
 magpie plugin add github:Chekhovin/magpie-ccursor
 ```
 
-### 第二步：接入 Cursor 客户端
+### 第二步：启用 Agent，打开 Cursor
 
-Cursor 需要通过本地客户端补丁将请求指向 `127.0.0.1:39831`。请根据你的当前环境选择对应方式：
+插件首次加载时会查找本机 Cursor，备份原文件并自动安装接入补丁。已有完整补丁会直接复用。接入完成后，在 Magpie 中启用 **Agent → CCursor** 并分配模型，启动 Cursor 即可使用；如果 Cursor 已经打开，重启一次即可。
 
-#### 情况 A：尚未安装过 CCursor（干净的 Cursor）
+补丁安装失败时会回滚并在 Magpie 插件日志中说明原因。Cursor 更新后，插件会重新检查接入状态，并为符合条件的干净新版本重新备份、安装补丁。自定义安装位置或需要写入权限时，请参阅 [接入与恢复指南](docs/setup.md)。
 
-首次使用需要对 Cursor 打一次本地接入补丁。请在安装了 [Bun](https://bun.sh)（`>= 1.3.0`）的环境中，先**关闭全部 Cursor 窗口**，然后在终端执行：
+#### 已经使用原版 CCursor
 
-```sh
-git clone https://github.com/Chekhovin/magpie-ccursor.git
-cd magpie-ccursor
-bun install --frozen-lockfile --ignore-scripts
-bun cli.ts setup --cursor-closed
-```
-
-`setup` 会在修改前自动备份原文件，且不会安装原版 Cursor++ 扩展。完成后，先在 Magpie 中启用 CCursor 连接，再启动 Cursor。若日后升级了 Cursor 客户端，可能需要重新执行接入，详情请参阅 [接入与恢复指南](docs/setup.md)。
-
-#### 情况 B：本机已经安装过原版 CCursor
-
-如果你之前配置过原版 CCursor，且补丁连接的是默认地址 `127.0.0.1:39831`，无需重新打补丁即可直接复用：
-
-1. **停止原版 CCursor 服务并关闭其自动启动**，避免与本插件争用 `39831` 端口（保留原有的补丁与文件即可）。
-2. 在 Magpie 中启用 **Agent → CCursor** 连接，然后重启 Cursor。
+请先停止原版 CCursor 服务并关闭其自动启动，避免与本插件争用 `39831` 端口。原有安装文件可以保留。指向默认地址 `127.0.0.1:39831` 的完整客户端补丁可以继续使用。
 
 关于已有安装、自定义端口及补丁兼容性说明，请参阅 [接入与恢复指南](docs/setup.md)。
 
@@ -80,6 +66,7 @@ bun cli.ts setup --cursor-closed
 | --- | --- |
 | 查看桥接与补丁状态 | `bun cli.ts status`（不显示任何密钥） |
 | 前台运行协议桥（调试） | `bun cli.ts start`，按 `Ctrl+C` 停止 |
+| 手动重试接入 | 关闭全部 Cursor 窗口后执行 `bun cli.ts setup --cursor-closed` |
 | 还原 Cursor 客户端补丁 | 关闭全部 Cursor 窗口后执行 `bun cli.ts restore --cursor-closed` |
 | 供应商、模型与 Agent key | 在 Magpie 中管理供应商与密钥，在 **Agent → CCursor** 连接并分配模型 |
 | 本地配置与会话数据目录 | `~/.magpie-ccursor/`（独立存储，不读取或导入 `~/.ccursor`） |

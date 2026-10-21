@@ -10,7 +10,7 @@ This project contains code from **CometixSpace/CCursor (Cursor++)**, licensed un
 
 `vendor/server` originated from `Cursor++/src/server`. `vendor/installer` originated from `installer/src`. These copies came from a new Git clone, not from a locally installed CCursor. No personal credentials or user configuration were copied.
 
-Modifications replace the Cursor-specific SQLite binding with Bun SQLite, isolate data paths, manage standalone lifecycle and file watchers, close sessions and streams, clear caches between runtime instances, and identify the bridge in `/health`. New Magpie Agent/server entry points, lifecycle supervision, transactional patch setup, documentation, UI instructions and isolated tests were added. Installer defaults use `.magpie-ccursor`, and installer backups have a separate prefix.
+Modifications replace the Cursor-specific SQLite binding with Bun SQLite, isolate data paths, manage standalone lifecycle and file watchers, close sessions and streams, clear caches between runtime instances, and identify the bridge in `/health`. New Magpie Agent/server entry points, lifecycle supervision, automatic client setup with transactional backups, update recovery, documentation, UI instructions and isolated tests were added. Installer defaults use `.magpie-ccursor`, and installer backups have a separate prefix.
 
 The source listing and per-file SHA-256 comparison with the fresh upstream snapshot are recorded in [docs/upstream-changes.json](docs/upstream-changes.json). This records the modified and unchanged vendored files without copying installed software or user data.
 

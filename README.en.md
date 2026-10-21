@@ -14,11 +14,11 @@ Cursor → Local CCursor bridge (127.0.0.1:39831) → Magpie gateway → Model p
 
 ## Quick start
 
-Once you complete the [Installation and setup](#installation-and-setup) below, everyday usage takes three steps:
+Installing the plugin in Magpie also installs the Cursor client hooks automatically. You do not need to clone the repository or run setup commands:
 
-1. In Magpie, open **Agent → CCursor**, enable the connection, and select the models you want to expose to Cursor.
-2. Start (or restart) Cursor and pick one of the assigned models from the Cursor model picker.
-3. Send a quick test prompt to verify the connection:
+1. Add `github:Chekhovin/magpie-ccursor` on Magpie's plugin page.
+2. Open **Agent → CCursor**, enable the connection, and select the models you want to use.
+3. Start Cursor and choose a model from the model picker. If Cursor was open when you installed the plugin, restart it once to load the hooks, then send a test message:
 
    > Reply only with "Connected successfully".
 
@@ -46,29 +46,15 @@ Or install it via the Magpie CLI:
 magpie plugin add github:Chekhovin/magpie-ccursor
 ```
 
-### Step 2: Connect the Cursor client
+### Step 2: Enable the Agent and open Cursor
 
-Cursor needs local client hooks that route requests to `127.0.0.1:39831`. Follow the path that matches your setup:
+When Magpie first loads the plugin, it finds your local Cursor installation, backs up the original files, and installs the client hooks. Existing complete hooks are reused. Once setup finishes, enable **Agent → CCursor** in Magpie, assign models, and start Cursor. If Cursor is already open, restart it once.
 
-#### Option A: Fresh Cursor installation (not patched with CCursor yet)
+If setup fails, the plugin rolls back the changes and reports the reason in Magpie's plugin logs. After a Cursor update, it checks the hooks again and creates a new backup before patching an eligible clean version. For custom installation paths or write permissions, see the [Setup and recovery guide (Chinese)](docs/setup.md).
 
-If you have not patched Cursor before, apply the client hooks once. With [Bun](https://bun.sh) (`>= 1.3.0`) installed on your machine, **close all Cursor windows first**, then run in a terminal:
+#### Already using upstream CCursor
 
-```sh
-git clone https://github.com/Chekhovin/magpie-ccursor.git
-cd magpie-ccursor
-bun install --frozen-lockfile --ignore-scripts
-bun cli.ts setup --cursor-closed
-```
-
-`setup` backs up the original application files before patching and does not install the upstream Cursor++ extension. Once finished, enable the CCursor connection in Magpie and launch Cursor. Updating Cursor later may require running `setup` again; see the [Setup and recovery guide (Chinese)](docs/setup.md) for details.
-
-#### Option B: Already using upstream CCursor
-
-If you already patched Cursor with upstream CCursor and your hooks point to the default `127.0.0.1:39831` address, you can reuse your existing client patch without running `setup`:
-
-1. **Stop the original CCursor server and disable its auto-start** so it does not compete with this plugin for port `39831` (leave the existing patched files in place).
-2. Enable **Agent → CCursor** in Magpie, then restart Cursor.
+Stop the original CCursor server and disable its auto-start to prevent a conflict on port `39831`. You can keep the original installation files. Complete client hooks that point to the default `127.0.0.1:39831` address can still be used.
 
 For details on existing installations, custom ports, and patch compatibility, see the [Setup and recovery guide (Chinese)](docs/setup.md).
 
@@ -80,6 +66,7 @@ From a local clone of this repository, you can use `bun cli.ts` (requires [Bun](
 | --- | --- |
 | Check bridge and patch status | `bun cli.ts status` (no keys are printed) |
 | Run the bridge in the foreground (debug) | `bun cli.ts start`; press `Ctrl+C` to stop |
+| Retry client setup manually | Close all Cursor windows, then run `bun cli.ts setup --cursor-closed` |
 | Restore patched Cursor files | Close all Cursor windows, then run `bun cli.ts restore --cursor-closed` |
 | Providers, models, and Agent key | Manage providers and API keys in Magpie; connect and assign models under **Agent → CCursor** |
 | Local state and conversation database | `~/.magpie-ccursor/` (isolated; does not read or import `~/.ccursor`) |
