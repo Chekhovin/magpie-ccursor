@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { copyFile, mkdir, readFile, open, unlink } from 'node:fs/promises'
+import { copyFile, mkdir, readFile, realpath } from 'node:fs/promises'
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { createHash, randomUUID } from 'node:crypto'
 import { join, resolve } from 'node:path'
 import { dataDirectory, writePrivateJSON } from './connection'
+import { withPatchLock } from './patch-lock'
 import { findCursorPathsDetailed, formatDiagnostic } from '../vendor/installer/detect.js'
 import { isInjectPatched, isLocalLoopCompatible, isModelCatalogCompatible, patchInject } from '../vendor/installer/patch-inject.js'
 import { inspectAlwaysLocalPatch, patchAlwaysLocal } from '../vendor/installer/patch-always-local.js'
@@ -17,30 +18,27 @@ export interface CursorPaths {
   alwaysLocalSingletonJs: string, agentHostDist: string, agentHostMain: string,
   agentHostPackageJson: string, productJson: string,
 }
-export interface SetupOptions { dataDir?: string, appRoot?: string, paths?: CursorPaths, log?: (message: string) => void }
+export interface SetupOptions {
+  dataDir?: string, appRoot?: string, paths?: CursorPaths, log?: (message: string) => void,
+  /** Automatic setup must not override a user's explicit restore. */
+  automatic?: boolean,
+}
+export class AutomaticSetupPausedError extends Error {
+  constructor() { super('Automatic Cursor setup is paused after manual restore. Close Cursor and run setup explicitly to enable it again.'); this.name = 'AutomaticSetupPausedError' }
+}
 interface SnapshotEntry { file: string, backup: string, originalHash: string, patchedHash: string }
 interface Snapshot {
-  state: 'applying' | 'applied' | 'rolled-back' | 'restored', entries: SnapshotEntry[],
+  state: 'applying' | 'applied' | 'rolled-back' | 'restoring' | 'restored', entries: SnapshotEntry[],
   appRoot?: string, version?: string, packageHash?: string,
 }
 const digest = (data: Buffer) => createHash('sha256').update(data).digest('hex')
+const pathIdentity = (file: string) => process.platform === 'win32' ? resolve(file).toLowerCase() : resolve(file)
 
-async function withPatchLock<T>(directory: string, action: () => Promise<T>): Promise<T> {
-  await mkdir(directory, { recursive: true, mode: 0o700 })
-  const path = join(directory, 'patch.lock')
-  const owner = JSON.stringify({ pid: process.pid, token: randomUUID() })
-  let handle
-  try { handle = await open(path, 'wx', 0o600) }
-  catch (error: any) {
-    if (error.code !== 'EEXIST') throw error
-    // Never unlink a lock based on a PID probe: a concurrent owner could replace it.
-    throw new Error(`Another Cursor setup or restore is in progress, or a previous operation left ${path}. Retry after it finishes; if no setup or restore is running, review the snapshot before removing that lock.`)
-  }
-  try { await handle.writeFile(owner) }
-  catch (error) { await handle.close(); await unlink(path).catch(() => {}); throw error }
-  await handle.close()
-  try { return await action() }
-  finally { if (await readFile(path, 'utf8').catch(() => '') === owner) await unlink(path).catch(() => {}) }
+function checkSetupIntent(manifest: Snapshot | undefined, automatic?: boolean) {
+  if (automatic && (manifest?.state === 'restored' || manifest?.state === 'restoring'))
+    throw new AutomaticSetupPausedError()
+  if (manifest?.state === 'restoring')
+    throw new Error('Restore was interrupted. Finish restore before explicitly enabling setup again.')
 }
 
 // The upstream detector has no explicit-root argument; avoid changing process.env during setup.
@@ -89,25 +87,51 @@ export function cursorTargetFingerprint(options: SetupOptions = {}) {
   })])
 }
 
-async function readSnapshot(directory: string): Promise<Snapshot | undefined> {
+async function readSnapshot(directory: string, allowInterrupted = false): Promise<Snapshot | undefined> {
   let manifest: Snapshot
   try { manifest = JSON.parse(await readFile(join(directory, 'patch-manifest.json'), 'utf8')) }
   catch (error: any) {
     if (error.code === 'ENOENT') return
     throw new Error(`Patch snapshot is damaged; review patch-manifest.json and its backups: ${error.message}`)
   }
-  if (!manifest || !['applying', 'applied', 'rolled-back', 'restored'].includes(manifest.state)
+  if (!manifest || !['applying', 'applied', 'rolled-back', 'restoring', 'restored'].includes(manifest.state)
     || !Array.isArray(manifest.entries) || !manifest.entries.length
-    || manifest.entries.some(e => typeof e.file !== 'string' || typeof e.backup !== 'string'
-      || !/^[a-f0-9]{64}$/.test(e.originalHash) || (manifest.state === 'applied' && !/^[a-f0-9]{64}$/.test(e.patchedHash))))
+    || manifest.entries.some(e => !e || typeof e.file !== 'string' || typeof e.backup !== 'string'
+      || !/^[a-f0-9]{64}$/.test(e.originalHash) || (['applied', 'restoring'].includes(manifest.state) && !/^[a-f0-9]{64}$/.test(e.patchedHash)))
+    || new Set(manifest.entries.map(e => pathIdentity(e.file))).size !== manifest.entries.length)
     throw new Error('Patch snapshot is damaged; review patch-manifest.json and its backups.')
-  if (manifest.state === 'applying')
-    throw new Error('Setup was interrupted. Review patch-manifest.json and its backups before continuing.')
+  if (!allowInterrupted && (manifest.state === 'applying' || manifest.state === 'restoring'))
+    throw new Error('Setup or restore was interrupted. Review patch-manifest.json and its backups before continuing.')
   for (const entry of manifest.entries) {
     if (digest(await readFile(entry.backup)) !== entry.originalHash)
       throw new Error(`Backup verification failed: ${entry.backup}`)
   }
   return manifest
+}
+
+async function recoverCleanInterruptedSetup(directory: string, manifest: Snapshot, paths: CursorPaths,
+  state: 'rolled-back' | 'restored', log: (message: string) => void) {
+  if (!manifest.appRoot || manifest.version !== paths.cursorVersion || !manifest.packageHash
+    || pathIdentity(await realpath(manifest.appRoot)) !== pathIdentity(await realpath(paths.appRoot))
+    || digest(await readFile(join(paths.appRoot, 'package.json'))) !== manifest.packageHash)
+    throw new Error('Setup was interrupted for another Cursor version or location; no old files will be restored. Review its snapshot and backups.')
+  const files = cursorPatchFiles(paths).filter(existsSync)
+  const expected = new Set(files.map(pathIdentity))
+  if (manifest.entries.length !== files.length || manifest.entries.some(entry => !expected.has(pathIdentity(entry.file))))
+    throw new Error('Interrupted setup target set changed; review the snapshot before retrying.')
+  for (const entry of manifest.entries) {
+    if (digest(await readFile(entry.file)) !== entry.originalHash)
+      throw new Error(`Interrupted setup contains changed files: ${entry.file}. Automatic recovery will not overwrite them.`)
+  }
+  // A compatibility upgrade's "originals" can be old patched files. Only a clean baseline qualifies.
+  await assertCleanInstallation(paths, undefined, true)
+  if (digest(await readFile(join(paths.appRoot, 'package.json'))) !== manifest.packageHash)
+    throw new Error('Cursor changed during interrupted-setup verification.')
+  await writePrivateJSON(join(directory, `patch-history-${randomUUID()}.json`), manifest)
+  const recovered: Snapshot = { ...manifest, state }
+  await writePrivateJSON(join(directory, 'patch-manifest.json'), recovered)
+  log('Interrupted Cursor setup verified: every target still matches its clean original. Recovery record retained.')
+  return recovered
 }
 
 export async function snapshotTransaction(files: string[], directory: string, action: () => Promise<void> | void,
@@ -184,9 +208,14 @@ export async function restoreSnapshot(directory = dataDirectory()) {
 }
 
 async function restoreSnapshotLocked(directory: string) {
-  const manifest = await readSnapshot(directory)
+  const manifest = await readSnapshot(directory, true)
   if (!manifest) throw new Error('No Cursor patch snapshot found.')
-  if (manifest.state === 'restored' || manifest.state === 'rolled-back') return
+  if (manifest.state === 'restored') return
+  if (manifest.state === 'applying') {
+    if (!manifest.appRoot) throw new Error('Interrupted setup has no recorded Cursor location.')
+    await recoverCleanInterruptedSetup(directory, manifest, resolveCursorPaths({ appRoot: manifest.appRoot }), 'restored', () => {})
+    return
+  }
   if (manifest.appRoot && manifest.packageHash
     && digest(await readFile(join(manifest.appRoot, 'package.json'))) !== manifest.packageHash)
     throw new Error('Cursor changed version after setup; refusing to restore an older version. Run setup for the current clean installation first.')
@@ -195,8 +224,15 @@ async function restoreSnapshotLocked(directory: string) {
     if (current !== entry.patchedHash && current !== entry.originalHash)
       throw new Error(`Cursor changed after setup; refusing to overwrite ${entry.file}. Use the saved backup only after reviewing the change.`)
   }
-  for (const entry of manifest.entries) {
-    if (digest(await readFile(entry.file)) !== entry.originalHash) await copyFile(entry.backup, entry.file)
+  if (manifest.state !== 'rolled-back') {
+    // Persist manual intent before touching a target. Automatic setup must stay paused after a crash.
+    await writePrivateJSON(join(directory, 'patch-manifest.json'), { ...manifest, state: 'restoring' })
+    for (const entry of manifest.entries) {
+      const current = digest(await readFile(entry.file))
+      if (current !== entry.patchedHash && current !== entry.originalHash)
+        throw new Error(`Cursor changed during restore: ${entry.file}. No further files were restored.`)
+      if (current !== entry.originalHash) await copyFile(entry.backup, entry.file)
+    }
   }
   await writePrivateJSON(join(directory, 'patch-manifest.json'), { ...manifest, state: 'restored' })
 }
@@ -229,16 +265,20 @@ export async function setupCursor(options: SetupOptions = {}) {
   const directory = options.dataDir ?? dataDirectory()
   // No-op inspection does not own a write lock: transient hosts may exit during a large scan.
   // Keep damaged/interrupted snapshot validation before reporting a ready installation.
-  await readSnapshot(directory)
+  const manifest = await readSnapshot(directory, true)
+  checkSetupIntent(manifest, options.automatic)
   const status = cursorStatus(options)
-  if (status.ready) return { ...status, changed: false }
+  if (manifest?.state !== 'applying' && status.ready) return { ...status, changed: false }
   return withPatchLock(directory, () => setupCursorLocked({ ...options, dataDir: directory }))
 }
 
 async function setupCursorLocked(options: SetupOptions) {
   const directory = options.dataDir ?? dataDirectory(), log = options.log ?? console.log
   const paths = resolveCursorPaths(options)
-  const manifest = await readSnapshot(directory)
+  let manifest = await readSnapshot(directory, true)
+  checkSetupIntent(manifest, options.automatic)
+  if (manifest?.state === 'applying')
+    manifest = await recoverCleanInterruptedSetup(directory, manifest, paths, 'rolled-back', log)
   const status = cursorStatus({ paths })
   if (status.ready) return { ...status, changed: false }
   const files = cursorPatchFiles(paths).filter(existsSync)
@@ -257,6 +297,23 @@ async function setupCursorLocked(options: SetupOptions) {
     log('Cursor compatibility hooks updated. Restart any open Cursor window once to load the model and chat compatibility fixes.')
     return { ...cursorStatus({ paths }), changed: true }
   }
+  await assertCleanInstallation(paths, manifest)
+  await snapshotTransaction(files, directory, () => {
+    patchInject(paths, log)
+    patchAlwaysLocal(paths, log)
+    patchAgentHost(paths, log)
+    patchProxy39(paths, log)
+    patchKatex(paths, log)
+    const verified = cursorStatus({ paths })
+    if (!verified.ready) throw new Error(`Cursor hook verification failed (missing or incompatible installation files): ${JSON.stringify(verified)}`)
+    if (digest(readFileSync(join(paths.appRoot, 'package.json'))) !== packageHash) throw new Error('Cursor changed version during setup.')
+  }, { appRoot: paths.appRoot, version: paths.cursorVersion, packageHash })
+  log('Cursor hooks installed. If Cursor is open, restart it once to load the hooks; enable the CCursor Agent in Magpie to use its models.')
+  return { ...cursorStatus({ paths }), changed: true }
+}
+
+async function assertCleanInstallation(paths: CursorPaths, manifest?: Snapshot, requireChecksums = false) {
+  const files = cursorPatchFiles(paths).filter(existsSync)
   for (const file of files) {
     if (!/\.(?:js|html)$/.test(file)) continue
     const source = readFileSync(file, 'utf8')
@@ -275,22 +332,17 @@ async function setupCursorLocked(options: SetupOptions) {
     }
   }
   const product = JSON.parse(readFileSync(paths.productJson, 'utf8'))
+  const checked = new Set<string>()
   for (const [relative, expected] of Object.entries(product.checksums ?? {})) {
     const file = join(paths.appRoot, 'out', relative)
     if (!files.includes(file)) continue
     const actual = createHash('sha256').update(await readFile(file)).digest('base64').replace(/=+$/, '')
     if (actual !== expected) throw new Error(`Cursor checksum mismatch (possibly an update in progress): ${file}. No files were changed.`)
+    checked.add(pathIdentity(file))
   }
-  await snapshotTransaction(files, directory, () => {
-    patchInject(paths, log)
-    patchAlwaysLocal(paths, log)
-    patchAgentHost(paths, log)
-    patchProxy39(paths, log)
-    patchKatex(paths, log)
-    const verified = cursorStatus({ paths })
-    if (!verified.ready) throw new Error(`Cursor hook verification failed (missing or incompatible installation files): ${JSON.stringify(verified)}`)
-    if (digest(readFileSync(join(paths.appRoot, 'package.json'))) !== packageHash) throw new Error('Cursor changed version during setup.')
-  }, { appRoot: paths.appRoot, version: paths.cursorVersion, packageHash })
-  log('Cursor hooks installed. If Cursor is open, restart it once to load the hooks; enable the CCursor Agent in Magpie to use its models.')
-  return { ...cursorStatus({ paths }), changed: true }
+  // Cursor 3.27 ships no Glass checksum. Its bytes must still match the verified
+  // same-version snapshot; require the two stable checksums present in real releases.
+  if (requireChecksums && [paths.workbenchJs, paths.extensionHostJs]
+    .some(file => !checked.has(pathIdentity(file))))
+    throw new Error('Interrupted setup lacks the required Cursor baseline checksums; automatic recovery was refused.')
 }

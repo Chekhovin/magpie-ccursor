@@ -2,10 +2,11 @@
 import { readFile, stat } from 'node:fs/promises'
 import { join } from 'node:path'
 import { writePrivateJSON } from './connection'
-import { cursorTargetFingerprint, resolveCursorPaths, setupCursor, type SetupOptions } from './setup'
+import { AutomaticSetupPausedError, cursorTargetFingerprint, resolveCursorPaths, setupCursor, type SetupOptions } from './setup'
+import { PatchBusyError } from './patch-lock'
 
 export interface AutoSetupStatus {
-  state: 'ready' | 'failed' | 'paused', updatedAt: string, fingerprint: string,
+  state: 'ready' | 'failed' | 'paused' | 'waiting', updatedAt: string, fingerprint: string,
   appRoot?: string, version?: string, restartRequired: boolean, message: string,
 }
 
@@ -25,7 +26,7 @@ export function createAutoSetup(options: SetupOptions & {
     // Manual restore/setup changes intent even if the Cursor installation itself is unchanged.
     const snapshot = await stat(join(dataDir, 'patch-manifest.json')).catch(() => undefined)
     const lock = await stat(join(dataDir, 'patch.lock')).catch(() => undefined)
-    return JSON.stringify(['renderer-model-catalog-v1', target, snapshot?.mtimeMs, snapshot?.ctimeMs, snapshot?.size, lock?.mtimeMs, lock?.size])
+    return JSON.stringify(['cursor-recovery-v2', target, snapshot?.mtimeMs, snapshot?.ctimeMs, snapshot?.size, lock?.mtimeMs, lock?.size])
   }
   return async function reconcileAutoSetup() {
     if (now() < nextCheck) return
@@ -45,28 +46,33 @@ export function createAutoSetup(options: SetupOptions & {
     let paths: ReturnType<typeof resolveCursorPaths> | undefined
     try {
       const snapshot = JSON.parse(await readFile(join(dataDir, 'patch-manifest.json'), 'utf8').catch(() => 'null'))
-      if (snapshot?.state === 'restored') {
+      if (snapshot?.state === 'restored' || snapshot?.state === 'restoring') {
         const message = 'Automatic Cursor setup is paused after manual restore. To enable it again, close Cursor and run: magpie-ccursor setup --cursor-closed'
         if (previous?.state !== 'paused') log(message)
         status = { state: 'paused', updatedAt: new Date().toISOString(), fingerprint: target,
           appRoot: snapshot.appRoot, version: snapshot.version, restartRequired: false, message }
       } else {
         paths = resolveCursorPaths(options)
-        const result = await setupCursor({ ...options, paths, log })
+        const result = await setupCursor({ ...options, paths, log, automatic: true })
         status = { state: 'ready', updatedAt: new Date().toISOString(), fingerprint: await fingerprint(),
           appRoot: paths.appRoot, version: paths.cursorVersion,
           restartRequired: result.changed || (previous?.restartRequired === true && previous.fingerprint === target),
           message: result.changed ? 'Cursor hooks installed. Restart any open Cursor window once, then enable the CCursor Agent in Magpie.' : 'Cursor hooks are ready.' }
       }
     } catch (error) {
-      const message = `Automatic Cursor setup failed: ${error instanceof Error ? error.message : String(error)} Waiting for the Cursor installation to change; manual setup can retry after the cause is fixed.`
-      log(message)
-      status = { state: 'failed', updatedAt: new Date().toISOString(), fingerprint: await fingerprint(),
+      const state = error instanceof PatchBusyError ? 'waiting' : error instanceof AutomaticSetupPausedError ? 'paused' : 'failed'
+      const detail = error instanceof Error ? error.message : String(error)
+      const message = state === 'waiting' ? `Automatic Cursor setup is waiting: ${detail} It will retry automatically.`
+        : state === 'paused' ? detail
+        : `Automatic Cursor setup failed: ${detail} Waiting for the Cursor installation to change; manual setup can retry after the cause is fixed.`
+      if (state !== previous?.state || message !== previous?.message) log(message)
+      status = { state, updatedAt: new Date().toISOString(), fingerprint: await fingerprint(),
         appRoot: paths?.appRoot, version: paths?.cursorVersion, restartRequired: false, message }
     }
-    completed = status.fingerprint
+    // Kernel guard contention can end without any file metadata changing.
+    completed = status.state === 'waiting' ? '' : status.fingerprint
     previous = status
-    nextCheck = now() + checkIntervalMs
+    nextCheck = now() + (status.state === 'waiting' ? Math.min(checkIntervalMs, 5000) : checkIntervalMs)
     try { await writePrivateJSON(statusPath, status) }
     catch (error) { log(`Cannot write automatic Cursor setup status (${statusPath}): ${error}`) }
   }

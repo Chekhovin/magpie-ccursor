@@ -199,7 +199,7 @@ test('automatic and manual operations share a lock and retry once its owner rele
   let clock = 0
   const reconcile = createAutoSetup({ ...f, now: () => clock, settleMs: 0, checkIntervalMs: 1 })
   await reconcile()
-  expect(JSON.parse(await readFile(join(f.dataDir, 'auto-setup.json'), 'utf8')).state).toBe('failed')
+  expect(JSON.parse(await readFile(join(f.dataDir, 'auto-setup.json'), 'utf8')).state).toBe('waiting')
   for (const [file, source] of f.sources) expect(await readFile(file, 'utf8')).toBe(source)
   await rm(lockPath)
   clock++
@@ -231,15 +231,20 @@ test('upgrading plugin hooks retains clean originals and rolls failure back to t
   for (const [file, source] of f.sources) expect(await readFile(file, 'utf8')).toBe(source)
 })
 
-test('concurrent operations never reclaim an abandoned patch lock', async () => {
+test('concurrent operations serialize recovery of a verified abandoned patch lock', async () => {
   const f = await fixture()
   await mkdir(f.dataDir)
   const lockPath = join(f.dataDir, 'patch.lock')
   const orphan = JSON.stringify({ pid: 2147483647, token: 'orphan' })
   await writeFile(lockPath, orphan)
-  const results = await Promise.allSettled([setupCursor(f), setupCursor(f), restoreSnapshot(f.dataDir)])
-  expect(results.every(result => result.status === 'rejected')).toBe(true)
-  expect(await readFile(lockPath, 'utf8')).toBe(orphan)
+  const results = await Promise.allSettled([setupCursor(f), setupCursor(f)])
+  expect(results.some(result => result.status === 'fulfilled')).toBe(true)
+  expect(cursorStatus(f).ready).toBe(true)
+  const evidence = (await readdir(f.dataDir)).filter(name => name.startsWith('patch.lock.stale-'))
+  expect(evidence).toHaveLength(1)
+  expect(await readFile(join(f.dataDir, evidence[0]), 'utf8')).toBe(orphan)
+  await expect(readFile(lockPath)).rejects.toThrow()
+  await restoreSnapshot(f.dataDir)
   for (const [file, source] of f.sources) expect(await readFile(file, 'utf8')).toBe(source)
 })
 

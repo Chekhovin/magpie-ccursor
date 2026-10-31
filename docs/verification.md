@@ -26,7 +26,7 @@ Result for **0.2.4**: **73 tests passed, 0 failed**, with 510 assertions across 
 | Automatic setup | A managed daemon installs hooks before Agent connection; complete hooks reuse one snapshot; failed targets wait for changes without stopping the bridge |
 | Shutdown during setup | A real daemon with its first backup copy delayed by 5.5 seconds completes setup after parent stdin closes, exits successfully, and releases both patch and bridge locks |
 | Upgrade and recovery | Clean updates get separate snapshots; partial hooks, checksum mismatches and damaged backups are refused; manual restore pauses automatic setup |
-| Concurrent operations | Setup writes and restore share an exclusive patch lock; ready-only inspection preserves existing locks without acquiring one; abandoned locks are not reclaimed automatically; detected external version changes preserve the updater's files |
+| Concurrent operations | In 0.2.4, setup and restore shared an exclusive file lock and required manual abandoned-lock review. The 0.2.6 recovery changes are recorded below. Ready-only inspection remains lock-free; detected external version changes preserve updater files |
 | Protocol selection | Actual desktop/glass capability method shapes select Connect when BYOK is enabled and restore official gates when disabled; a single routes SSE connection updates the choice |
 | Default model | Cursor's reserved `default` uses the assigned default exposed by all feature configs and `GetDefaultModel`; explicit IDs retain precedence and unknown IDs are rejected. Both explicit and Auto requests traverse real RunSSE/BidiAppend to mock OpenAI SSE |
 | Window catalog | Captured services synchronize models, picker display and feature defaults from a marked bridge response; tests cover stale overwrite repair, shared storage, own-key cache, OFF/disconnect restoration, late replies, empty catalogs, malformed hooks and upgrade idempotency |
@@ -63,11 +63,23 @@ Official `internal/agent/plugged.go` was inspected to verify `connect()` values 
 - Web-to-Markdown: upstream optional `supermarkdown` native platform packages returned 404 during dependency installation.
 - Full upstream test suite. It contains installed-Cursor probes and is intentionally excluded from this package's test command.
 
-The GitHub CI checks Windows and Linux after publication; its results must be read separately from the local results above. Unit tests and fixture success do not establish real-client compatibility.
+The GitHub CI originally checked Windows and Linux; 0.2.6 also includes macOS. Results must be read separately from the local results above. Unit tests and fixture success do not establish real-client compatibility.
 
 ## 0.2.5 documentation and page removal
 
 After the 0.2.4 deployment, the user confirmed that the reported Agents-window problem was resolved. This is user-reported confirmation; it does not add coverage for every model or tool.
 
 Version 0.2.5 updates both READMEs and removes the standalone Magpie page registration and all three page assets. Agent and server registration remain. Package-entry and documentation-link checks, bilingual structure/command/link parity, and a package dry run passed; the package contains both READMEs and no page files. The official host smoke test passed without a page registration, including automatic Cursor setup, bridge recovery and shutdown. Runtime behavior is unchanged apart from the versioned User-Agent string; the 73-test result above belongs to 0.2.4.
+
+## 0.2.6 update recovery (2026-10-31)
+
+Windows with Magpie's Bun 1.4.3: **119 tests passed, 0 failed, 847 assertions across ten files**. Package entry and documentation-link checks passed. The initial full-suite runner was stopped by a 55-second harness timeout after 91 passing checks and no assertion failures; the subsequent recorded run completed in 63.55 seconds with exit code 0.
+
+New process-level cases kill a CLI after its `applying` manifest is committed but before target writes, then verify automatic recovery and preservation of the interrupted record and original backups. Killing after an unrecorded target change remains blocked without further writes. Restore is interrupted both before and after its first target copy; the durable manual intent prevents automatic reapplication, and explicit restore finishes safely.
+
+The lock tests cover separate processes, two competing recoverers, forced exit, an old writer winning the file-lock race, fixed-port collisions, directory aliases, malformed/live owners, PID probe errors, and incomplete temporary cleanup. Automatic setup retries a busy guard with unchanged files, including across daemon restarts. A controlled race verifies that manual restore winning before automatic lock acquisition leaves the installation paused. Invalid/missing/duplicate entries, corrupt backups, checksum failures, changed targets and cross-version interrupted snapshots stay blocked.
+
+A separate **Cursor 3.27.22** copy (59 patch targets plus two package metadata files) was built from verified original backups. A real child was terminated after committing the recovery manifest; the new reconciler archived the abandoned owner and recovered to `ready`. Repeated setup changed nothing; restore returned every target to its original hash, and interrupted history was retained. This release does not require a Glass product checksum because the actual version omits it; tests still reject mismatched provided checksums and altered Glass bytes. The full real-copy harness exceeded its 55-second tool limit after reaching `ready`; a continuation verified the same sandbox's no-op and restore behavior, then removed it. No live Cursor file was changed by these tests.
+
+Independent read-only reviews found no blocking issues. These results cover process termination, not power-loss durability or arbitrary future Cursor protocol changes. A clean completed Cursor update receives its own snapshot as before; automatic recovery of an interrupted older-version snapshot remains deliberately unsupported. CI results and local deployment must be checked separately.
 

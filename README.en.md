@@ -53,7 +53,9 @@ If CCursor does not appear on Magpie's Agent page immediately after installation
 
 When Magpie first loads the plugin, it locates your local Cursor installation, backs up the original files, and installs the client hooks. All configuration lives in **Agent → CCursor**—once enabled with models assigned, open Cursor to start using them. If Cursor was running during plugin installation or update, quit Cursor completely and reopen it.
 
-Earlier hooks backed up and managed by this plugin are upgraded automatically. If setup fails, the plugin rolls back the changes and reports the reason in Magpie's plugin logs. After a Cursor update, it checks the installation again and backs up and patches an eligible clean version. For custom installation paths or write permissions, see the [Setup and recovery guide (Chinese)](docs/setup.md).
+Earlier hooks backed up and managed by this plugin are upgraded automatically. Keep Magpie running after a Cursor update: the plugin checks the installation, backs up the new version, and reapplies compatible hooks. If setup exits unexpectedly while the current version's files still match their complete backups, it recovers and retries automatically. It also retries after another setup operation finishes. Once setup is complete, quit Cursor fully and reopen it; your model assignments stay in place.
+
+If a new Cursor release changes its interfaces, or files have been partially modified, the plugin retains the backups and reports the problem while awaiting a compatibility fix. It never restores older-version files over a new installation. For custom paths, write permissions, and recovery, see the [Setup and recovery guide (Chinese)](docs/setup.md).
 
 #### Already using upstream CCursor
 
