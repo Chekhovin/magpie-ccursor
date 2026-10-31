@@ -148,7 +148,7 @@ test('patch-inject preflights both renderers and refuses unknown or partial hook
   const original = readFileSync(f.paths.workbenchJs, 'utf8')
   expect(() => patch(f)).toThrow(/local-loop/)
   expect(readFileSync(f.paths.workbenchJs, 'utf8')).toBe(original)
-  expect(readdirSync(join(f.paths.appRoot, 'out'))).toEqual(['desktop.js', 'glass.js'])
+  expect(readdirSync(join(f.paths.appRoot, 'out')).sort()).toEqual(['desktop.js', 'glass.js'])
   writeFileSync(f.paths.glassJs, renderer('glass'))
   patch(f)
   const good = readFileSync(f.paths.workbenchJs, 'utf8')
