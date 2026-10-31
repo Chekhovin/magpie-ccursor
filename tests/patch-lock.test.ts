@@ -187,7 +187,7 @@ for (const owner of invalidOwners) {
     await utimes(path, new Date(0), new Date(0))
     await busy(await start(dir))
     expect(await readFile(path, 'utf8')).toBe(owner)
-    expect(await readdir(dir)).toEqual(['patch.lock', 'snapshot-sentinel'])
+    expect((await readdir(dir)).sort()).toEqual(['patch.lock', 'snapshot-sentinel'])
     expect(await readFile(join(dir, 'snapshot-sentinel'), 'utf8')).toBe('unchanged snapshot')
   })
 }
