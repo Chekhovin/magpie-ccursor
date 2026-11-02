@@ -35,7 +35,7 @@ Only `127.0.0.1` is bound. Provider changes clear SDK clients and push model-ref
 
 `connection.json` is Magpie-owned. `providers.json` is derived; it contains only the Magpie gateway key and assigned model metadata. The standalone server never reads `~/.ccursor` or dynamically loads code from an installed Cursor application. Conversation storage and runtime logs stay below `~/.magpie-ccursor`.
 
-The daemon inspects the local Cursor application for automatic setup and update recovery. The CLI also exposes `status`, `setup`, and `restore`. Existing complete hooks can connect on the upstream default port; new hooks use the separate data directory. The original installer entry points remain vendored for provenance, but the plugin does not execute their extension installer, uninstall routine or defaults-release routine.
+The daemon inspects the local Cursor application for automatic setup and update recovery. The CLI also exposes `status`, `setup`, and `restore`. Existing complete hooks can connect on the upstream default port; new hooks use the separate data directory. Only the upstream installer modules used by the plugin are retained; the original extension installer, uninstall routine and defaults-release routine are not included.
 
 ## Patches
 

@@ -61,13 +61,6 @@
       "modified": true
     },
     {
-      "path": "vendor/server/config.ts",
-      "upstream": "Cursor++/src/server/config.ts",
-      "upstreamSha256": "496218223cab7192c597a568f6c26f9a865165b3c751e15eab53b695890fedfd",
-      "sha256": "496218223cab7192c597a568f6c26f9a865165b3c751e15eab53b695890fedfd",
-      "modified": false
-    },
-    {
       "path": "vendor/server/data/defaults.ts",
       "upstream": "Cursor++/src/server/data/defaults.ts",
       "upstreamSha256": "192627e7f12e1f7356943c4c10d53f869426886420308b43e17a7a0bae7dd6a0",
@@ -131,13 +124,6 @@
       "modified": false
     },
     {
-      "path": "vendor/server/gen/google_rpc_pb.ts",
-      "upstream": "Cursor++/src/server/gen/google_rpc_pb.ts",
-      "upstreamSha256": "454cd9257f8e6b67c550fe4da687420d91fc72c084b87bc7202e859244a06147",
-      "sha256": "454cd9257f8e6b67c550fe4da687420d91fc72c084b87bc7202e859244a06147",
-      "modified": false
-    },
-    {
       "path": "vendor/server/gen/internapi_v1_pb.ts",
       "upstream": "Cursor++/src/server/gen/internapi_v1_pb.ts",
       "upstreamSha256": "99b23d2b3d49a0ccb2bf1384eee06e17a928aac1d835e1a658a4ff77473bfab3",
@@ -187,20 +173,6 @@
       "modified": false
     },
     {
-      "path": "vendor/server/handlers/agent/compactLocal.ts",
-      "upstream": "Cursor++/src/server/handlers/agent/compactLocal.ts",
-      "upstreamSha256": "9c5bdcf533cfcdd4c077466e9fdfe05a54703b4632d42afa54d45723530ce7ec",
-      "sha256": "9c5bdcf533cfcdd4c077466e9fdfe05a54703b4632d42afa54d45723530ce7ec",
-      "modified": false
-    },
-    {
-      "path": "vendor/server/handlers/agent/compactRemote.ts",
-      "upstream": "Cursor++/src/server/handlers/agent/compactRemote.ts",
-      "upstreamSha256": "d1c8203a4566794196f8a24c1a6e39fdc561257678df778eb0b5e434f0a578b5",
-      "sha256": "d1c8203a4566794196f8a24c1a6e39fdc561257678df778eb0b5e434f0a578b5",
-      "modified": false
-    },
-    {
       "path": "vendor/server/handlers/agent/constants.ts",
       "upstream": "Cursor++/src/server/handlers/agent/constants.ts",
       "upstreamSha256": "18133124f095319b81077849ad921051cef10d2c7ff8654b1e3b35e60446a562",
@@ -215,13 +187,6 @@
       "modified": false
     },
     {
-      "path": "vendor/server/handlers/agent/conversation.ts",
-      "upstream": "Cursor++/src/server/handlers/agent/conversation.ts",
-      "upstreamSha256": "4f24c437b300a5678547c52c93ba1e10f38ada133642ff74a454cc3af0aa25fa",
-      "sha256": "4f24c437b300a5678547c52c93ba1e10f38ada133642ff74a454cc3af0aa25fa",
-      "modified": false
-    },
-    {
       "path": "vendor/server/handlers/agent/conversationRuntime.ts",
       "upstream": "Cursor++/src/server/handlers/agent/conversationRuntime.ts",
       "upstreamSha256": "1a79cbc66308d2e59d6fc7d7a9dcb1ef8b288f174547714483aec1a74ac25b1c",
@@ -233,27 +198,6 @@
       "upstream": "Cursor++/src/server/handlers/agent/cursorTools.ts",
       "upstreamSha256": "68c09a70accb081ff87c88cffbbe24580bd5b8378456dbc818a81b390bd39a24",
       "sha256": "68c09a70accb081ff87c88cffbbe24580bd5b8378456dbc818a81b390bd39a24",
-      "modified": false
-    },
-    {
-      "path": "vendor/server/handlers/agent/database/blobs.ts",
-      "upstream": "Cursor++/src/server/handlers/agent/database/blobs.ts",
-      "upstreamSha256": "73518ed2f472b706c66edbaeaa46ddf7f1fdb69aca5220518c139518c57de03a",
-      "sha256": "73518ed2f472b706c66edbaeaa46ddf7f1fdb69aca5220518c139518c57de03a",
-      "modified": false
-    },
-    {
-      "path": "vendor/server/handlers/agent/database/checkpoints.ts",
-      "upstream": "Cursor++/src/server/handlers/agent/database/checkpoints.ts",
-      "upstreamSha256": "7ec3c41822f13b912a3b0eb532a2c04045af6eab1c7326f2f66064656950690d",
-      "sha256": "7ec3c41822f13b912a3b0eb532a2c04045af6eab1c7326f2f66064656950690d",
-      "modified": false
-    },
-    {
-      "path": "vendor/server/handlers/agent/database/sqlite.ts",
-      "upstream": "Cursor++/src/server/handlers/agent/database/sqlite.ts",
-      "upstreamSha256": "049a8d4aa963b9ed6e7cf169841aa12185b9a8b6c984e3d88eb877df3e88a788",
-      "sha256": "049a8d4aa963b9ed6e7cf169841aa12185b9a8b6c984e3d88eb877df3e88a788",
       "modified": false
     },
     {
@@ -292,13 +236,6 @@
       "modified": false
     },
     {
-      "path": "vendor/server/handlers/agent/index.ts",
-      "upstream": "Cursor++/src/server/handlers/agent/index.ts",
-      "upstreamSha256": "3b83c316206f39e9196ae63c74ccf41f2a804432a4d7b3770826f1581902c9d7",
-      "sha256": "3b83c316206f39e9196ae63c74ccf41f2a804432a4d7b3770826f1581902c9d7",
-      "modified": false
-    },
-    {
       "path": "vendor/server/handlers/agent/interactionRuntime.ts",
       "upstream": "Cursor++/src/server/handlers/agent/interactionRuntime.ts",
       "upstreamSha256": "0e2e202d77d8951f236840b79dde526b5a403b04abfe68add733f037e8362e11",
@@ -310,13 +247,6 @@
       "upstream": "Cursor++/src/server/handlers/agent/mcpState.ts",
       "upstreamSha256": "e97d3f89c18fb9bca37cb27b071d854fbf244414d73eec2178611c3d48f7ad1f",
       "sha256": "e97d3f89c18fb9bca37cb27b071d854fbf244414d73eec2178611c3d48f7ad1f",
-      "modified": false
-    },
-    {
-      "path": "vendor/server/handlers/agent/persistence.ts",
-      "upstream": "Cursor++/src/server/handlers/agent/persistence.ts",
-      "upstreamSha256": "832e86a4ef8374e982701f359a64fbd1a274b2ca82308d7ae619068187e3f8f3",
-      "sha256": "832e86a4ef8374e982701f359a64fbd1a274b2ca82308d7ae619068187e3f8f3",
       "modified": false
     },
     {
@@ -838,13 +768,6 @@
       "modified": false
     },
     {
-      "path": "vendor/server/handlers/llm/conversationPolicy.ts",
-      "upstream": "Cursor++/src/server/handlers/llm/conversationPolicy.ts",
-      "upstreamSha256": "8cae5f297380c17a929b3738948382b76c7e5fca4b9da4ef4e29c391f01d12f1",
-      "sha256": "8cae5f297380c17a929b3738948382b76c7e5fca4b9da4ef4e29c391f01d12f1",
-      "modified": false
-    },
-    {
       "path": "vendor/server/handlers/llm/gemini.ts",
       "upstream": "Cursor++/src/server/handlers/llm/gemini.ts",
       "upstreamSha256": "b54780abe449067001088efb5a2c74cb789e9d0f156746910a1be651a6101ba0",
@@ -971,13 +894,6 @@
       "modified": true
     },
     {
-      "path": "vendor/server/handlers/models/upstream.ts",
-      "upstream": "Cursor++/src/server/handlers/models/upstream.ts",
-      "upstreamSha256": "dec36dc3cdc58663d50dbb5e3f52d9fb90cc72608dbb6869cda190f599daca03",
-      "sha256": "dec36dc3cdc58663d50dbb5e3f52d9fb90cc72608dbb6869cda190f599daca03",
-      "modified": false
-    },
-    {
       "path": "vendor/server/handlers/server/config.ts",
       "upstream": "Cursor++/src/server/handlers/server/config.ts",
       "upstreamSha256": "4c14aaa6234d5a7dff85683ea02901e6b86cdbb9c5a3f8942602a69079f5555d",
@@ -997,13 +913,6 @@
       "upstreamSha256": "b8f5278243cbdce04eb6be3e4a2bede79b86f73023656f73f77bd216d3d4d025",
       "sha256": "906c8fea3d9fc838cd4134d009970dea5ba1f13a81ef88e25bc231f003681836",
       "modified": true
-    },
-    {
-      "path": "vendor/server/routes.ts",
-      "upstream": "Cursor++/src/server/routes.ts",
-      "upstreamSha256": "9fedde6f589c986169b83c039721e35ee489d07c2ff3b1aa75dffdd3c86a5cd8",
-      "sha256": "9fedde6f589c986169b83c039721e35ee489d07c2ff3b1aa75dffdd3c86a5cd8",
-      "modified": false
     },
     {
       "path": "vendor/server/runtime-config.ts",
@@ -1524,31 +1433,10 @@
       "modified": true
     },
     {
-      "path": "vendor/installer/build-vsix.js",
-      "upstream": "installer/src/build-vsix.js",
-      "upstreamSha256": "b7270ef8684de359d10098bd41f474d3c8e90f9752924f4e3d4ab096e300ab70",
-      "sha256": "b7270ef8684de359d10098bd41f474d3c8e90f9752924f4e3d4ab096e300ab70",
-      "modified": false
-    },
-    {
-      "path": "vendor/installer/check.js",
-      "upstream": "installer/src/check.js",
-      "upstreamSha256": "23d4b5aa62e75679cc9179d655b1de6a550ea0b1fdc9dcde0d7e03d17844cd85",
-      "sha256": "23d4b5aa62e75679cc9179d655b1de6a550ea0b1fdc9dcde0d7e03d17844cd85",
-      "modified": false
-    },
-    {
       "path": "vendor/installer/checksum.js",
       "upstream": "installer/src/checksum.js",
       "upstreamSha256": "8e584942b34808553d639c09583d84ccea69e565e7089ffe1ee8ca9a77b4a6f6",
       "sha256": "8e584942b34808553d639c09583d84ccea69e565e7089ffe1ee8ca9a77b4a6f6",
-      "modified": false
-    },
-    {
-      "path": "vendor/installer/cli.js",
-      "upstream": "installer/src/cli.js",
-      "upstreamSha256": "d1b9f54be9f6d35d00eb7b6e3254fd2dd98d96cfdefcab621762b6e7940f30bf",
-      "sha256": "d1b9f54be9f6d35d00eb7b6e3254fd2dd98d96cfdefcab621762b6e7940f30bf",
       "modified": false
     },
     {
@@ -1566,32 +1454,11 @@
       "modified": false
     },
     {
-      "path": "vendor/installer/extension-embed.js",
-      "upstream": "installer/src/extension-embed.js",
-      "upstreamSha256": "2f4f3abb8683a07d98a851a3f96b9cbe6f6aa677830d3927e1756c2092db3080",
-      "sha256": "2f4f3abb8683a07d98a851a3f96b9cbe6f6aa677830d3927e1756c2092db3080",
-      "modified": false
-    },
-    {
-      "path": "vendor/installer/install.js",
-      "upstream": "installer/src/install.js",
-      "upstreamSha256": "74e9fed5c3ce23fcae0e3981f35bf040f82e48b3030d14980d83ab5f6afcf774",
-      "sha256": "fc14812a364add585f58d9101f16503f8dddd481ee63eb8122ede9d801af1d7f",
-      "modified": true
-    },
-    {
       "path": "vendor/installer/node-http11-router.js",
       "upstream": "installer/src/node-http11-router.js",
       "upstreamSha256": "c52f6af4653f69cf20acc96681b53e87c7d76d9a4e76b05c61ef13b62863ff32",
       "sha256": "efedaf436f93382e49ea5c2a6f3b51f3bddd917549e8df7381732f498db3bdba",
       "modified": true
-    },
-    {
-      "path": "vendor/installer/obfuscate.js",
-      "upstream": "installer/src/obfuscate.js",
-      "upstreamSha256": "7f57ace68ac07247f7a0becb92f77a7375f5b77053a4cc196400dbf9817d4d73",
-      "sha256": "7f57ace68ac07247f7a0becb92f77a7375f5b77053a4cc196400dbf9817d4d73",
-      "modified": false
     },
     {
       "path": "vendor/installer/patch-agent-host.js",
@@ -1605,13 +1472,6 @@
       "upstream": "installer/src/patch-always-local.js",
       "upstreamSha256": "5e0ebd2c43f436984536a845a1e309453f481fbbe709bb90b3923713ac16aaa8",
       "sha256": "5e0ebd2c43f436984536a845a1e309453f481fbbe709bb90b3923713ac16aaa8",
-      "modified": false
-    },
-    {
-      "path": "vendor/installer/patch-delete-fix.js",
-      "upstream": "installer/src/patch-delete-fix.js",
-      "upstreamSha256": "71c5c406f71cbbec7748a79cd8bcc02463b5ed4b6f30083a5f43bb8d87030879",
-      "sha256": "71c5c406f71cbbec7748a79cd8bcc02463b5ed4b6f30083a5f43bb8d87030879",
       "modified": false
     },
     {
@@ -1637,13 +1497,6 @@
       "added": true
     },
     {
-      "path": "vendor/installer/patch-local-mode.js",
-      "upstream": "installer/src/patch-local-mode.js",
-      "upstreamSha256": "a191fee8799459b5daa65b5599d18c5e257501a5ae9dc432f361ed697cd4428a",
-      "sha256": "a191fee8799459b5daa65b5599d18c5e257501a5ae9dc432f361ed697cd4428a",
-      "modified": false
-    },
-    {
       "path": "vendor/installer/patch-model-catalog.js",
       "upstream": null,
       "upstreamSha256": null,
@@ -1659,31 +1512,10 @@
       "modified": false
     },
     {
-      "path": "vendor/installer/release-defaults.js",
-      "upstream": "installer/src/release-defaults.js",
-      "upstreamSha256": "efaad5bbf84e913297e7b7de7ebb0e2b3cdfbb6202c7233fd3f6625cc765f8bd",
-      "sha256": "efaad5bbf84e913297e7b7de7ebb0e2b3cdfbb6202c7233fd3f6625cc765f8bd",
-      "modified": false
-    },
-    {
       "path": "vendor/installer/routes.js",
       "upstream": "installer/src/routes.js",
       "upstreamSha256": "f051787472e3b7e47bdec917e855ef7f15cd3fe81afb8c84d59c4b83b9bcccd9",
       "sha256": "f051787472e3b7e47bdec917e855ef7f15cd3fe81afb8c84d59c4b83b9bcccd9",
-      "modified": false
-    },
-    {
-      "path": "vendor/installer/status.js",
-      "upstream": "installer/src/status.js",
-      "upstreamSha256": "0861448b151064577ffcf8bb4a16a49e4654af5c1c6721e57d2e525944e1e344",
-      "sha256": "0861448b151064577ffcf8bb4a16a49e4654af5c1c6721e57d2e525944e1e344",
-      "modified": false
-    },
-    {
-      "path": "vendor/installer/uninstall.js",
-      "upstream": "installer/src/uninstall.js",
-      "upstreamSha256": "4b572b6e486c518fa5c1236844340d338acbd15dd828e848282520365ca0897e",
-      "sha256": "4b572b6e486c518fa5c1236844340d338acbd15dd828e848282520365ca0897e",
       "modified": false
     }
   ]

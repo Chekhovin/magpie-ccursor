@@ -28,7 +28,7 @@ Plugin release: **0.3.0**. Fresh upstream source: [c110c6e8ae34f785bca453c163bc1
 - Route-mode read/decide/write is serialized, and debounce/timers are reset between standalone runtime instances.
 - Windows atomic JSON replacement retries transient `EPERM`/`EBUSY` failures at most five additional times without deleting the original target.
 
-The [per-file source record](upstream-changes.json) lists 240 vendored files and 25 local adaptations. The three upstream Vitest additions are retained as source provenance; the executed regression suite is the Bun suite under `tests/`, not the installed-Cursor probes in `vendor/server/tests/`.
+The [per-file source record](upstream-changes.json) lists the retained vendored files and local adaptations. Unused upstream installer entry points, legacy server shims and an unreferenced generated descriptor have been omitted. The upstream Vitest files remain for source comparison; the executed regression suite is the Bun suite under `tests/`, not the installed-Cursor probes in `vendor/server/tests/`.
 
 ## Validation
 
