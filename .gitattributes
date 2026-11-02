@@ -1,0 +1,2 @@
+# Captured installed payloads are byte-sensitive fixtures; keep generated LF text.
+tests/fixtures/upstream-installer-026-*.js text eol=lf
