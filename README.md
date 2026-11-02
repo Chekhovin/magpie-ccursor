@@ -12,6 +12,8 @@ Cursor → 本机 CCursor 协议桥 (127.0.0.1:39831) → Magpie 网关 → 模�
 
 ## 快速上手
 
+> **安装前准备（重要）：** 在安装 Magpie CCursor 插件前，请先打开 **Cursor 客户端并完成官方账号登录**。若在未登录状态下先行安装了插件，从浏览器完成网页授权后客户端可能仍停留在未登录状态；如已遇到该问题，请按[浏览器授权后 Cursor 仍无法完成登录](#浏览器授权后-cursor-仍无法完成登录)排查处理。
+
 在 Magpie 中安装插件后，插件会自动检查并接入兼容的 Cursor 客户端。日常使用无需克隆仓库、单独安装 Bun 或手动执行 `setup` 命令：
 
 1. 在 Magpie 插件页面添加 `github:Chekhovin/magpie-ccursor`，或通过命令行安装：
@@ -75,6 +77,27 @@ Magpie 的 **Agent 页面底部**提供「Cursor 中文界面」开关，默认�
 > **安全提示：** `~/.magpie-ccursor/` 下的连接配置与派生配置包含本地网关密钥。提交问题或分享日志时，请勿上传这些文件或贴出其中的密钥。
 
 ## 故障排查与文档
+
+### 浏览器授权后 Cursor 仍无法完成登录
+
+**现象：** 安装本插件前未在 Cursor 客户端登录账号；安装并启用插件后，在 Cursor 中点击登录并在浏览器完成官方授权，但客户端仍卡在登录/等待响应状态。
+
+**原因：** 默认开启 BYOK 路由（`byokMode: 1`）时，路由配置文件 `~/.magpie-ccursor/routes.json`（Windows 为 `%USERPROFILE%\.magpie-ccursor\routes.json`）的 `redirect` 数组中包含 `"REST:/auth/poll"`。该规则会将 Cursor 轮询网页登录结果的请求转发至本机协议桥（`127.0.0.1:39831`），而本地端点仅返回占位登录数据，导致客户端无法拿到浏览器侧的真实授权结果。
+
+**解决步骤（无需重装或重签名 Cursor）：**
+
+1. **保持服务在线：** 保持 Magpie 运行，并确保 **Agent → CCursor** 连接处于开启状态（让本机协议桥保持在线）。
+2. **备份路由文件：** 在修改前先备份路由配置文件：
+   - macOS / Linux：`~/.magpie-ccursor/routes.json`（例如复制为 `~/.magpie-ccursor/routes.json.bak`）
+   - Windows：`%USERPROFILE%\.magpie-ccursor\routes.json`（PowerShell 下为 `$HOME\.magpie-ccursor\routes.json`）
+3. **仅移除登录轮询规则：** 用文本编辑器打开 `routes.json`，从 `redirect` 数组中**只删除 `"REST:/auth/poll"` 这一项**并保存：
+   - 注意清理多余逗号，确保保存后仍是**合法 JSON**（若 JSON 语法损坏，协议桥可能使用默认路由，导致 `"REST:/auth/poll"` 重新生效）。
+   - **不要**删除 `redirect` 中的其他规则（如 `agent.v1.AgentService/*`、`aiserver.v1.*` 等），**不要**修改 `byokMode`（保持 `1`），也请勿在反馈问题时粘贴 `~/.magpie-ccursor/` 下其他文件中的密钥。
+4. **重新登录验证：** 保存后路由配置会自动热更新。回到 Cursor 客户端重新点击登录并在浏览器完成授权，检查客户端是否已成功登录（若仍失败，可能存在网络或账号等其他原因）；此操作会保留原有的 BYOK 模型与 Agent 转发规则。
+
+> **注意：** 切换 BYOK 模式会重建 `redirect` 数组并恢复 `"REST:/auth/poll"`；插件升级后若再次遇到网页授权后客户端无响应，也可复查 `routes.json` 的 `redirect` 数组中是否包含该规则。
+
+### 更多文档
 
 - **接入、恢复与常见问题排查：** [docs/setup.md](docs/setup.md)
 - **中文界面开关与兼容说明：** [docs/localization.md](docs/localization.md)
