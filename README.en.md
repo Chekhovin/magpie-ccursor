@@ -12,6 +12,8 @@ Cursor → Local CCursor bridge (127.0.0.1:39831) → Magpie gateway → Model p
 
 ## Quick start
 
+> **Before installing (Important):** Please open the **Cursor client and sign in to your official account first** before installing the Magpie CCursor plugin. If the plugin is installed while Cursor is still signed out, completing authorization in the browser may leave the client stuck in an unauthenticated state. If you run into this, see [Cursor stays unauthenticated after browser sign-in](#cursor-stays-unauthenticated-after-browser-sign-in).
+
 After installation in Magpie, the plugin automatically checks and sets up a compatible Cursor client. For everyday use, there is no need to clone the repository, install Bun separately, or run `setup` commands:
 
 1. Add `github:Chekhovin/magpie-ccursor` on Magpie's plugin page, or install it via the Magpie CLI:
@@ -75,6 +77,27 @@ You do not need the CLI for everyday use. For troubleshooting, foreground debugg
 > **Security note:** The connection and derived provider files inside `~/.magpie-ccursor/` contain your local gateway key. Never upload those files or paste their keys into an issue or log snippet.
 
 ## Troubleshooting and documentation
+
+### Cursor stays unauthenticated after browser sign-in
+
+**Symptom:** The plugin was installed before signing in to an account in the Cursor client; after installing and enabling the plugin, clicking sign-in in Cursor and completing official authorization in the browser still leaves the Cursor client stuck waiting to sign in.
+
+**Possible cause:** When BYOK routing is enabled by default (`byokMode: 1`), the route configuration file `~/.magpie-ccursor/routes.json` (`%USERPROFILE%\.magpie-ccursor\routes.json` on Windows) includes `"REST:/auth/poll"` in its `redirect` array. This rule redirects Cursor's login-polling requests to the local protocol bridge (`127.0.0.1:39831`), whose local endpoint returns placeholder login data, which can prevent the client from receiving the real browser authorization result (though network, proxy, or account issues can also prevent sign-in independently).
+
+**Resolution (no need to reinstall or re-sign Cursor):**
+
+1. **Keep the bridge online:** Keep Magpie running and make sure the **Agent → CCursor** connection remains enabled so the local protocol bridge stays online.
+2. **Back up the route file:** Back up the route configuration file before editing:
+   - macOS / Linux: `~/.magpie-ccursor/routes.json` (for example, copy it to `~/.magpie-ccursor/routes.json.bak`)
+   - Windows: `%USERPROFILE%\.magpie-ccursor\routes.json` (`$HOME\.magpie-ccursor\routes.json` in PowerShell)
+3. **Remove only the login-polling rule:** Open `routes.json` in a text editor, remove **only `"REST:/auth/poll"`** from the `redirect` array, and save the file:
+   - Clean up any extra comma so the file remains **valid JSON** (if the JSON syntax is invalid, the protocol bridge may fall back to default routes, causing `"REST:/auth/poll"` to take effect again).
+   - **Do not** remove other rules in `redirect` (such as `agent.v1.AgentService/*`, `aiserver.v1.*`, etc.), **do not** modify `byokMode` (keep it set to `1`), and never share or paste keys from other files under `~/.magpie-ccursor/` when reporting issues.
+4. **Retry sign-in and verify:** Saving `routes.json` hot-reloads the routing rules automatically. Wait a moment for the reload, then return to Cursor, initiate sign-in again, complete authorization in your browser, and check whether the client is now signed in (if sign-in still fails, check for other causes such as network connectivity or account status). Your BYOK models and Agent routing rules remain active.
+
+> **Note:** Switching BYOK mode rebuilds the `redirect` array, and re-enabling BYOK (`byokMode: 1`) will add `"REST:/auth/poll"` back. If browser sign-in stops completing again after a plugin update or mode change, re-check the `redirect` array in `routes.json`.
+
+### Further documentation
 
 - **Setup, recovery, and troubleshooting (Chinese):** [docs/setup.md](docs/setup.md)
 - **Chinese interface switch and compatibility notes (Chinese):** [docs/localization.md](docs/localization.md)
