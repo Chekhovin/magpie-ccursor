@@ -4,6 +4,7 @@ import { join } from 'node:path'
 import { dataDirectory, PORT, readConnection, toProviders, writePrivateJSON } from './connection'
 import { startRuntime } from './runtime'
 import { createAutoSetup } from './auto-setup'
+import { readLocalizationOption } from './plugin-options'
 
 const managed = process.argv[2] === '--managed'
 const dataDir = managed ? process.argv[3] : dataDirectory()
@@ -18,7 +19,7 @@ let stopped = false
 let previous = ''
 let lastError = ''
 let queue = Promise.resolve()
-const autoSetup = createAutoSetup({ dataDir })
+const autoSetup = createAutoSetup({ dataDir, getLocalize: () => readLocalizationOption(dataDir) })
 
 async function lock() {
   if (ownsLock) return true

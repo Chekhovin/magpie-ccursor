@@ -10,6 +10,10 @@
 
 Cursor 在自定义目录时，可给 Magpie 设置 `CCURSOR_CURSOR_ROOT` 环境变量，指向 Cursor 的 `resources/app` 目录。自动接入需要对 Cursor 应用目录有写权限；不会自动提权。Linux 的只读 AppImage 挂载目录需先换成可写的安装目录。
 
+## 中文界面
+
+安装后默认开启插件附加汉化，开关位于 Magpie 的 **Agent 页底部 → Cursor 中文界面**。关闭汉化保留模型接入，保存后等待后台完成并完全重启 Cursor。当前只对匹配的 Cursor 3.27.22 文件生效；未匹配的版本仍可正常接入模型。详见[汉化与恢复说明](localization.md)。
+
 ## 已有 CCursor
 
 本插件的服务代码来自全新下载的上游，不加载原版安装目录中的服务代码，也不导入 `~/.ccursor/providers.json`。原版客户端补丁即使指向默认地址 `127.0.0.1:39831`，也不保证包含当前 Cursor 所需的兼容修复；只有本插件记录并校验过的补丁快照才能自动升级。

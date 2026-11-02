@@ -1,5 +1,16 @@
 # Verification record
 
+## 0.4.0 optional Cursor localization (2026-11-02)
+
+- Final Windows Bun 1.4.3 suite: **155 tests passed, 0 failed, 1,229 assertions across 16 files**. New coverage includes default ON, saved OFF, ON/OFF/ON, English and legacy-localized originals, checksums, immutable backups, unknown builds, external text changes with intact hooks, malformed catalogs and immediate option reconciliation.
+- Actual Cursor 3.27.22 copies passed both English and legacy-localized ON/OFF/ON, repeated no-op, and full restoration of **59 targets** for each original baseline. Live Cursor files were not changed by these tests.
+- The independently downloaded Magpie `host.js` loaded the plugin with explicit `localize: false`, persisted that value, started automatic setup without Agent credentials, recovered its bridge process and stopped after host exit.
+- Headless Edge loaded the real HTML/CSS/JS and official Magpie `pagebridge.js` in an opaque `sandbox="allow-scripts"` iframe. It verified default ON without a write, OFF then ON persistence with unrelated options retained, two iframe reloads and zero parent reloads. The outer Magpie options API was simulated; this is not a claim of an end-to-end native Magpie window test.
+- Independent read-only review identified and closed missing host reactivation and false no-op localization confirmation. New tests cover both fixes.
+
+One initial full run failed an obsolete log-string assertion and encountered a transient Windows `EPERM` in the existing routes writer. The log assertion was updated for the changed message; the subsequent full run passed. No unrelated route-writer refactor was introduced.
+
+
 ## 0.3.0 upstream synchronization (2026-11-02)
 
 The fresh upstream snapshot `c110c6e8ae34f785bca453c163bc113993f19b70` identifies CCursor 0.0.16 and the Cursor 3.27.22 protocol update. See the [integration comparison](upstream-0.0.16.md) for applied changes and deliberate Magpie adaptations.

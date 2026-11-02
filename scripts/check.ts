@@ -4,9 +4,15 @@ import { agent, connect } from '../agent.mjs'
 
 const root = resolve(import.meta.dir, '..')
 const pkg = JSON.parse(await readFile(join(root, 'package.json'), 'utf8'))
-const required = [pkg.main, pkg.exports['./server'], pkg.magpie.agent, 'README.md', 'README.en.md', 'LICENSE', 'NOTICE.md']
+const required = [pkg.main, pkg.exports['./server'], pkg.magpie.agent, 'README.md', 'README.en.md', 'LICENSE', 'NOTICE.md',
+  'localization/zh-CN.json', 'ui/localization.html', 'ui/app.js', 'ui/style.css']
 for (const file of required) if (!(await stat(join(root, file))).isFile()) throw new Error(`Missing package entry: ${file}`)
 if (pkg.scripts.postinstall || pkg.scripts.prepare) throw new Error('Installation must not require lifecycle scripts.')
+if (pkg.magpie.page || pkg.magpie.panels?.length !== 1 || pkg.magpie.panels[0].slot !== 'agents')
+  throw new Error('Localization must use one embedded Agent panel, with no sidebar page.')
+if (!pkg.files.includes('ui') || !pkg.files.includes('localization')) throw new Error('Package must contain the panel and localization catalog.')
+const { loadLocalizationCatalog, validateLocalizationCatalog } = await import('../src/localization')
+validateLocalizationCatalog(loadLocalizationCatalog())
 if (agent.id !== 'ccursor' || 'model' in agent) throw new Error('Agent must allow model selection inside Cursor.')
 const connection = connect({ gateway: { v1: 'http://127.0.0.1:1/v1', key: 'fixture' }, models: [{ id: 'fixture/model' }] })
 if (connection.enabled !== true) throw new Error('Agent connect contract failed.')

@@ -65,6 +65,16 @@ BYOK mode writes accept an idempotent target value; legacy toggle requests are d
 
 A recorded, hash-matching old plugin installation can upgrade renderer, always-local and Agent Host patches in one snapshot transaction. This differs from upstream's uninstall-first requirement and retains the pristine backup across upgrades. Unrecorded changes remain blocked; no foreign file is silently accepted as a new baseline.
 
+## Optional Chinese interface
+
+`magpie.panels` registers one `agents` panel and no sidebar page. The panel uses only its own `magpie.options` bridge calls; after a successful write it reloads itself. Serving that hosted panel invokes Magpie's `pageHost/Warm`, which is necessary because `SetOptions/Restart` alone retires the old host and starts a new one only on demand.
+
+The plugin config hook writes the effective `localize` boolean to a separate `plugin-options.json`; it never changes Agent connection credentials. The daemon reads it each tick. Preference changes bypass the normal inspection interval but retain file-settlement and patch-lock checks. An explicit manual restore remains paused.
+
+Localization uses a version-and-hash catalog with three known clean states: English, legacy localized, and localized with known protocol/export identifiers retained. It preflights both immutable renderer backups, produces buffers with UTF-8 byte edits, verifies output hashes, and runs the ordinary installer in the existing snapshot transaction. Toggle upgrades retain original backups; full restore always returns the first recorded baseline. Unknown builds return `unsupported` without guessing replacements. No-op confirmation additionally verifies the full applied target set and hashes.
+
+The VS Code language pack and language settings are outside this option's ownership. See [localization notes](localization.md) for user-visible behavior.
+
 ## Sources
 
 - [Magpie plugin guide](https://usemagpie.ai/docs/zh/plugins)

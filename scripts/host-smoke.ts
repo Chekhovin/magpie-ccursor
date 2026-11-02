@@ -11,6 +11,7 @@ import { createCursorFixture, sandboxEnvironment } from '../tests/fixtures/curso
 const host = process.argv[2]
 if (!host) throw new Error('Usage: bun scripts/host-smoke.ts /path/to/official/host.js [sandbox-port; default random]')
 const requestedPort = Number(process.argv[3] ?? 0)
+const localize = !process.argv.includes('--localize-off')
 if (!Number.isInteger(requestedPort) || requestedPort < 0 || requestedPort > 65535 || requestedPort === 39831)
   throw new Error('Choose a sandbox port other than the user bridge port 39831.')
 const reservation = createServer()
@@ -37,11 +38,13 @@ async function until(check: () => Promise<boolean>) {
   throw new Error(`Official host condition timed out. ${stderr}`)
 }
 try {
-  child.stdin.write(`${JSON.stringify({ id: 1, method: 'init', params: { authPath: join(sandbox, 'auth.json'), directory: sandbox, plugins: [{ spec: 'magpie-ccursor-fixture', target: resolve(import.meta.dir, '..') }] } })}\n`)
+  child.stdin.write(`${JSON.stringify({ id: 1, method: 'init', params: { authPath: join(sandbox, 'auth.json'), directory: sandbox, plugins: [{ spec: 'magpie-ccursor-fixture', target: resolve(import.meta.dir, '..'), options: { localize, unrelated: 'preserved' } }] } })}\n`)
   await until(async () => stdout.split('\n').some(line => { try { const m = JSON.parse(line); return m.id === 1 } catch { return false } }))
   const result = stdout.split('\n').flatMap(line => { try { return [JSON.parse(line)] } catch { return [] } }).find(m => m.id === 1)
   if (result.error || result.result.plugins.some((p: any) => p.error)) throw new Error(JSON.stringify(result))
   await until(async () => JSON.parse(await readFile(join(dataDir, 'auto-setup.json'), 'utf8').catch(() => '{}')).state === 'ready')
+  const savedOptions = JSON.parse(await readFile(join(dataDir, 'plugin-options.json'), 'utf8'))
+  if (savedOptions.localize !== localize) throw new Error('Official host did not pass the localization option to the daemon.')
   const snapshot = await readFile(join(dataDir, 'patch-manifest.json'), 'utf8')
   const initialStatus = await readFile(join(dataDir, 'auto-setup.json'), 'utf8')
   await writeFile(join(dataDir, 'connection.json'), JSON.stringify(connection))
@@ -55,7 +58,7 @@ try {
   child.stdin.end()
   if (await exited !== 0) throw new Error(`Official host exited unsuccessfully: ${stderr}`)
   await until(async () => { try { await fetch(`${url}/health`, { signal: AbortSignal.timeout(250) }); return false } catch { return true } })
-  console.log(`PASS: official Magpie host installed fixture Cursor hooks without Agent config; bridge on sandbox port ${port} recovered after termination and stopped after host exit.`)
+  console.log(`PASS: official Magpie host installed fixture Cursor hooks without Agent config; localize=${localize} reached the daemon; bridge on sandbox port ${port} recovered after termination and stopped after host exit.`)
 } finally {
   clearTimeout(deadline)
   child.stdin.end()

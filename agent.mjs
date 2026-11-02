@@ -8,7 +8,7 @@ export const agent = {
   config: '~/.magpie-ccursor/connection.json',
   format: 'json',
   ua: ['magpie-ccursor'],
-  notice: 'Start Magpie before Cursor. Select a model inside Cursor. See the CCursor plugin page for first-time setup.',
+  notice: 'Keep Magpie running. Fully quit and reopen Cursor after setup or interface changes. The Chinese interface switch is at the bottom of Magpie’s Agent page.',
 }
 
 export function connect({ gateway, models }) {

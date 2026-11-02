@@ -1,12 +1,12 @@
 {
   "name": "magpie-ccursor",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Connect Cursor to Magpie models with a standalone CCursor BYOK bridge.",
   "type": "module",
   "main": "./index.ts",
   "exports": { ".": "./index.ts", "./server": "./index.ts" },
   "bin": { "magpie-ccursor": "./cli.ts" },
-  "files": ["index.ts", "agent.mjs", "cli.ts", "src", "vendor", "README.md", "README.en.md", "CONTRIBUTING.md", "LICENSE", "NOTICE.md", "docs", "scripts", "tests"],
+  "files": ["index.ts", "agent.mjs", "cli.ts", "src", "vendor", "ui", "localization", "README.md", "README.en.md", "CONTRIBUTING.md", "LICENSE", "NOTICE.md", "docs", "scripts", "tests"],
   "scripts": {
     "test": "bun test ./tests",
     "check": "bun run scripts/check.ts"
@@ -18,7 +18,13 @@
   "license": "AGPL-3.0-or-later",
   "engines": { "bun": ">=1.3.0" },
   "magpie": {
-    "agent": "./agent.mjs"
+    "agent": "./agent.mjs",
+    "panels": [{
+      "slot": "agents",
+      "file": "ui/localization.html",
+      "title": "Cursor Chinese interface",
+      "titles": { "zh": "Cursor 中文界面" }
+    }]
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.111.0",

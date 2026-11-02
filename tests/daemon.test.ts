@@ -82,7 +82,7 @@ test('daemon installs Cursor hooks without Agent configuration and keeps one sna
   const manifest = await readFile(join(dir, 'patch-manifest.json'), 'utf8')
   await sleep(2200)
   expect(await readFile(join(dir, 'patch-manifest.json'), 'utf8')).toBe(manifest)
-  expect(running.logs().match(/Cursor hooks installed/g)).toHaveLength(1)
+  expect(running.logs().match(/Cursor hooks and interface preference updated/g)).toHaveLength(1)
   expect(running.child.exitCode).toBeNull()
 }, 15000)
 

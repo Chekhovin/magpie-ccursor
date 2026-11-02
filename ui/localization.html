@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+  <script src="_magpie/bridge.js"></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <section class="card" aria-labelledby="title">
+    <div class="heading">
+      <div>
+        <h2 id="title">Cursor 中文界面</h2>
+        <p id="description">安装接入补丁时，同时将 Cursor 界面切换为中文。</p>
+      </div>
+      <label class="switch" title="切换 Cursor 中文界面">
+        <input id="enabled" type="checkbox" role="switch" aria-label="Cursor 中文界面" checked disabled>
+        <span class="track"><span class="thumb"></span></span>
+      </label>
+    </div>
+    <p id="status" class="status" role="status"></p>
+    <p id="restart" class="hint">更改后请完全退出并重新打开 Cursor。</p>
+  </section>
+</body>
+</html>

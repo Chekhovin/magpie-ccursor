@@ -6,7 +6,7 @@
 
 [AGPL-3.0-or-later](LICENSE) · 基于 [CometixSpace/CCursor](https://github.com/CometixSpace/CCursor)
 
-`0.3.0` 已同步上游 CCursor `0.0.16` 的 Cursor **3.27.x** 适配：更新对话协议，改进 Agents 窗口的模型路由，并修复 BYOK 开关重复触发和切换后短暂显示旧模型的问题。
+`0.4.0` 新增默认开启的 **Cursor 中文界面**开关，可在 Magpie 的 **Agent 页底部**切换。模型连接和分配仍在 **Agent → CCursor** 中管理。插件同时保留了上游 CCursor `0.0.16` 的 Cursor **3.27.x** 协议与路由适配。
 
 `magpie-ccursor` 是适配 Magpie 的 CCursor Agent 插件。它在本机运行一个轻量协议桥（`127.0.0.1:39831`），把 Cursor 的模型请求转发到 Magpie 本地网关，再由 Magpie 调用你配置的供应商。模型费用按你在 Magpie 中接入的供应商计费。
 
@@ -16,7 +16,7 @@ Cursor → 本机 CCursor 协议桥 (127.0.0.1:39831) → Magpie 网关 → 模�
 
 ## 快速上手
 
-在 Magpie 安装插件后，Cursor 的接入补丁会自动安装，日常使用无需单独克隆仓库或手动执行 `setup` 命令。所有配置统一在 Magpie 的 **Agent → CCursor** 中完成，无需额外的独立接入页面：
+在 Magpie 安装插件后，Cursor 的接入补丁会自动安装，日常使用无需单独克隆仓库或手动执行 `setup` 命令。连接与模型配置在 Magpie 的 **Agent → CCursor** 中完成，无需额外的独立接入页面：
 
 1. 在 Magpie 的插件页面添加 `github:Chekhovin/magpie-ccursor`。
 2. 打开 **Agent → CCursor**，启用连接并勾选要分配给 Cursor 的模型。如果安装后还未显示 CCursor，请先手动刷新一下 Magpie 页面。
@@ -65,6 +65,12 @@ magpie plugin add github:Chekhovin/magpie-ccursor
 
 关于已有原版安装、自定义端口、补丁兼容与恢复说明，请参阅 [接入与恢复指南](docs/setup.md)。
 
+## 中文界面开关
+
+在 Magpie 的 **Agent 页面底部**找到「Cursor 中文界面」面板。开关默认开启；关闭后撤销插件附加的翻译，CCursor 接入补丁、模型分配和已有对话不受影响。设置保存后，面板会自行刷新以重新加载插件。等待后台接入完成，再完全退出并重新打开 Cursor。
+
+当前翻译已验证于 **Cursor 3.27.22 的对应文件版本**，覆盖普通窗口和 Agents 窗口。版本号相同但文件不同，也会跳过汉化，继续保留模型接入，避免把旧翻译强行应用到新文件。原有 VS Code 中文语言包独立管理，关闭此开关不会卸载它，因此基础编辑器界面可能仍为中文。详见[汉化与恢复说明](docs/localization.md)。
+
 ## 常用命令与配置
 
 日常使用无需运行命令行。需要排查问题、前台调试或手动恢复客户端文件时，可在克隆的仓库目录中使用 `bun cli.ts`（需本机安装 [Bun](https://bun.sh) `>= 1.3.0`）：
@@ -75,6 +81,7 @@ magpie plugin add github:Chekhovin/magpie-ccursor
 | 前台运行协议桥（调试） | `bun cli.ts start`，按 `Ctrl+C` 停止 |
 | 手动重试接入 | 关闭全部 Cursor 窗口后执行 `bun cli.ts setup --cursor-closed` |
 | 还原 Cursor 客户端补丁 | 关闭全部 Cursor 窗口后执行 `bun cli.ts restore --cursor-closed` |
+| Cursor 附加汉化 | Magpie **Agent 页底部 → Cursor 中文界面**，默认开启 |
 | 供应商、模型与 Agent key | 在 Magpie 中管理供应商与密钥，在 **Agent → CCursor** 连接并分配模型 |
 | 本地配置与会话数据目录 | `~/.magpie-ccursor/`（独立存储，不读取或导入 `~/.ccursor`） |
 | 连接配置文件 | `~/.magpie-ccursor/connection.json`（由 Magpie 自动写入与还原） |
@@ -91,6 +98,6 @@ magpie plugin add github:Chekhovin/magpie-ccursor
 
 ## 致谢与许可证
 
-本项目的协议桥服务与客户端补丁逻辑移植自 [CometixSpace/CCursor (`fcac85d`)](https://github.com/CometixSpace/CCursor/tree/fcac85db793fc2c8cda3318b96ec5a41c24f5e26)，针对 Magpie Agent 插件机制的改造说明记录在 [NOTICE.md](NOTICE.md)。
+本项目的协议桥服务与客户端补丁逻辑移植自 [CometixSpace/CCursor (`0.0.16`)](https://github.com/CometixSpace/CCursor/tree/c110c6e8ae34f785bca453c163bc113993f19b70)，针对 Magpie Agent 插件机制的改造说明记录在 [NOTICE.md](NOTICE.md)。
 
 本项目遵循 [AGPL-3.0-or-later](LICENSE) 许可证开源。它是社区维护的第三方插件，非 Cursor、Magpie 或 CCursor 官方发布，按“原样”提供，不附带任何明示或暗示的担保。

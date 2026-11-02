@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { copyFile, mkdir, readFile, realpath } from 'node:fs/promises'
-import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
+import { copyFile, mkdir, readFile, realpath, writeFile } from 'node:fs/promises'
+import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs'
 import { createHash, randomUUID } from 'node:crypto'
 import { join, resolve } from 'node:path'
 import { dataDirectory, writePrivateJSON } from './connection'
@@ -11,6 +11,9 @@ import { inspectAlwaysLocalPatch, patchAlwaysLocal } from '../vendor/installer/p
 import { findAgentHostNetworkTargets, getAgentHostBackupTargets, inspectAgentHostPatch, patchAgentHost } from '../vendor/installer/patch-agent-host.js'
 import { isProxy39Patched, needsProxy39Patch, patchProxy39 } from '../vendor/installer/patch-proxy-39.js'
 import { patchKatex } from '../vendor/installer/patch-katex.js'
+import { loadLocalizationCatalog, planLocalization, rendererPaths, type LocalizationCatalog, type LocalizationRecord } from './localization'
+import { readLocalizationOption } from './plugin-options'
+import { updateChecksums } from '../vendor/installer/checksum.js'
 
 export interface CursorPaths {
   appRoot: string, cursorVersion: string, hasGlass: boolean,
@@ -20,6 +23,10 @@ export interface CursorPaths {
 }
 export interface SetupOptions {
   dataDir?: string, appRoot?: string, paths?: CursorPaths, log?: (message: string) => void,
+  /** Install the bundled reversible Cursor Chinese UI edits. Defaults to true. */
+  localize?: boolean,
+  /** A catalog can be injected by isolated compatibility tests. Never loaded from user options. */
+  localizationCatalog?: LocalizationCatalog,
   /** Automatic setup must not override a user's explicit restore. */
   automatic?: boolean,
 }
@@ -29,7 +36,7 @@ export class AutomaticSetupPausedError extends Error {
 interface SnapshotEntry { file: string, backup: string, originalHash: string, patchedHash: string }
 interface Snapshot {
   state: 'applying' | 'applied' | 'rolled-back' | 'restoring' | 'restored', entries: SnapshotEntry[],
-  appRoot?: string, version?: string, packageHash?: string,
+  appRoot?: string, version?: string, packageHash?: string, localization?: LocalizationRecord,
 }
 const digest = (data: Buffer) => createHash('sha256').update(data).digest('hex')
 const pathIdentity = (file: string) => process.platform === 'win32' ? resolve(file).toLowerCase() : resolve(file)
@@ -135,7 +142,7 @@ async function recoverCleanInterruptedSetup(directory: string, manifest: Snapsho
 }
 
 export async function snapshotTransaction(files: string[], directory: string, action: () => Promise<void> | void,
-  metadata: Pick<Snapshot, 'appRoot' | 'version' | 'packageHash'> = {}, upgrade = false) {
+  metadata: Pick<Snapshot, 'appRoot' | 'version' | 'packageHash' | 'localization'> = {}, upgrade = false) {
   const previous = await readSnapshot(directory)
   const backupDir = join(directory, `backup-${randomUUID()}`)
   await mkdir(backupDir, { recursive: true })
@@ -263,58 +270,107 @@ export function cursorStatus(options: SetupOptions = {}) {
     ready: renderer && glass && agent && alwaysLocal && signature && proxy && localLoop && modelCatalog }
 }
 
+function verifyAppliedSnapshot(paths: CursorPaths, manifest: Snapshot) {
+  const targets = cursorPatchFiles(paths).filter(existsSync)
+  if (manifest.state !== 'applied' || !manifest.appRoot || pathIdentity(manifest.appRoot) !== pathIdentity(paths.appRoot)
+    || manifest.version !== paths.cursorVersion || manifest.packageHash !== digest(readFileSync(join(paths.appRoot, 'package.json')))
+    || targets.length !== manifest.entries.length
+    || manifest.entries.some(e => !targets.some(file => pathIdentity(file) === pathIdentity(e.file))))
+    throw new Error('Cursor installation no longer matches the recorded localization snapshot; no files were changed.')
+  for (const entry of manifest.entries) if (digest(readFileSync(entry.file)) !== entry.patchedHash)
+    throw new Error(`Cursor file changed outside this plugin: ${entry.file}. Localization state cannot be confirmed.`)
+}
+
 export async function setupCursor(options: SetupOptions = {}) {
   const directory = options.dataDir ?? dataDirectory()
-  // No-op inspection does not own a write lock: transient hosts may exit during a large scan.
-  // Keep damaged/interrupted snapshot validation before reporting a ready installation.
+  const localize = options.localize ?? await readLocalizationOption(directory)
+  const catalog = options.localizationCatalog ?? loadLocalizationCatalog()
   const manifest = await readSnapshot(directory, true)
   checkSetupIntent(manifest, options.automatic)
   const status = cursorStatus(options)
-  if (manifest?.state !== 'applying' && status.ready) return { ...status, changed: false }
-  return withPatchLock(directory, () => setupCursorLocked({ ...options, dataDir: directory }))
+  // No-op inspection does not acquire a write lock. New preferences/revisions must reconcile.
+  if (manifest?.state !== 'applying' && status.ready && manifest?.localization?.requested === localize
+    && manifest.localization.revision === catalog.revision) {
+    verifyAppliedSnapshot(resolveCursorPaths(options), manifest)
+    return { ...status, changed: false, localization: manifest.localization }
+  }
+  return withPatchLock(directory, () => setupCursorLocked({ ...options, dataDir: directory, localize, localizationCatalog: catalog }))
+}
+
+async function prepareLocalization(paths: CursorPaths, enabled: boolean, catalog: LocalizationCatalog, manifest?: Snapshot) {
+  const sources = new Map<string, Buffer>()
+  for (const relative of rendererPaths) {
+    const file = join(paths.appRoot, relative)
+    if (!existsSync(file)) continue
+    const entry = manifest?.entries.find(e => pathIdentity(e.file) === pathIdentity(file))
+    if (manifest && !entry) throw new Error(`Localization target is outside the recorded snapshot: ${file}`)
+    sources.set(relative, await readFile(entry?.backup ?? file))
+  }
+  return planLocalization(paths.cursorVersion, sources, enabled, catalog)
+}
+
+async function writeLocalizedRenderers(paths: CursorPaths, plan: ReturnType<typeof planLocalization>) {
+  for (const [relative, source] of plan.outputs) await writeFile(join(paths.appRoot, relative), source)
+}
+
+function localizePickerSelector(paths: CursorPaths, enabled: boolean, log: (message: string) => void) {
+  if (!enabled) return
+  const end = '/* CURSOR-BYOK-HOOK-END */'
+  const from = 'input[placeholder="Search models"]', to = 'input[placeholder="搜索模型"]'
+  const changed: string[] = []
+  for (const file of [paths.workbenchJs, paths.glassJs].filter(existsSync)) {
+    const source = readFileSync(file, 'utf8'), at = source.indexOf(end)
+    if (at < 0) throw new Error('Missing Cursor hook during localization.')
+    const payload = source.slice(0, at)
+    if (payload.split(from).length !== 2) throw new Error('Cursor model picker selector changed; localization was cancelled.')
+    // Only this display selector changes; local-loop and catalog helpers remain byte-identical.
+    const output = payload.replace(from, to) + source.slice(at)
+    writeFileSync(file, output)
+    changed.push(file)
+  }
+  updateChecksums(paths, changed, 'localization', log)
 }
 
 async function setupCursorLocked(options: SetupOptions) {
   const directory = options.dataDir ?? dataDirectory(), log = options.log ?? console.log
-  const paths = resolveCursorPaths(options)
+  const paths = resolveCursorPaths(options), localize = options.localize !== false
+  const catalog = options.localizationCatalog ?? loadLocalizationCatalog()
   let manifest = await readSnapshot(directory, true)
   checkSetupIntent(manifest, options.automatic)
   if (manifest?.state === 'applying')
     manifest = await recoverCleanInterruptedSetup(directory, manifest, paths, 'rolled-back', log)
   const status = cursorStatus({ paths })
-  if (status.ready) return { ...status, changed: false }
+  if (status.ready && manifest?.localization?.requested === localize && manifest.localization.revision === catalog.revision) {
+    verifyAppliedSnapshot(paths, manifest)
+    return { ...status, changed: false, localization: manifest.localization }
+  }
   const files = cursorPatchFiles(paths).filter(existsSync)
   const packageHash = digest(await readFile(join(paths.appRoot, 'package.json')))
-  // Upgrade only an intact installation recorded by us. 0.0.16 also updates Node routing
-  // and Agent Host turn selection; the manifest proves ownership when old readiness changes.
-  if (manifest?.state === 'applied' && manifest.appRoot === paths.appRoot
+  const owned = manifest?.state === 'applied' && manifest.appRoot === paths.appRoot
     && manifest.packageHash === packageHash && status.signature && status.proxy
     && files.length === manifest.entries.length
     && files.every(file => manifest.entries.some(entry => entry.file === file))
-    && manifest.entries.every(entry => digest(readFileSync(entry.file)) === entry.patchedHash)) {
-    await snapshotTransaction(files, directory, () => {
-      patchInject(paths, log)
-      patchAlwaysLocal(paths, log)
-      patchAgentHost(paths, log)
-      if (!cursorStatus({ paths }).ready) throw new Error('Upgraded Cursor compatibility hooks did not pass verification.')
-      if (digest(readFileSync(join(paths.appRoot, 'package.json'))) !== packageHash) throw new Error('Cursor changed version during setup.')
-    }, { appRoot: paths.appRoot, version: paths.cursorVersion, packageHash }, true)
-    log('Cursor compatibility hooks updated. Restart any open Cursor window once to load the model and chat compatibility fixes.')
-    return { ...cursorStatus({ paths }), changed: true }
-  }
-  await assertCleanInstallation(paths, manifest)
-  await snapshotTransaction(files, directory, () => {
+    && manifest.entries.every(entry => digest(readFileSync(entry.file)) === entry.patchedHash)
+  if (!owned) await assertCleanInstallation(paths, manifest)
+  const plan = await prepareLocalization(paths, localize, catalog, owned ? manifest : undefined)
+  if (plan.record.state === 'unsupported')
+    log(`Cursor ${paths.cursorVersion} localization skipped: original file hashes do not match the bundled translation. Model routing remains available.`)
+  const previousHashes = new Map(files.map(file => [file, digest(readFileSync(file))]))
+  await snapshotTransaction(files, directory, async () => {
+    // Apply to clean originals before the normal patcher. Never layer translations on injected code.
+    await writeLocalizedRenderers(paths, plan)
     patchInject(paths, log)
     patchAlwaysLocal(paths, log)
     patchAgentHost(paths, log)
-    patchProxy39(paths, log)
-    patchKatex(paths, log)
+    if (!owned) { patchProxy39(paths, log); patchKatex(paths, log) }
+    localizePickerSelector(paths, plan.record.state === 'enabled', log)
     const verified = cursorStatus({ paths })
-    if (!verified.ready) throw new Error(`Cursor hook verification failed (missing or incompatible installation files): ${JSON.stringify(verified)}`)
+    if (!verified.ready) throw new Error(`Cursor hook verification failed: ${JSON.stringify(verified)}`)
     if (digest(readFileSync(join(paths.appRoot, 'package.json'))) !== packageHash) throw new Error('Cursor changed version during setup.')
-  }, { appRoot: paths.appRoot, version: paths.cursorVersion, packageHash })
-  log('Cursor hooks installed. If Cursor is open, restart it once to load the hooks; enable the CCursor Agent in Magpie to use its models.')
-  return { ...cursorStatus({ paths }), changed: true }
+  }, { appRoot: paths.appRoot, version: paths.cursorVersion, packageHash, localization: plan.record }, !!owned)
+  const changed = files.some(file => digest(readFileSync(file)) !== previousHashes.get(file))
+  log(changed ? 'Cursor hooks and interface preference updated. Fully quit and reopen Cursor to load the changes.' : 'Cursor hooks are ready; interface preference recorded.')
+  return { ...cursorStatus({ paths }), changed, localization: plan.record }
 }
 
 async function assertCleanInstallation(paths: CursorPaths, manifest?: Snapshot, requireChecksums = false) {

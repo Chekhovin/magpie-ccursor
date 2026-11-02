@@ -14,6 +14,8 @@ Modifications replace the Cursor-specific SQLite binding with Bun SQLite, isolat
 
 The source listing and per-file SHA-256 comparison with the fresh upstream snapshot are recorded in [docs/upstream-changes.json](docs/upstream-changes.json). This records the modified and unchanged vendored files without copying installed software or user data.
 
+The optional `localization/zh-CN.json` catalog is separate from the upstream CCursor import. It was extracted from the user's authorized existing Cursor 3.27.22 interface translations and verified against the original English backups. It contains reversible text deltas and baseline hashes, not complete Cursor bundles or user configuration. Four known changes to internal `Files` and `Hooks` identifiers are retained solely to recognize and reverse the legacy localization; they are not applied in the new translated output. Product checksums are computed from the actual patched files. See [localization notes](docs/localization.md) for compatibility and restoration scope.
+
 README structure follows the separately downloaded [tommy0103/better-readme-skill](https://github.com/tommy0103/better-readme-skill). The skill itself is not redistributed in this package.
 
 Cursor, Magpie, and CCursor are names of their respective projects. This adaptation is not an official release from those projects.
