@@ -6,7 +6,7 @@ Use the models you configured in **Magpie** directly inside **Cursor**: manage m
 
 [AGPL-3.0-or-later](LICENSE) · Based on [CometixSpace/CCursor](https://github.com/CometixSpace/CCursor)
 
-Version `0.4.0` adds a **Cursor Chinese interface** switch, enabled by default, at the **bottom of Magpie’s Agent page**. Connections and model assignments remain under **Agent → CCursor**. The plugin retains upstream CCursor `0.0.16` protocol and routing support for **Cursor 3.27.x**.
+Version `0.4.0` adds a **Cursor Chinese interface** switch—enabled by default—at the **bottom of Magpie’s Agent page** (translating the sidebar, settings, and Agents Window), while connections and model assignments remain under **Agent → CCursor**. It also includes upstream CCursor `0.0.16` support for **Cursor 3.27.x** conversation protocols, Agents Window routing, and BYOK mode switching fixes.
 
 `magpie-ccursor` is a CCursor Agent plugin built for Magpie. It runs a lightweight local protocol bridge (`127.0.0.1:39831`) that forwards Cursor's model requests to your local Magpie gateway, which then routes them to your configured providers. Model usage is billed by the providers you configure in Magpie.
 
@@ -16,7 +16,7 @@ Cursor → Local CCursor bridge (127.0.0.1:39831) → Magpie gateway → Model p
 
 ## Quick start
 
-Installing the plugin in Magpie also sets up the Cursor client hooks automatically—no need to clone the repository or run `setup` commands for normal use. Connections and models are configured under **Agent → CCursor** in Magpie, with no separate CCursor setup page:
+Installing the plugin in Magpie also sets up the Cursor client hooks automatically—no need to clone the repository or run `setup` commands for normal use. Connections and models are configured under **Agent → CCursor** in Magpie with no separate setup page, and the optional Chinese interface is enabled by default at the **bottom of the Agent page**:
 
 1. Add `github:Chekhovin/magpie-ccursor` on Magpie's plugin page.
 2. Open **Agent → CCursor**, enable the connection, and select the models to assign to Cursor. If CCursor does not appear after installation, manually refresh the Magpie page first.
@@ -57,7 +57,7 @@ When Magpie first loads the plugin, it locates your local Cursor installation, b
 
 Earlier hooks backed up and managed by this plugin are upgraded automatically. Keep Magpie running after a Cursor update: the plugin checks the installation, backs up the new version, and reapplies compatible hooks. If setup exits unexpectedly while the current version's files still match their complete backups, it recovers and retries automatically. It also retries after another setup operation finishes. Once setup is complete, quit Cursor fully and reopen it; your model assignments stay in place.
 
-If a new Cursor release changes its interfaces, or files have been partially modified, the plugin retains the backups and reports the problem while awaiting a compatibility fix. It never restores older-version files over a new installation. For custom paths, write permissions, and recovery, see the [Setup and recovery guide (Chinese)](docs/setup.md).
+If a new Cursor release changes its interfaces, or files have been partially modified, the plugin retains the backups and reports the problem while awaiting a compatibility fix. It never restores older-version files over a new installation. If Cursor is installed in a custom location, set the `CCURSOR_CURSOR_ROOT` environment variable for Magpie pointing to Cursor's `resources/app` directory. For custom paths, write permissions, and recovery, see the [Setup and recovery guide (Chinese)](docs/setup.md).
 
 #### Already using upstream CCursor
 
@@ -67,9 +67,11 @@ For details on existing upstream installations, custom ports, patch compatibilit
 
 ## Chinese interface switch
 
-Find **Cursor Chinese interface** at the **bottom of Magpie’s Agent page**. It is enabled by default. Turning it off removes the plugin’s additional translations while keeping the CCursor hooks, model assignments, and existing conversations. After saving, the panel reloads itself to start the updated plugin. Wait for background setup, then quit Cursor completely and reopen it.
+Find **Cursor Chinese interface** at the **bottom of Magpie’s Agent page**. It is enabled by default; turning it off persists `false` across Magpie restarts and plugin updates, removing only the plugin’s additional UI translations while keeping the CCursor hooks, model assignments, and existing conversations intact. After saving, the panel reloads itself to activate the updated plugin host. Wait for background setup to finish, then quit Cursor completely and reopen it.
 
-The included translations are verified against the matching **Cursor 3.27.22 files**, covering the standard IDE and Agents Window. Different files—even under the same version number—skip localization while retaining model routing. This prevents older translations from being applied to an unfamiliar build. An existing VS Code Chinese language pack is managed separately and is not removed by this switch, so the base editor may remain in Chinese. See the [localization and recovery notes (Chinese)](docs/localization.md).
+The bundled translations are verified specifically against the two matching **Cursor 3.27.22** renderer files (checking both the version number and original file SHA-256 hashes), covering the sidebar and settings across both the standard IDE window and the Agents Window. The installer recognizes both clean English originals and the existing localized 3.27.22 baseline while preserving the internal `Files` and `Hooks` identifiers in English to avoid changing their behavior. Different builds, modified files, or other Cursor versions with non-matching hashes are marked `unsupported` and automatically skip localization while keeping model routing active—never applying old translations to unverified files.
+
+An existing VS Code Chinese language pack is managed separately and is not removed by this switch, so the base editor may remain in Chinese. Turning off this switch only removes the additional translation layer while keeping model hooks active, whereas running `bun cli.ts restore --cursor-closed` restores the initial `.original` client backups recorded by the plugin and pauses automatic setup. Because the panel only confirms that the option was saved, check Magpie’s plugin logs or run `bun cli.ts status` (`automaticSetup.localization`) if the interface does not change after restarting Cursor. See the [localization and recovery notes (Chinese)](docs/localization.md).
 
 ## Commands and configuration
 
@@ -77,11 +79,11 @@ You do not need the CLI for everyday use. For troubleshooting, foreground debugg
 
 | Action or setting | Command / details |
 | --- | --- |
-| Check bridge and patch status | `bun cli.ts status` (no keys are printed) |
+| Check bridge and patch status | `bun cli.ts status` (includes automatic setup and `localization` state; no keys are printed) |
 | Run the bridge in the foreground (debug) | `bun cli.ts start`; press `Ctrl+C` to stop |
-| Retry client setup manually | Close all Cursor windows, then run `bun cli.ts setup --cursor-closed` |
-| Restore patched Cursor files | Close all Cursor windows, then run `bun cli.ts restore --cursor-closed` |
-| Additional Cursor translations | **Bottom of Magpie’s Agent page → Cursor Chinese interface**; enabled by default |
+| Retry client setup manually | Close all Cursor windows, then run `bun cli.ts setup --cursor-closed` (also re-enables automatic setup after a manual `restore`) |
+| Restore patched Cursor files | Close all Cursor windows, then run `bun cli.ts restore --cursor-closed` (restores initial backups and pauses automatic setup) |
+| Additional Cursor translations | **Bottom of Magpie’s Agent page → Cursor Chinese interface** (enabled by default; synced to `~/.magpie-ccursor/plugin-options.json`) |
 | Providers, models, and Agent key | Manage providers and API keys in Magpie; connect and assign models under **Agent → CCursor** |
 | Local state and conversation database | `~/.magpie-ccursor/` (isolated; does not read or import `~/.ccursor`) |
 | Connection config file | `~/.magpie-ccursor/connection.json` (written and restored by Magpie) |
@@ -91,6 +93,7 @@ You do not need the CLI for everyday use. For troubleshooting, foreground debugg
 ## Troubleshooting and documentation
 
 - **Setup, recovery, and troubleshooting (Chinese):** [docs/setup.md](docs/setup.md)
+- **Chinese interface switch and recovery notes (Chinese):** [docs/localization.md](docs/localization.md)
 - **Architecture and runtime boundaries:** [docs/architecture.md](docs/architecture.md)
 - **Local development and checks:** [CONTRIBUTING.md](CONTRIBUTING.md)
 
