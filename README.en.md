@@ -2,11 +2,7 @@
 
 **English** · [简体中文](README.md)
 
-Use the models you configured in **Magpie** directly inside **Cursor**: manage model providers, API keys, and usage tracking in Magpie while switching models, chatting, and running Agent tasks in Cursor.
-
-[AGPL-3.0-or-later](LICENSE) · Based on [CometixSpace/CCursor](https://github.com/CometixSpace/CCursor)
-
-Version `0.4.0` adds a **Cursor Chinese interface** switch—enabled by default—at the **bottom of Magpie’s Agent page** (translating the sidebar, settings, and Agents Window), while connections and model assignments remain under **Agent → CCursor**. It also includes upstream CCursor `0.0.16` support for **Cursor 3.27.x** conversation protocols, Agents Window routing, and BYOK mode switching fixes.
+Use the models you manage in **Magpie** directly inside **Cursor**: configure model providers, API keys, and usage tracking in Magpie while switching models, chatting, and running Agent tasks in Cursor.
 
 `magpie-ccursor` is a CCursor Agent plugin built for Magpie. It runs a lightweight local protocol bridge (`127.0.0.1:39831`) that forwards Cursor's model requests to your local Magpie gateway, which then routes them to your configured providers. Model usage is billed by the providers you configure in Magpie.
 
@@ -16,91 +12,79 @@ Cursor → Local CCursor bridge (127.0.0.1:39831) → Magpie gateway → Model p
 
 ## Quick start
 
-Installing the plugin in Magpie also sets up the Cursor client hooks automatically—no need to clone the repository or run `setup` commands for normal use. Connections and models are configured under **Agent → CCursor** in Magpie with no separate setup page, and the optional Chinese interface is enabled by default at the **bottom of the Agent page**:
+After installation in Magpie, the plugin automatically checks and sets up a compatible Cursor client. For everyday use, there is no need to clone the repository, install Bun separately, or run `setup` commands:
 
-1. Add `github:Chekhovin/magpie-ccursor` on Magpie's plugin page.
-2. Open **Agent → CCursor**, enable the connection, and select the models to assign to Cursor. If CCursor does not appear after installation, manually refresh the Magpie page first.
-3. Open Cursor and pick a model from the model picker (if Cursor was running while you installed or updated the plugin, quit it completely and reopen it so the hooks load), then send a test message:
+1. Add `github:Chekhovin/magpie-ccursor` on Magpie's plugin page, or install it via the Magpie CLI:
+
+   ```sh
+   magpie plugin add github:Chekhovin/magpie-ccursor
+   ```
+
+2. Open **Agent → CCursor**, enable the connection, and select the models to assign to Cursor. If CCursor does not appear immediately after installation, manually refresh the Magpie page. The optional **Cursor Chinese interface** switch is at the **bottom of the Agent page** and enabled by default.
+3. Open Cursor and pick a model in the model picker (if Cursor was running while you installed or updated the plugin, quit it completely and reopen it first so the hooks load), then send a test message:
 
    > Reply only with "Connected successfully".
 
-Keep Magpie running while you use Cursor:
+For everyday use, keep the following in mind:
 
-- Assigned models sync to both the standard IDE window and the Agents Window. Changing model assignments in Magpie updates Cursor automatically, and updating the plugin keeps your existing model selections.
-- Cursor's **Auto** and new conversations without a specified model use the default model assigned by Magpie. You can also choose a specific model in the picker.
-- Model requests authenticate with the dedicated Agent key Magpie assigns to CCursor, so usage is tracked specifically under that Agent.
-- Disabling the CCursor connection in Magpie stops the local bridge; re-enabling it starts the bridge again.
+- **Keep Magpie running:** The local bridge runs alongside Magpie's plugin host. Disabling the CCursor connection in Magpie stops the bridge; re-enabling it starts the bridge again.
+- **Automatic model sync:** Assigned models sync to both the standard IDE window and the Agents Window. Changes in Magpie update automatically, and plugin updates preserve your existing assignments.
+- **Default model and usage tracking:** Cursor's **Auto** mode and new conversations without an explicit model choice use the first enabled model assigned by Magpie. Model requests authenticate with CCursor's dedicated Agent key so usage is tracked under that Agent.
 
-## Installation and setup
+## Client setup and updates
 
-Before starting, make sure you have a Magpie version with Agent plugin support and the Cursor desktop app. Magpie's bundled Bun runtime loads the plugin entry points directly, so you do not need a separate Bun installation just to use the plugin.
+Magpie's built-in Bun runtime loads the plugin directly. On first load, the plugin locates your local Cursor installation, backs up the original files, and installs the client hooks automatically.
 
-### Step 1: Install the plugin in Magpie
+- **Plugin and client updates:** Hooks managed by this plugin upgrade automatically when the plugin updates. After a Cursor update, keep Magpie running so the plugin can back up the new files and reapply compatible hooks, then quit Cursor completely and reopen it.
+- **Compatibility safeguards:** Client hooks only apply to supported Cursor builds rather than all Cursor versions universally. If a newer Cursor release changes its internal interfaces or client files were modified externally, the plugin preserves its backups and logs the reason without overwriting the new installation with older files.
+- **Custom installation path:** If Cursor is installed in a non-default location, set the `CCURSOR_CURSOR_ROOT` environment variable for Magpie pointing to Cursor's `resources/app` directory.
 
-Add the following plugin source on Magpie's plugin page:
+For custom paths, write permissions, interrupted setup recovery, and compatibility details, see the [Setup and recovery guide (Chinese)](docs/setup.md).
 
-```text
-github:Chekhovin/magpie-ccursor
-```
+### Already using upstream CCursor
 
-Or install it via the Magpie CLI:
-
-```sh
-magpie plugin add github:Chekhovin/magpie-ccursor
-```
-
-### Step 2: Enable the Agent and open Cursor
-
-If CCursor does not appear on Magpie's Agent page immediately after installation, manually refresh the page, then enable the connection and assign models. You do not need to reinstall the plugin.
-
-When Magpie first loads the plugin, it locates your local Cursor installation, backs up the original files, and installs the client hooks. Connect and assign models under **Agent → CCursor**, then open Cursor to start using them. If Cursor was running during plugin installation or update, quit Cursor completely and reopen it.
-
-Earlier hooks backed up and managed by this plugin are upgraded automatically. Keep Magpie running after a Cursor update: the plugin checks the installation, backs up the new version, and reapplies compatible hooks. If setup exits unexpectedly while the current version's files still match their complete backups, it recovers and retries automatically. It also retries after another setup operation finishes. Once setup is complete, quit Cursor fully and reopen it; your model assignments stay in place.
-
-If a new Cursor release changes its interfaces, or files have been partially modified, the plugin retains the backups and reports the problem while awaiting a compatibility fix. It never restores older-version files over a new installation. If Cursor is installed in a custom location, set the `CCURSOR_CURSOR_ROOT` environment variable for Magpie pointing to Cursor's `resources/app` directory. For custom paths, write permissions, and recovery, see the [Setup and recovery guide (Chinese)](docs/setup.md).
-
-#### Already using upstream CCursor
-
-Stop the original CCursor server and disable its auto-start to avoid a conflict on port `39831`; you can keep its installation files. Upstream client patches may not be compatible with this plugin. If the logs report incomplete patches or an upgrade that cannot proceed safely, restore them using the original installation's recovery method, or use a clean Cursor installation, then let this plugin set it up automatically.
-
-For details on existing upstream installations, custom ports, patch compatibility, and recovery, see the [Setup and recovery guide (Chinese)](docs/setup.md).
+Stop the original CCursor server and disable its auto-start to avoid a conflict on port `39831`; you can keep its installation files. Upstream client patches may not be compatible with this plugin. If logs report incomplete patches or an unsafe upgrade, restore the client files using the original installation's recovery method (or start from a clean Cursor installation) before letting this plugin set it up automatically. See the [Setup and recovery guide (Chinese)](docs/setup.md).
 
 ## Chinese interface switch
 
-Find **Cursor Chinese interface** at the **bottom of Magpie’s Agent page**. It is enabled by default; turning it off persists `false` across Magpie restarts and plugin updates, removing only the plugin’s additional UI translations while keeping the CCursor hooks, model assignments, and existing conversations intact. After saving, the panel reloads itself to activate the updated plugin host. Wait for background setup to finish, then quit Cursor completely and reopen it.
+The **Cursor Chinese interface** switch at the **bottom of Magpie's Agent page** is enabled by default and translates the sidebar, settings, and related UI across both the standard IDE window and the Agents Window:
 
-The bundled translations are verified specifically against the two matching **Cursor 3.27.22** renderer files (checking both the version number and original file SHA-256 hashes), covering the sidebar and settings across both the standard IDE window and the Agents Window. The installer recognizes both clean English originals and the existing localized 3.27.22 baseline while preserving the internal `Files` and `Hooks` identifiers in English to avoid changing their behavior. Different builds, modified files, or other Cursor versions with non-matching hashes are marked `unsupported` and automatically skip localization while keeping model routing active—never applying old translations to unverified files.
+- **Independent and persistent toggle:** Turning the switch off saves `false` persistently across Magpie restarts and plugin updates. It removes only the plugin's UI translations while leaving model hooks, assigned models, and conversation history intact. After saving, wait for background setup to finish, then quit Cursor completely and reopen it.
+- **Localization compatibility:** Bundled translations apply only to Cursor builds whose version and original file hashes match the verified catalog. Unmatched builds skip localization; skipping translation does not itself disable model routing, though the client hooks must still be compatible with Cursor. If files were modified externally, the plugin may stop setup and retain its backups.
+- **Difference from language packs and `restore`:**
+  - Any installed VS Code Chinese language pack is managed separately and is not removed by this switch, so the base editor may remain in Chinese.
+  - Turning off this switch only removes the plugin's translation layer while keeping model hooks active, whereas running `bun cli.ts restore --cursor-closed` restores the initial `.original` client backups and pauses automatic setup.
 
-An existing VS Code Chinese language pack is managed separately and is not removed by this switch, so the base editor may remain in Chinese. Turning off this switch only removes the additional translation layer while keeping model hooks active, whereas running `bun cli.ts restore --cursor-closed` restores the initial `.original` client backups recorded by the plugin and pauses automatic setup. Because the panel only confirms that the option was saved, check Magpie’s plugin logs or run `bun cli.ts status` (`automaticSetup.localization`) if the interface does not change after restarting Cursor. See the [localization and recovery notes (Chinese)](docs/localization.md).
+If the interface does not change as expected after restarting Cursor, check Magpie's plugin logs or run `bun cli.ts status`. For compatibility scope and recovery details, see the [localization and recovery notes (Chinese)](docs/localization.md).
 
 ## Commands and configuration
 
-You do not need the CLI for everyday use. For troubleshooting, foreground debugging, or manual recovery from a local clone of this repository, use `bun cli.ts` (requires [Bun](https://bun.sh) `>= 1.3.0`):
+You do not need the CLI for everyday use. For troubleshooting, foreground debugging, or manual recovery, install [Bun](https://bun.sh), then clone the repository and install its dependencies as shown in the [setup and recovery guide](docs/setup.md). Run `bun cli.ts` from the repository directory:
 
 | Action or setting | Command / details |
 | --- | --- |
-| Check bridge and patch status | `bun cli.ts status` (includes automatic setup and `localization` state; no keys are printed) |
+| Check bridge and patch status | `bun cli.ts status` (inspects the bridge, client patches, and automatic setup state; prints no keys) |
 | Run the bridge in the foreground (debug) | `bun cli.ts start`; press `Ctrl+C` to stop |
 | Retry client setup manually | Close all Cursor windows, then run `bun cli.ts setup --cursor-closed` (also re-enables automatic setup after a manual `restore`) |
 | Restore patched Cursor files | Close all Cursor windows, then run `bun cli.ts restore --cursor-closed` (restores initial backups and pauses automatic setup) |
-| Additional Cursor translations | **Bottom of Magpie’s Agent page → Cursor Chinese interface** (enabled by default; synced to `~/.magpie-ccursor/plugin-options.json`) |
-| Providers, models, and Agent key | Manage providers and API keys in Magpie; connect and assign models under **Agent → CCursor** |
+| Additional Cursor translations | **Bottom of Magpie's Agent page → Cursor Chinese interface** (enabled by default; synced to `~/.magpie-ccursor/plugin-options.json`) |
+| Providers, models, and Agent key | Manage providers and API keys in Magpie; enable connection and assign models under **Agent → CCursor** |
 | Local state and conversation database | `~/.magpie-ccursor/` (isolated; does not read or import `~/.ccursor`) |
-| Connection config file | `~/.magpie-ccursor/connection.json` (written and restored by Magpie) |
+| Connection config file | `~/.magpie-ccursor/connection.json` (written and restored automatically by Magpie) |
 
-> **Security note:** The connection and derived provider files inside `~/.magpie-ccursor/` contain your local gateway key. Never commit those files or paste their keys into an issue or log snippet.
+> **Security note:** The connection and derived provider files inside `~/.magpie-ccursor/` contain your local gateway key. Never upload those files or paste their keys into an issue or log snippet.
 
 ## Troubleshooting and documentation
 
 - **Setup, recovery, and troubleshooting (Chinese):** [docs/setup.md](docs/setup.md)
-- **Chinese interface switch and recovery notes (Chinese):** [docs/localization.md](docs/localization.md)
+- **Chinese interface switch and compatibility notes (Chinese):** [docs/localization.md](docs/localization.md)
 - **Architecture and runtime boundaries:** [docs/architecture.md](docs/architecture.md)
 - **Local development and checks:** [CONTRIBUTING.md](CONTRIBUTING.md)
 
-Running into issues? Please [open an issue](https://github.com/Chekhovin/magpie-ccursor/issues) with your Magpie, Bun, and Cursor versions, reproduction steps, and redacted logs.
+Running into issues? Please [open an issue](https://github.com/Chekhovin/magpie-ccursor/issues) with your environment details, reproduction steps, and redacted logs.
 
 ## Credits and license
 
-The protocol bridge and client patching logic are adapted from [CometixSpace/CCursor (`0.0.16`)](https://github.com/CometixSpace/CCursor/tree/c110c6e8ae34f785bca453c163bc113993f19b70). Changes made for Magpie Agent integration are documented in [NOTICE.md](NOTICE.md).
-
-Licensed under [AGPL-3.0-or-later](LICENSE). This is a community-maintained third-party plugin and is not an official release from Cursor, Magpie, or CCursor. It is provided "as is", without warranty of any kind.
+- The protocol bridge and client patching logic are adapted from [CometixSpace/CCursor](https://github.com/CometixSpace/CCursor). Changes made for Magpie Agent integration are documented in [NOTICE.md](NOTICE.md).
+- Cursor interface localization references [rongwei-lab/cursor-chinese](https://github.com/rongwei-lab/cursor-chinese).
+- Licensed under [AGPL-3.0-or-later](LICENSE). This is a community-maintained third-party plugin and is not an official release from Cursor, Magpie, or CCursor. It is provided "as is", without warranty of any kind.
