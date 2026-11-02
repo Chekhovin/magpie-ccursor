@@ -10,6 +10,8 @@
 
 One initial full run failed an obsolete log-string assertion and encountered a transient Windows `EPERM` in the existing routes writer. The log assertion was updated for the changed message; the subsequent full run passed. No unrelated route-writer refactor was introduced.
 
+The first Linux CI run exposed an `ENOTDIR` preference-read error preceding the normal automatic-setup error boundary. Preference errors now enter that boundary without touching Cursor, and a repaired option can trigger recovery. The affected 34 local tests passed (285 assertions), including a new malformed-option/recovery test. Final cross-platform results are tracked by the corresponding CI run.
+
 
 ## 0.3.0 upstream synchronization (2026-11-02)
 

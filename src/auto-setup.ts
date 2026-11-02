@@ -24,7 +24,7 @@ export function createAutoSetup(options: SetupOptions & {
   let loaded = false, previous: AutoSetupStatus | undefined
   let candidate = '', changedAt = 0, nextCheck = 0, completed = ''
   let lastPreference: boolean | undefined
-  async function fingerprint(localize: boolean) {
+  async function fingerprint(localize: boolean | undefined) {
     let target: string
     try { target = cursorTargetFingerprint(options) }
     catch (error) { target = JSON.stringify([options.appRoot ?? process.env.CCURSOR_CURSOR_ROOT ?? 'auto-detect', String(error)]) }
@@ -34,8 +34,11 @@ export function createAutoSetup(options: SetupOptions & {
     return JSON.stringify(['cursor-localization-v1', localize, target, snapshot?.mtimeMs, snapshot?.ctimeMs, snapshot?.size, lock?.mtimeMs, lock?.size])
   }
   return async function reconcileAutoSetup() {
-    const localize = options.localize ?? await getLocalize()
-    if (typeof localize !== 'boolean') throw new Error('Invalid Cursor localization preference.')
+    let localize: boolean | undefined, preferenceError: unknown
+    try {
+      localize = options.localize ?? await getLocalize()
+      if (typeof localize !== 'boolean') throw new Error('Invalid Cursor localization preference.')
+    } catch (error) { preferenceError = error; localize = undefined }
     if (lastPreference !== localize) { nextCheck = 0; completed = ''; candidate = ''; lastPreference = localize }
     if (now() < nextCheck) return
     if (!loaded) {
@@ -53,6 +56,7 @@ export function createAutoSetup(options: SetupOptions & {
     let status: AutoSetupStatus
     let paths: ReturnType<typeof resolveCursorPaths> | undefined
     try {
+      if (preferenceError) throw preferenceError
       const snapshot = JSON.parse(await readFile(join(dataDir, 'patch-manifest.json'), 'utf8').catch(() => 'null'))
       if (snapshot?.state === 'restored' || snapshot?.state === 'restoring') {
         const message = 'Automatic Cursor setup is paused after manual restore. To enable it again, close Cursor and run: magpie-ccursor setup --cursor-closed'

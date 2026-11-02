@@ -132,6 +132,20 @@ test('saved OFF survives host restart; missing options default ON and invalid va
   await expect(readLocalizationOption(f.dataDir)).rejects.toThrow()
 })
 
+test('invalid preference reports a failure without patching, then recovers when the option is fixed', async () => {
+  const f = await fixture(); let time = 1000
+  await saveLocalizationOption(f.dataDir, { localize: false })
+  await writeFile(join(f.dataDir, 'plugin-options.json'), '{bad')
+  const reconcile = createAutoSetup({ ...f, now: () => time, settleMs: 0, checkIntervalMs: 30000 })
+  await reconcile()
+  expect(JSON.parse(await readFile(join(f.dataDir, 'auto-setup.json'), 'utf8')).state).toBe('failed')
+  for (const [file, text] of f.sources) expect(await readFile(file, 'utf8')).toBe(text)
+  await saveLocalizationOption(f.dataDir, { localize: false })
+  time += 1; await reconcile()
+  expect((await snapshot(f.dataDir)).localization.state).toBe('disabled')
+  expect(cursorStatus(f).ready).toBe(true)
+})
+
 test('preference changes bypass the long polling interval; restore intent remains paused', async () => {
   const f = await fixture(); let time = 1000, localize = true
   const reconcile = createAutoSetup({ ...f, now: () => time, getLocalize: () => localize, settleMs: 0, checkIntervalMs: 30000 })
