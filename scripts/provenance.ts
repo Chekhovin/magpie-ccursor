@@ -1,10 +1,14 @@
 import { readdir, readFile, writeFile } from 'node:fs/promises'
 import { join, relative, resolve } from 'node:path'
 import { createHash } from 'node:crypto'
+import { execFileSync } from 'node:child_process'
 
 const upstream = process.argv[2]
 if (!upstream) throw new Error('Usage: bun scripts/provenance.ts /path/to/fresh-CCursor-clone')
 const root = resolve(import.meta.dir, '..')
+const commit = execFileSync('git', ['-C', upstream, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim()
+if (commit !== 'c110c6e8ae34f785bca453c163bc113993f19b70')
+  throw new Error('Use the verified CCursor 0.0.16 snapshot c110c6e8, not the moving main branch.')
 const sha256 = (value: Buffer) => createHash('sha256').update(value).digest('hex')
 async function walk(dir: string): Promise<string[]> {
   const result: string[] = []
@@ -25,5 +29,5 @@ for (const [local, original] of [['vendor/server', 'Cursor++/src/server'], ['ven
     files.push({ path: relative(root, path).replaceAll('\\', '/'), upstream: sourceBytes ? join(original, suffix).replaceAll('\\', '/') : null, upstreamSha256: upstreamHash, sha256: adaptedHash, modified: upstreamHash !== adaptedHash, ...(!sourceBytes ? { added: true } : {}) })
   }
 }
-await writeFile(join(root, 'docs/upstream-changes.json'), JSON.stringify({ upstream: 'https://github.com/CometixSpace/CCursor', commit: 'fcac85db793fc2c8cda3318b96ec5a41c24f5e26', adapted: '2026-10-21', files }, null, 2) + '\n')
+await writeFile(join(root, 'docs/upstream-changes.json'), JSON.stringify({ upstream: 'https://github.com/CometixSpace/CCursor', commit, version: '0.0.16', adapted: '2026-11-02', files }, null, 2) + '\n')
 console.log(`Recorded ${files.length} vendored files, ${files.filter(f => f.modified).length} modified.`)

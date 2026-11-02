@@ -38,7 +38,7 @@ async function runtime(dataDir: string, port = 0) {
 async function providers(dir: string, baseUrl: string, key = 'fixture-key', apiModel = 'fixture-model') {
   await writeFile(join(dir, 'providers.json'), JSON.stringify({ $schemaVersion: 1, providers: [{
     id: 'fixture', name: 'Fixture', type: 'openai-chat', baseUrl,
-    auth: { kind: 'apiKey', value: key }, models: [{ id: 'fixture-picker', apiModel, displayName: 'Fixture Model', thinking: false, contextTokenLimit: 32768, maxOutputTokens: 256, supportsAgent: true }],
+    auth: { kind: 'apiKey', value: key }, models: [{ id: 'fixture-picker', apiModel, displayName: 'Fixture Model', thinking: false, contextTokenLimit: 32768, maxOutputTokens: 256, supportsAgent: true, defaultOn: true }],
   }] }))
 }
 async function modelList(url: string) {
@@ -150,7 +150,7 @@ test('BidiAppend accepts binary frames and rejects malformed input without a fal
   await expect(bidi.bidiAppend({ requestId: { requestId: 'no-data' } })).rejects.toThrow('requires requestId')
 })
 
-for (const selectedModel of ['fixture-picker', 'default']) {
+for (const selectedModel of ['fixture-picker', 'default', 'auto', '']) {
 test(`RunSSE + BidiAppend resolve ${selectedModel} and return OpenAI SSE text`, async () => {
   const mock = mockOpenAI()
   const dir = await directory()

@@ -45,7 +45,7 @@ Cursor 3.26 uses a local inference loop by default for some accounts. Its `RunIn
 
 Model catalog synchronization tracks captured AiService instances by their reactive storage. While BYOK is active, it requests the parsed model catalog through the client's existing transport and requires the bridge's `x-magpie-ccursor-catalog` response header before adopting it. Models, picker display configuration and feature defaults form one snapshot; reactive change notifications repair stale window snapshots without modifying credentials or model enable/disable preferences. OFF and disconnect invalidate pending replies, dispose observers, restore the previous catalog (including the own-key cache when enabled), and resume native refresh. The synchronizer reuses the existing SSE connection. `globalThis.__magpieCatalogSync.status()` reports only state and model counts for diagnosis.
 
-Cursor's reserved Auto ID `default` maps to the same assigned default used by `GetDefaultModel` and feature defaults. An explicitly assigned ID takes precedence, and all other unknown IDs still fail with instructions for Magpie → Agent → CCursor.
+Cursor's placeholder IDs `default`, `auto`, and an empty model choice map to the same explicitly enabled assigned default used by `GetDefaultModel` and feature defaults. Magpie emits `defaultOn: true` for each assigned model. A registered exact ID takes precedence over alias interpretation; disabled or missing default candidates are never used as an implicit fallback. Other unknown IDs still fail with instructions for Magpie → Agent → CCursor.
 
 Automatic setup is independent of Agent connection state and is idempotent for a fully patched installation. Setup and restore use a kernel-held loopback port guard derived from the canonical data directory, followed by the legacy `patch.lock` for compatibility with older writers. The OS releases the guard when the process exits. Only a well-formed owner record whose PID probe returns `ESRCH` can be archived; an old writer winning file-lock acquisition is never overwritten. The complete owner record is published through an exclusive hard link. A port collision or live/unknown owner produces `waiting` and is retried without requiring target changes. Unsupported hard-link filesystems fail closed.
 
@@ -53,9 +53,21 @@ A same-version interrupted setup is recovered only under both locks, with a matc
 
 A clean newer Cursor version gets its own snapshot; prior backups remain available. If the package version changes during patching, rollback is skipped to avoid copying old files over the updater's files. Manual restore records `restoring` before the first target copy and pauses automatic setup across crashes. Automatic setup rechecks that intent inside its critical section; only explicit setup after a completed restore enables it again. Patching never closes Cursor: an already-running client must be restarted to load the hooks. Status is reported in `auto-setup.json` and logs without stopping the model bridge.
 
+## Upstream 0.0.16 integration
+
+The synchronized snapshot is `c110c6e8ae34f785bca453c163bc113993f19b70`, whose extension and installer both declare `0.0.16`. There is no matching release tag. Four generated protobuf modules now match Cursor 3.27.22; shared enum imports and removed service handlers follow the new descriptors.
+
+Agent Window renderer hook rev2 routes advertised unary and server-streaming Connect RPCs to the loopback bridge. REST and RPC rules arrive over the same SSE connection. Unsupported client/bidirectional streaming kinds keep their original transport; an already-consumed stream is never replayed. The local stream decoder validates framing and terminal metadata, rejects premature EOF, and releases its response reader.
+
+Node HTTP/1.1 router V3 reloads route metadata before a request is routed and exposes a process-local predicate. The Agent Host turn guard checks that predicate before allowing the managed-local inference branch. BYOK routes use Connect, and disabling BYOK preserves the official branch. ServerConfig explicitly disables HTTP/2 while locally routed.
+
+BYOK mode writes accept an idempotent target value; legacy toggle requests are debounced. The Magpie adaptation serializes the complete read/decide/write operation and resets debounce state between runtime instances. Mode changes push REST/RPC rules, a debounced refresh, and one later refresh to replace an in-flight official model response. Both timers are cancelled when the runtime stops.
+
+A recorded, hash-matching old plugin installation can upgrade renderer, always-local and Agent Host patches in one snapshot transaction. This differs from upstream's uninstall-first requirement and retains the pristine backup across upgrades. Unrecorded changes remain blocked; no foreign file is silently accepted as a new baseline.
+
 ## Sources
 
 - [Magpie plugin guide](https://usemagpie.ai/docs/zh/plugins)
-- [CCursor source baseline](https://github.com/CometixSpace/CCursor/tree/fcac85db793fc2c8cda3318b96ec5a41c24f5e26)
+- [CCursor source baseline](https://github.com/CometixSpace/CCursor/tree/c110c6e8ae34f785bca453c163bc113993f19b70)
 - [Magpie plugin host](https://github.com/yetone/magpie/blob/main/internal/plugin/host.js)
 - [Magpie Agent configuration writer](https://github.com/yetone/magpie/blob/main/internal/agent/plugged.go)

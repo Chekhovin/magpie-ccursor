@@ -1,7 +1,8 @@
 {
   "upstream": "https://github.com/CometixSpace/CCursor",
-  "commit": "fcac85db793fc2c8cda3318b96ec5a41c24f5e26",
-  "adapted": "2026-10-21",
+  "commit": "c110c6e8ae34f785bca453c163bc113993f19b70",
+  "version": "0.0.16",
+  "adapted": "2026-11-02",
   "files": [
     {
       "path": "vendor/server/config/atomic.ts",
@@ -48,9 +49,9 @@
     {
       "path": "vendor/server/config/routesStore.ts",
       "upstream": "Cursor++/src/server/config/routesStore.ts",
-      "upstreamSha256": "94ea4bd03ac4eec83cb421aaa1aa6ef138b558e4983f697d5790c2653b1d4a8f",
-      "sha256": "94ea4bd03ac4eec83cb421aaa1aa6ef138b558e4983f697d5790c2653b1d4a8f",
-      "modified": false
+      "upstreamSha256": "f7c91eeab843d7227904a0b05a85c128d5f2e47bc2d3ffb9db34b5098344eef3",
+      "sha256": "831208e162e6165b158cf0035dda1894d5e2a66c80a3efa152dc98728aeabeff",
+      "modified": true
     },
     {
       "path": "vendor/server/config/searchConfigStore.ts",
@@ -69,8 +70,8 @@
     {
       "path": "vendor/server/data/defaults.ts",
       "upstream": "Cursor++/src/server/data/defaults.ts",
-      "upstreamSha256": "d37ea0a95017acaa7aad8596a11e895ac6e306f7ee00ad20522f79c639a7629c",
-      "sha256": "d37ea0a95017acaa7aad8596a11e895ac6e306f7ee00ad20522f79c639a7629c",
+      "upstreamSha256": "192627e7f12e1f7356943c4c10d53f869426886420308b43e17a7a0bae7dd6a0",
+      "sha256": "192627e7f12e1f7356943c4c10d53f869426886420308b43e17a7a0bae7dd6a0",
       "modified": false
     },
     {
@@ -104,29 +105,29 @@
     {
       "path": "vendor/server/gen/agent_v1_pb.ts",
       "upstream": "Cursor++/src/server/gen/agent_v1_pb.ts",
-      "upstreamSha256": "4691e586d1dbb0c14070a2895b1c196dd12d8b339e49ec7a1d78bd3239f20ad2",
-      "sha256": "4691e586d1dbb0c14070a2895b1c196dd12d8b339e49ec7a1d78bd3239f20ad2",
+      "upstreamSha256": "b607172ad1a1bd2a770cc9bfddc705799edfa4e0b67d66bbdadaeabad039ead1",
+      "sha256": "b607172ad1a1bd2a770cc9bfddc705799edfa4e0b67d66bbdadaeabad039ead1",
       "modified": false
     },
     {
       "path": "vendor/server/gen/aiserver_v1_pb.ts",
       "upstream": "Cursor++/src/server/gen/aiserver_v1_pb.ts",
-      "upstreamSha256": "aa9961c10ad735ec07ad5c5d00ac99a56e68b800d7758602f83e06d0fef1e4c0",
-      "sha256": "aa9961c10ad735ec07ad5c5d00ac99a56e68b800d7758602f83e06d0fef1e4c0",
+      "upstreamSha256": "c0e039e05b202fcb428ccfec8e809299e30eb72d952e9e7669b7f1e1b5a4ac54",
+      "sha256": "c0e039e05b202fcb428ccfec8e809299e30eb72d952e9e7669b7f1e1b5a4ac54",
       "modified": false
     },
     {
       "path": "vendor/server/gen/aiserver_v1_shared_pb.ts",
       "upstream": "Cursor++/src/server/gen/aiserver_v1_shared_pb.ts",
-      "upstreamSha256": "38096443dd39278ce9ece353e675cb869cef484428a7239aa992b751d7d7841f",
-      "sha256": "38096443dd39278ce9ece353e675cb869cef484428a7239aa992b751d7d7841f",
+      "upstreamSha256": "288f8cb5f5e0845e06ebe43ec24508739bd3739ccb1f07f952e63d2c3565b6ec",
+      "sha256": "288f8cb5f5e0845e06ebe43ec24508739bd3739ccb1f07f952e63d2c3565b6ec",
       "modified": false
     },
     {
       "path": "vendor/server/gen/anyrun_v1_pb.ts",
       "upstream": "Cursor++/src/server/gen/anyrun_v1_pb.ts",
-      "upstreamSha256": "72f3cf5d04a5507c73cb4955ec63b765ab144aaf93d8a26dab85b676a618b79f",
-      "sha256": "72f3cf5d04a5507c73cb4955ec63b765ab144aaf93d8a26dab85b676a618b79f",
+      "upstreamSha256": "e86716fca9306fba7f58faa39c986f681c8f83e31cecbb606f8f32706801da7c",
+      "sha256": "e86716fca9306fba7f58faa39c986f681c8f83e31cecbb606f8f32706801da7c",
       "modified": false
     },
     {
@@ -335,8 +336,8 @@
     {
       "path": "vendor/server/handlers/agent/protocol/parseRunRequest.ts",
       "upstream": "Cursor++/src/server/handlers/agent/protocol/parseRunRequest.ts",
-      "upstreamSha256": "c0c13a50b122b37870e8cb0f650d2654460c5e53fc2178c37d5763592f11d98d",
-      "sha256": "c0c13a50b122b37870e8cb0f650d2654460c5e53fc2178c37d5763592f11d98d",
+      "upstreamSha256": "11aac8796239a062b3ae3dfbb261ab84a95756d3c945a5d51cf555aa60c95269",
+      "sha256": "11aac8796239a062b3ae3dfbb261ab84a95756d3c945a5d51cf555aa60c95269",
       "modified": false
     },
     {
@@ -951,15 +952,22 @@
     {
       "path": "vendor/server/handlers/models/byokModelBuilder.ts",
       "upstream": "Cursor++/src/server/handlers/models/byokModelBuilder.ts",
-      "upstreamSha256": "1877d0bc503d293df24c5a4e8bc4393acb38246185239ec02aaefe097838f9b2",
-      "sha256": "1877d0bc503d293df24c5a4e8bc4393acb38246185239ec02aaefe097838f9b2",
+      "upstreamSha256": "c0a718dbeae08194d369fed4af40e61cfd75a765bfe269e5db682a2bc153d5d5",
+      "sha256": "c0a718dbeae08194d369fed4af40e61cfd75a765bfe269e5db682a2bc153d5d5",
       "modified": false
     },
     {
       "path": "vendor/server/handlers/models/mapper.ts",
       "upstream": "Cursor++/src/server/handlers/models/mapper.ts",
-      "upstreamSha256": "bfe7cb1d31706f0d6062850d970f537bc10ddfc75ff9b4b3a9f52a5064988770",
-      "sha256": "1d426ec54b744bb343948c89fc9bdb168bb33d903d21e3101f0c5dac4b6e0632",
+      "upstreamSha256": "84936421d0dbebfab5ba3c81e63a5b92c0466085b3ff01114b4a769cbd386598",
+      "sha256": "8e61f47c7468b06dd5aa406156406543979310712465ce3421b03825ef24cfe2",
+      "modified": true
+    },
+    {
+      "path": "vendor/server/handlers/models/requestedModelId.ts",
+      "upstream": "Cursor++/src/server/handlers/models/requestedModelId.ts",
+      "upstreamSha256": "8604e479ac3d9bce5d57a6b91939f0835855de03976ef3895575fe548ffbad06",
+      "sha256": "69efc1459de41a6ba731a5e7200c35ecb0a0b430b7275446a26d01ad8e42d9c9",
       "modified": true
     },
     {
@@ -972,15 +980,15 @@
     {
       "path": "vendor/server/handlers/server/config.ts",
       "upstream": "Cursor++/src/server/handlers/server/config.ts",
-      "upstreamSha256": "63348d4c8d6fbfeb00c5a9595ce9e7d6c642e92932e2f6a8d5bd4b9b915295e0",
-      "sha256": "63348d4c8d6fbfeb00c5a9595ce9e7d6c642e92932e2f6a8d5bd4b9b915295e0",
+      "upstreamSha256": "4c14aaa6234d5a7dff85683ea02901e6b86cdbb9c5a3f8942602a69079f5555d",
+      "sha256": "4c14aaa6234d5a7dff85683ea02901e6b86cdbb9c5a3f8942602a69079f5555d",
       "modified": false
     },
     {
       "path": "vendor/server/index.ts",
       "upstream": "Cursor++/src/server/index.ts",
-      "upstreamSha256": "2cdd8b4dfde284e40abf27853c0ff6ab295548ede6c7c2a68e817ea0255dc106",
-      "sha256": "94f20ef1067441c278c87abf1c0273687f83d2e1d42d2dd039922e66b0c639e1",
+      "upstreamSha256": "d80fbee3f6f4d172c2eb3a62ecdf19e8bda5c71c1e364e97845cb64b5c00ea34",
+      "sha256": "63c80a1046140ba328e8a2f40f7e4a50b1a0db495ec4880abb7499c334e180d5",
       "modified": true
     },
     {
@@ -1014,8 +1022,8 @@
     {
       "path": "vendor/server/services/account/DashboardService.ts",
       "upstream": "Cursor++/src/server/services/account/DashboardService.ts",
-      "upstreamSha256": "53515ab3154ebd1515abd739050538dbe46ffb4ce46ae8b05d468f4af77f83b9",
-      "sha256": "53515ab3154ebd1515abd739050538dbe46ffb4ce46ae8b05d468f4af77f83b9",
+      "upstreamSha256": "21eb43d54391f6e8e0aba8be4b2a8b8bc564a311288906ca35aa76098be1e732",
+      "sha256": "21eb43d54391f6e8e0aba8be4b2a8b8bc564a311288906ca35aa76098be1e732",
       "modified": false
     },
     {
@@ -1056,15 +1064,15 @@
     {
       "path": "vendor/server/services/core/AiService.ts",
       "upstream": "Cursor++/src/server/services/core/AiService.ts",
-      "upstreamSha256": "8549744f7bfe30f0b61484e65ad2a44b30acd08f9aaf1061a8a341222377a554",
-      "sha256": "6e675ab5696a0105da42a139bf83af9b5bb44659a617fd890eae2359a68f013a",
+      "upstreamSha256": "86f81dc895cebb8a7bfc6c1540d9a935b11043492771176ce5805c3ad73012e8",
+      "sha256": "bb3dc23adb028bc38b3339da41ddd0c89a2b9e08a121284b1ca96b32554ee380",
       "modified": true
     },
     {
       "path": "vendor/server/services/core/BackgroundComposerService.ts",
       "upstream": "Cursor++/src/server/services/core/BackgroundComposerService.ts",
-      "upstreamSha256": "f89a9ed758cad1cca218cd2b676cad98bec2671bca7ba327d700d6fdcdc4c382",
-      "sha256": "f89a9ed758cad1cca218cd2b676cad98bec2671bca7ba327d700d6fdcdc4c382",
+      "upstreamSha256": "f6c0ae5b52645886f4cfba103b776c00f57993c11e905ece0e3aecd0029fd26c",
+      "sha256": "f6c0ae5b52645886f4cfba103b776c00f57993c11e905ece0e3aecd0029fd26c",
       "modified": false
     },
     {
@@ -1250,6 +1258,13 @@
       "modified": false
     },
     {
+      "path": "vendor/server/tests/byokModeRequest.test.ts",
+      "upstream": "Cursor++/src/server/tests/byokModeRequest.test.ts",
+      "upstreamSha256": "ea88cad018b9505340ec9067c36d44b152aafefb7003058338d2efb35f32b85f",
+      "sha256": "ea88cad018b9505340ec9067c36d44b152aafefb7003058338d2efb35f32b85f",
+      "modified": false
+    },
+    {
       "path": "vendor/server/tests/callMcpToolRouting.test.ts",
       "upstream": "Cursor++/src/server/tests/callMcpToolRouting.test.ts",
       "upstreamSha256": "37bec24eacce3d115bad97daff30de68ccc0a66ee485594b8c5fe3c07a089863",
@@ -1296,6 +1311,13 @@
       "upstream": "Cursor++/src/server/tests/conversationCodec.test.ts",
       "upstreamSha256": "72ff7f991275283b7fe7ed09e07ca0d4661d78701898327d40703eade7b08d9f",
       "sha256": "72ff7f991275283b7fe7ed09e07ca0d4661d78701898327d40703eade7b08d9f",
+      "modified": false
+    },
+    {
+      "path": "vendor/server/tests/defaultModelSelection.test.ts",
+      "upstream": "Cursor++/src/server/tests/defaultModelSelection.test.ts",
+      "upstreamSha256": "fc25571f07039f35e9fccdb9e888ead996d2d3b504ede96728313d8ebe629bc0",
+      "sha256": "fc25571f07039f35e9fccdb9e888ead996d2d3b504ede96728313d8ebe629bc0",
       "modified": false
     },
     {
@@ -1404,6 +1426,13 @@
       "modified": false
     },
     {
+      "path": "vendor/server/tests/requestedModelId.test.ts",
+      "upstream": "Cursor++/src/server/tests/requestedModelId.test.ts",
+      "upstreamSha256": "a9c6221eb1dd6c087fbe95b04f90d78b7b0c8db7231d7c271ca0894163818ee9",
+      "sha256": "a9c6221eb1dd6c087fbe95b04f90d78b7b0c8db7231d7c271ca0894163818ee9",
+      "modified": false
+    },
+    {
       "path": "vendor/server/tests/runCancellation.test.ts",
       "upstream": "Cursor++/src/server/tests/runCancellation.test.ts",
       "upstreamSha256": "e05cec3fcb00d0485e78febc04a8796564d4ece666d1da4bd2c9b023d6158bf0",
@@ -1474,6 +1503,13 @@
       "modified": false
     },
     {
+      "path": "vendor/installer/agent-turn-route-guard.js",
+      "upstream": "installer/src/agent-turn-route-guard.js",
+      "upstreamSha256": "c4115408e9d709f5e9aca3adf9225e6ee3389441a3e5c704901aa4bd64a55afe",
+      "sha256": "0e808498474ce865350dd4a881321135b88d347a79d89fc9a997055b21f71a12",
+      "modified": true
+    },
+    {
       "path": "vendor/installer/agent-websocket-guard.js",
       "upstream": "installer/src/agent-websocket-guard.js",
       "upstreamSha256": "4f33efc0e1ff3153e6f5bf4db38b2d15e01e9471a615a4cdd9ce39ec2968bf6d",
@@ -1497,8 +1533,8 @@
     {
       "path": "vendor/installer/check.js",
       "upstream": "installer/src/check.js",
-      "upstreamSha256": "b35eac78b662be7b8f5b4311139499fd52b1248c65671ced3ddefe4bc5e74409",
-      "sha256": "b35eac78b662be7b8f5b4311139499fd52b1248c65671ced3ddefe4bc5e74409",
+      "upstreamSha256": "23d4b5aa62e75679cc9179d655b1de6a550ea0b1fdc9dcde0d7e03d17844cd85",
+      "sha256": "23d4b5aa62e75679cc9179d655b1de6a550ea0b1fdc9dcde0d7e03d17844cd85",
       "modified": false
     },
     {
@@ -1539,16 +1575,16 @@
     {
       "path": "vendor/installer/install.js",
       "upstream": "installer/src/install.js",
-      "upstreamSha256": "c576357fdb5c15c837c71906b3d644c8ec68f0857024d3a922ab6b5e005ba847",
-      "sha256": "c576357fdb5c15c837c71906b3d644c8ec68f0857024d3a922ab6b5e005ba847",
-      "modified": false
+      "upstreamSha256": "74e9fed5c3ce23fcae0e3981f35bf040f82e48b3030d14980d83ab5f6afcf774",
+      "sha256": "fc14812a364add585f58d9101f16503f8dddd481ee63eb8122ede9d801af1d7f",
+      "modified": true
     },
     {
       "path": "vendor/installer/node-http11-router.js",
       "upstream": "installer/src/node-http11-router.js",
-      "upstreamSha256": "7f6d773bf59c5975370148cd75505f56264bbee64a2ed64c1fcdc5f00c6e76dc",
-      "sha256": "7f6d773bf59c5975370148cd75505f56264bbee64a2ed64c1fcdc5f00c6e76dc",
-      "modified": false
+      "upstreamSha256": "c52f6af4653f69cf20acc96681b53e87c7d76d9a4e76b05c61ef13b62863ff32",
+      "sha256": "efedaf436f93382e49ea5c2a6f3b51f3bddd917549e8df7381732f498db3bdba",
+      "modified": true
     },
     {
       "path": "vendor/installer/obfuscate.js",
@@ -1560,15 +1596,15 @@
     {
       "path": "vendor/installer/patch-agent-host.js",
       "upstream": "installer/src/patch-agent-host.js",
-      "upstreamSha256": "30524ad6f2729125d65b765d9898741eb321b7fff868a2b828d63a321c8f2ddb",
-      "sha256": "30524ad6f2729125d65b765d9898741eb321b7fff868a2b828d63a321c8f2ddb",
-      "modified": false
+      "upstreamSha256": "28dd37fffdc6a661aaec2a824d123b59bc385054396577fcebe9f4744a87db4a",
+      "sha256": "57a2057636044ac16430f9387ca8239cefba9b21cae059a46f0ca1bbd1fde631",
+      "modified": true
     },
     {
       "path": "vendor/installer/patch-always-local.js",
       "upstream": "installer/src/patch-always-local.js",
-      "upstreamSha256": "168edafced8181ba90a8a40a6a5d4cc624f3b3ed1a888368658e04eee018765b",
-      "sha256": "168edafced8181ba90a8a40a6a5d4cc624f3b3ed1a888368658e04eee018765b",
+      "upstreamSha256": "5e0ebd2c43f436984536a845a1e309453f481fbbe709bb90b3923713ac16aaa8",
+      "sha256": "5e0ebd2c43f436984536a845a1e309453f481fbbe709bb90b3923713ac16aaa8",
       "modified": false
     },
     {
@@ -1581,8 +1617,8 @@
     {
       "path": "vendor/installer/patch-inject.js",
       "upstream": "installer/src/patch-inject.js",
-      "upstreamSha256": "50ea0118615bced1fecfbe0a0fd97cd3c493562bcaca56eac0e78a8d6f02c0a4",
-      "sha256": "0a2e0050f1d0d98ded704a5d8bd4ef6f9bde44ecb46993f074697be4a79b77d9",
+      "upstreamSha256": "e474544aa4baa8a107798463a0ddc9f0609ee8a478650c15c0b4403f71338138",
+      "sha256": "af8c0a83493201595e7cd3a61f0d8d37a6f65543d81f05fc255b9491359bcbdb",
       "modified": true
     },
     {
@@ -1639,8 +1675,8 @@
     {
       "path": "vendor/installer/status.js",
       "upstream": "installer/src/status.js",
-      "upstreamSha256": "5e74e57ee1329da5a0b1abeb33677e25e24d55df7ee3faaea60cd523348fbba0",
-      "sha256": "5e74e57ee1329da5a0b1abeb33677e25e24d55df7ee3faaea60cd523348fbba0",
+      "upstreamSha256": "0861448b151064577ffcf8bb4a16a49e4654af5c1c6721e57d2e525944e1e344",
+      "sha256": "0861448b151064577ffcf8bb4a16a49e4654af5c1c6721e57d2e525944e1e344",
       "modified": false
     },
     {

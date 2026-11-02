@@ -13,8 +13,9 @@
  *   Cursor 的内置 Auto 标识 default 使用 GetDefaultModel 相同的默认项。
  */
 import type { ProviderEntry, ProviderModel, ProviderType, ThinkingLevel } from '../../data/defaults'
-import { flattenModels, lookupModel } from '../../config/providersStore'
+import { lookupModel } from '../../config/providersStore'
 import { logger } from '../../logger'
+import { enabledModelEntries, resolveRequestedModelId } from './requestedModelId'
 
 export class ModelNotFoundError extends Error {
   readonly code = 'MODEL_NOT_FOUND'
@@ -55,14 +56,14 @@ const UNSET_CONTEXT_LIMIT = 0
  * 上游 handler 应在 try/catch 中捕获此错, 构造对应的客户端错误响应。
  */
 export function defaultAssignedModel() {
-  return flattenModels().find(entry => entry.model.defaultOn !== false)
+  return enabledModelEntries()[0]
 }
 
 export function resolveModel(modelId: string): ResolvedModel {
-  // Resolve explicit IDs first; only Cursor's reserved Auto ID has default semantics.
-  const hit = lookupModel(modelId) ?? (modelId === 'default' ? defaultAssignedModel() : undefined)
+  const effectiveModelId = resolveRequestedModelId(modelId)
+  const hit = lookupModel(effectiveModelId)
   if (!hit) {
-    logger.warn({ modelId }, '[MODEL] not found in providers.json — rejecting request')
+    logger.warn({ modelId, effectiveModelId }, '[MODEL] not found in providers.json — rejecting request')
     throw new ModelNotFoundError(modelId)
   }
   return {

@@ -16,7 +16,7 @@ import { existsSync, readFileSync } from 'fs';
 import { findCursorPathsDetailed, formatDiagnostic } from './detect.js';
 import { installExtension, isExtensionInstalled } from './extension-embed.js';
 import { hasBackup } from './backup.js';
-import { isInjectPatched, patchInject } from './patch-inject.js';
+import { isInjectCurrent, patchInject } from './patch-inject.js';
 import { inspectAlwaysLocalPatch, patchAlwaysLocal } from './patch-always-local.js';
 import { getAgentHostBackupTargets, isAgentHostPatched, patchAgentHost } from './patch-agent-host.js';
 import { patchKatex } from './patch-katex.js';
@@ -46,8 +46,8 @@ export async function install() {
   info(`Version: ${paths.cursorVersion}${paths.hasGlass ? ' (glass)' : ''}`);
 
   const extInstalled = isExtensionInstalled(paths);
-  const desktopPatched = existsSync(paths.workbenchJs) && isInjectPatched(readFileSync(paths.workbenchJs, 'utf-8'));
-  const glassPatched = !existsSync(paths.glassJs) || isInjectPatched(readFileSync(paths.glassJs, 'utf-8'));
+  const desktopPatched = existsSync(paths.workbenchJs) && isInjectCurrent(readFileSync(paths.workbenchJs, 'utf-8'));
+  const glassPatched = !existsSync(paths.glassJs) || isInjectCurrent(readFileSync(paths.glassJs, 'utf-8'));
   const hookInjected = desktopPatched && glassPatched;
   const alPatched = inspectAlwaysLocalPatch(paths).fullyPatched;
   const agentHostPatched = isAgentHostPatched(paths);

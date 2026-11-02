@@ -43,6 +43,10 @@ bun cli.ts setup --cursor-closed
 
 ## 恢复与升级
 
+`0.3.0` 同步上游 CCursor `0.0.16` 对 Cursor 3.27.x 的协议与路由修复。本插件记录且哈希完整的旧补丁会自动升级；不需要先卸载插件，已有模型分配也会保留。升级后请完全退出 Cursor 再重新打开，以加载新的客户端路由。
+
+若文件被其他补丁或工具再次修改，自动升级会停止，避免覆盖它们。请保留日志和 `patch-manifest.json`，先核对这些改动；不要直接修改清单中的哈希来绕过检查。
+
 关闭 Cursor 后，在项目目录执行：
 
 ```sh
@@ -69,7 +73,7 @@ Cursor 升级后，请保持 Magpie 运行。插件会在后台重新检查客�
 | 日志提示找不到 Cursor | 安装 Cursor，或给 Magpie 设置指向 `resources/app` 的 `CCURSOR_CURSOR_ROOT` |
 | 日志提示权限不足 | 确认当前账户可写入 Cursor 应用目录 |
 | 端口 39831 被占用 | 停止原 CCursor；`status` 会区分新桥接与其他服务 |
-| Agent 列表没有 CCursor | 更新 Magpie，检查插件加载错误 |
+| Agent 列表没有 CCursor | 安装后先手动刷新 Magpie 页面；仍未出现时检查插件加载错误 |
 | 原版侧栏仍显示旧模型 | 原版面板管理的是旧配置；新配置由 Magpie 管理 |
 | 模型请求报 401/403 | 检查 Magpie 网关及供应商登录状态；不要粘贴配置文件中的密钥 |
 | 关闭 Magpie 后不能对话 | 请保持 Magpie 运行；桥接随插件宿主退出 |

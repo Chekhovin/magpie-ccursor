@@ -1,5 +1,14 @@
 # Verification record
 
+## 0.3.0 upstream synchronization (2026-11-02)
+
+The fresh upstream snapshot `c110c6e8ae34f785bca453c163bc113993f19b70` identifies CCursor 0.0.16 and the Cursor 3.27.22 protocol update. See the [integration comparison](upstream-0.0.16.md) for applied changes and deliberate Magpie adaptations.
+
+Final local Bun 1.4.3 run: **144 tests passed, 0 failed, 1,105 assertions across 14 files**. A real 3.27.22 copy reconstructed with committed plugin 0.2.6 upgraded successfully, retained clean backups, made no changes on a repeat, and restored all 59 target hashes. Read-only reviews passed. Tests also reject missing/malformed Connect end frames and cover bounded Windows atomic-rename retries.
+
+The live installation had unrecorded changes to both renderer bundles and product metadata, including Chinese localization. Its files were not treated as an intact plugin snapshot or overwritten by the isolated tests. Local deployment and live UI results must be recorded separately; passing file-copy tests do not remove that ownership check.
+
+
 Date: 2026-10-21. Source baseline: CCursor `fcac85db793fc2c8cda3318b96ec5a41c24f5e26`.
 
 ## Executed locally

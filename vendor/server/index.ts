@@ -9,7 +9,7 @@ import cors from '@fastify/cors'
  */
 import Fastify from 'fastify'
 import { ensureProvidersFile } from './config/providersStore'
-import { ensureRoutesFile, loadRoutes, toggleByokMode } from './config/routesStore'
+import { ensureRoutesFile, loadRoutes, requestByokMode } from './config/routesStore'
 import { closeAgentDatabase, initDatabase } from './database/sqlite'
 import { closeRuntimeLogs, enterWindowContext, logger, setLogBroadcast, setLogPush, setLogSubscriberCheck } from './logger'
 import { initRuntimeConfig } from './runtime-config'
@@ -127,28 +127,40 @@ export function bumpRefreshSignal(): void {
   }, 500)
 }
 
-/**
- * 向所有 renderer SSE 推送 REST redirect 列表变更。
- *
- * inject-patch 的 globalThis.fetch wrapper 里 _restPaths / _restSet 是安装时写死的,
- * 不随 routes.json 运行时变化。toggle BYOK 后需要通过 SSE 推送新列表让 renderer
- * 热更新,否则 OFF 模式下 /auth/poll 仍被拦截到本地,阻断真实登录流程。
- *
- * inject-patch 端监听 `event: routes`, 收到后替换 _restPaths + _restSet。
- */
-export function pushRoutesUpdate(restPaths: string[]): void {
-  let sent = 0
-  const data = JSON.stringify(restPaths)
-  for (const reply of refreshEventStreams) {
-    try {
-      reply.raw.write(`event: routes\ndata: ${data}\n\n`)
-      sent++
-    }
-    catch {
-      refreshEventStreams.delete(reply)
-    }
+/** Repeat after Cursor's in-flight official model-list request has settled (upstream 0.0.16). */
+const SETTLE_REFRESH_MS = 1500
+let settleRefreshTimer: ReturnType<typeof setTimeout> | null = null
+export function bumpRefreshSignalForModeChange(): void {
+  bumpRefreshSignal()
+  if (settleRefreshTimer) clearTimeout(settleRefreshTimer)
+  settleRefreshTimer = setTimeout(() => {
+    settleRefreshTimer = null
+    bumpRefreshSignal()
+  }, SETTLE_REFRESH_MS)
+}
+
+/** Keep the old REST event and add Connect rules for Agent Window renderer routing. */
+export function splitRedirect(redirect: string[]): { restPaths: string[], rpcRules: string[] } {
+  const restPaths: string[] = [], rpcRules: string[] = []
+  for (const rule of redirect) {
+    if (rule.startsWith('REST:')) restPaths.push(rule.slice(5))
+    else rpcRules.push(rule)
   }
-  logger.info({ connections: sent, restPaths: restPaths.length }, '[SRV] routes update pushed')
+  return { restPaths, rpcRules }
+}
+function writeRoutesEvents(reply: any, redirect: string[]): void {
+  const { restPaths, rpcRules } = splitRedirect(redirect)
+  reply.raw.write(`event: routes\ndata: ${JSON.stringify(restPaths)}\n\n`)
+  reply.raw.write(`event: rpc-routes\ndata: ${JSON.stringify(rpcRules)}\n\n`)
+}
+export function pushRoutesUpdate(redirect: string[]): void {
+  let sent = 0
+  for (const reply of refreshEventStreams) {
+    try { writeRoutesEvents(reply, redirect); sent++ }
+    catch { refreshEventStreams.delete(reply) }
+  }
+  const { restPaths, rpcRules } = splitRedirect(redirect)
+  logger.info({ connections: sent, restPaths: restPaths.length, rpcRules: rpcRules.length }, '[SRV] routes update pushed')
 }
 
 export interface StartServerOptions extends RuntimeConfigInit {}
@@ -204,6 +216,11 @@ export async function startServer(opts: StartServerOptions): Promise<{ host: str
       const status = reply.statusCode
       const rt = reply.elapsedTime?.toFixed(0) ?? '?'
 
+      if (req.method === 'OPTIONS') {
+        logger.trace(`[OPTIONS] ${url} → ${status} (${rt}ms)`)
+        done()
+        return
+      }
       if (TRACE_PATHS.has(url)) {
         logger.trace(`[${req.method}] ${url} → ${status} (${rt}ms)`)
         done()
@@ -224,7 +241,7 @@ export async function startServer(opts: StartServerOptions): Promise<{ host: str
       done()
     })
 
-    await server.register(cors, { origin: true, exposedHeaders: ['x-magpie-ccursor-catalog'] })
+    await server.register(cors, { origin: true, maxAge: 600, exposedHeaders: ['x-magpie-ccursor-catalog'] })
     await server.register(fastifyConnectPlugin, { routes })
 
     // ── SSE 日志流 + 窗口注册 ──
@@ -276,10 +293,8 @@ export async function startServer(opts: StartServerOptions): Promise<{ host: str
       refreshEventStreams.add(reply)
       reply.raw.writeHead(200, sseHeaders)
       reply.raw.write(`: connected\n\n`)
-      // 立即推送当前 REST redirect 列表 — inject-patch 初始只含 BASE,
-      // 需要 server 就绪后推送完整列表才能拦截 BYOK 路径
-      const currentRestPaths = loadRoutes().redirect.filter((r: string) => r.startsWith('REST:')).map((r: string) => r.slice(5))
-      reply.raw.write(`event: routes\ndata: ${JSON.stringify(currentRestPaths)}\n\n`)
+      // Initial handshake supplies both REST and Connect routes before refresh.
+      writeRoutesEvents(reply, loadRoutes().redirect)
       reply.hijack()
 
       req.raw.on('close', () => {
@@ -287,17 +302,24 @@ export async function startServer(opts: StartServerOptions): Promise<{ host: str
       })
     })
 
-    // BYOK toggle — renderer (glass sidebar) 通过 fetch 调用
-    server.post('/byok/toggle', async () => {
-      const next = await toggleByokMode()
-      const restPaths = next.redirect
-        .filter((r: string) => r.startsWith('REST:'))
-        .map((r: string) => r.slice(5))
-      pushRoutesUpdate(restPaths)
-      bumpRefreshSignal()
-      logger.info({ byokMode: next.byokMode }, '[SRV] BYOK toggled via REST')
-      return { byokMode: next.byokMode }
+    const applyRestByokRequest = async (target: 0 | 1 | 'toggle', source: string) => {
+      const { routes: next, changed } = await requestByokMode(target, source)
+      if (changed) {
+        pushRoutesUpdate(next.redirect)
+        bumpRefreshSignalForModeChange()
+      }
+      logger.info({ byokMode: next.byokMode, changed, source }, '[SRV] BYOK mode request via REST')
+      return { byokMode: next.byokMode, changed }
+    }
+    server.post('/byok/mode', async (req, reply) => {
+      const body = (req.body ?? {}) as { byokMode?: unknown, source?: unknown }
+      if (body.byokMode !== 0 && body.byokMode !== 1) {
+        reply.code(400)
+        return { error: 'byokMode must be 0 or 1' }
+      }
+      return applyRestByokRequest(body.byokMode, `rest:${typeof body.source === 'string' ? body.source : 'mode'}`)
     })
+    server.post('/byok/toggle', async () => applyRestByokRequest('toggle', 'rest:toggle'))
 
     // Fake auth endpoints
     server.get('/health', async () => ({ ok: true, mode: 'byok', magpieCcursor: true }))
@@ -370,6 +392,8 @@ export function broadcastShutdown(): void {
 }
 
 function clearStreams(): void {
+  if (settleRefreshTimer) clearTimeout(settleRefreshTimer)
+  settleRefreshTimer = null
   if (refreshDebounceTimer) clearTimeout(refreshDebounceTimer)
   refreshDebounceTimer = null
   for (const streams of logStreams.values()) {

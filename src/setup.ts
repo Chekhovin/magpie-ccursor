@@ -6,9 +6,9 @@ import { join, resolve } from 'node:path'
 import { dataDirectory, writePrivateJSON } from './connection'
 import { withPatchLock } from './patch-lock'
 import { findCursorPathsDetailed, formatDiagnostic } from '../vendor/installer/detect.js'
-import { isInjectPatched, isLocalLoopCompatible, isModelCatalogCompatible, patchInject } from '../vendor/installer/patch-inject.js'
+import { isInjectCurrent, isLocalLoopCompatible, isModelCatalogCompatible, patchInject } from '../vendor/installer/patch-inject.js'
 import { inspectAlwaysLocalPatch, patchAlwaysLocal } from '../vendor/installer/patch-always-local.js'
-import { findAgentHostNetworkTargets, getAgentHostBackupTargets, isAgentHostPatched, patchAgentHost } from '../vendor/installer/patch-agent-host.js'
+import { findAgentHostNetworkTargets, getAgentHostBackupTargets, inspectAgentHostPatch, patchAgentHost } from '../vendor/installer/patch-agent-host.js'
 import { isProxy39Patched, needsProxy39Patch, patchProxy39 } from '../vendor/installer/patch-proxy-39.js'
 import { patchKatex } from '../vendor/installer/patch-katex.js'
 
@@ -243,21 +243,23 @@ export function cursorStatus(options: SetupOptions = {}) {
   catch (error) { return { installed: false, diagnostic: String(error) } }
   const rendererSource = readFileSync(paths.workbenchJs, 'utf8')
   const glassSource = existsSync(paths.glassJs) ? readFileSync(paths.glassJs, 'utf8') : undefined
-  const renderer = isInjectPatched(rendererSource)
-  const glass = glassSource ? isInjectPatched(glassSource) : !paths.hasGlass
+  const renderer = isInjectCurrent(rendererSource)
+  const glass = glassSource ? isInjectCurrent(glassSource) : !paths.hasGlass
   const localLoop = (renderer && glass)
     || (isLocalLoopCompatible(rendererSource) && (glassSource ? isLocalLoopCompatible(glassSource) : !paths.hasGlass))
   const modelCatalog = (renderer && glass)
     || (isModelCatalogCompatible(rendererSource) && (glassSource ? isModelCatalogCompatible(glassSource) : !paths.hasGlass))
   const agentRequired = Number(paths.cursorVersion.split('.')[0]) > 3
     || (Number(paths.cursorVersion.split('.')[0]) === 3 && Number(paths.cursorVersion.split('.')[1]) >= 13)
-  const agent = (!agentRequired || existsSync(paths.agentHostMain)) && isAgentHostPatched(paths)
+  const agentState = inspectAgentHostPatch(paths)
+  const agent = (!agentRequired || existsSync(paths.agentHostMain)) && agentState.fullyPatched
+  const agentTurnRoute = agentState.turnRoute
   const alwaysLocal = inspectAlwaysLocalPatch(paths).fullyPatched
   const extensionHost = readFileSync(paths.extensionHostJs, 'utf8')
   const signature = extensionHost.includes('if(!1)') && !/if\(!\w\.valid\)/.test(extensionHost)
   // Newer Cursor layouts can omit the legacy singleton entirely.
   const proxy = !needsProxy39Patch(paths) || isProxy39Patched(paths)
-  return { installed: true, root: paths.appRoot, version: paths.cursorVersion, renderer, glass, agent, alwaysLocal, signature, proxy, localLoop, modelCatalog,
+  return { installed: true, root: paths.appRoot, version: paths.cursorVersion, renderer, glass, agent, alwaysLocal, signature, proxy, localLoop, modelCatalog, agentTurnRoute,
     ready: renderer && glass && agent && alwaysLocal && signature && proxy && localLoop && modelCatalog }
 }
 
@@ -283,15 +285,18 @@ async function setupCursorLocked(options: SetupOptions) {
   if (status.ready) return { ...status, changed: false }
   const files = cursorPatchFiles(paths).filter(existsSync)
   const packageHash = digest(await readFile(join(paths.appRoot, 'package.json')))
-  // Upgrade only the renderer compatibility hooks of an intact installation recorded by us.
+  // Upgrade only an intact installation recorded by us. 0.0.16 also updates Node routing
+  // and Agent Host turn selection; the manifest proves ownership when old readiness changes.
   if (manifest?.state === 'applied' && manifest.appRoot === paths.appRoot
-    && manifest.packageHash === packageHash && status.agent && status.alwaysLocal && status.signature && status.proxy
+    && manifest.packageHash === packageHash && status.signature && status.proxy
     && files.length === manifest.entries.length
     && files.every(file => manifest.entries.some(entry => entry.file === file))
     && manifest.entries.every(entry => digest(readFileSync(entry.file)) === entry.patchedHash)) {
     await snapshotTransaction(files, directory, () => {
       patchInject(paths, log)
-      if (!cursorStatus({ paths }).ready) throw new Error('Upgraded Cursor renderer hooks did not pass verification.')
+      patchAlwaysLocal(paths, log)
+      patchAgentHost(paths, log)
+      if (!cursorStatus({ paths }).ready) throw new Error('Upgraded Cursor compatibility hooks did not pass verification.')
       if (digest(readFileSync(join(paths.appRoot, 'package.json'))) !== packageHash) throw new Error('Cursor changed version during setup.')
     }, { appRoot: paths.appRoot, version: paths.cursorVersion, packageHash }, true)
     log('Cursor compatibility hooks updated. Restart any open Cursor window once to load the model and chat compatibility fixes.')

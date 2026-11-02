@@ -36,7 +36,7 @@ export function toProviders(connection: any) {
   return {
     $schemaVersion: 1,
     providers: [{ id: 'magpie', name: 'Magpie', type: 'openai-chat', baseUrl: gateway.v1.replace(/\/$/, ''),
-      auth: { kind: 'apiKey', value: gateway.key }, headers: { 'User-Agent': 'magpie-ccursor/0.2.6' }, models }],
+      auth: { kind: 'apiKey', value: gateway.key }, headers: { 'User-Agent': 'magpie-ccursor/0.3.0' }, models }],
   }
 }
 
@@ -49,5 +49,13 @@ export async function writePrivateJSON(path: string, value: unknown) {
   await mkdir(dirname(path), { recursive: true, mode: 0o700 })
   const temporary = `${path}.${process.pid}.tmp`
   await writeFile(temporary, `${JSON.stringify(value, null, 2)}\n`, { mode: 0o600 })
-  await rename(temporary, path)
+  // Windows readers/scanners can briefly deny replace-by-rename. Keep the old
+  // file intact and retry only those transient errors; never unlink the target.
+  for (let attempt = 0; ; attempt++) {
+    try { await rename(temporary, path); return }
+    catch (error: any) {
+      if (process.platform !== 'win32' || !['EPERM', 'EBUSY'].includes(error.code) || attempt >= 5) throw error
+      await new Promise(resolve => setTimeout(resolve, 20 * 2 ** attempt))
+    }
+  }
 }

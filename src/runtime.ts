@@ -9,7 +9,7 @@ import { setDataDir } from '../vendor/server/config/paths'
 import { onProvidersChange, resetProvidersCacheForTests, startProvidersWatcher, stopProvidersWatcher } from '../vendor/server/config/providersStore'
 import { loadRoutes, onRoutesChange, startRoutesWatcher, stopRoutesWatcher } from '../vendor/server/config/routesStore'
 import { resetProviderInstanceCache } from '../vendor/server/handlers/llm/providerRuntime'
-import { bumpRefreshSignal, pushRoutesUpdate, startServer, stopServer } from '../vendor/server/index'
+import { bumpRefreshSignal, bumpRefreshSignalForModeChange, pushRoutesUpdate, startServer, stopServer } from '../vendor/server/index'
 
 let occupied = false
 
@@ -48,8 +48,8 @@ export async function startRuntime({ dataDir = join(homedir(), '.magpie-ccursor'
       bumpRefreshSignal()
     }))
     disposers.push(onRoutesChange(() => {
-      pushRoutesUpdate(loadRoutes().redirect.filter(r => r.startsWith('REST:')).map(r => r.slice(5)))
-      bumpRefreshSignal()
+      pushRoutesUpdate(loadRoutes().redirect)
+      bumpRefreshSignalForModeChange()
     }))
     startProvidersWatcher()
     startRoutesWatcher()

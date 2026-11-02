@@ -6,6 +6,8 @@
 
 [AGPL-3.0-or-later](LICENSE) · 基于 [CometixSpace/CCursor](https://github.com/CometixSpace/CCursor)
 
+`0.3.0` 已同步上游 CCursor `0.0.16` 的 Cursor **3.27.x** 适配：更新对话协议，改进 Agents 窗口的模型路由，并修复 BYOK 开关重复触发和切换后短暂显示旧模型的问题。
+
 `magpie-ccursor` 是适配 Magpie 的 CCursor Agent 插件。它在本机运行一个轻量协议桥（`127.0.0.1:39831`），把 Cursor 的模型请求转发到 Magpie 本地网关，再由 Magpie 调用你配置的供应商。模型费用按你在 Magpie 中接入的供应商计费。
 
 ```text
@@ -25,7 +27,7 @@ Cursor → 本机 CCursor 协议桥 (127.0.0.1:39831) → Magpie 网关 → 模�
 使用 Cursor 期间请保持 Magpie 运行：
 
 - 已分配的模型会同时同步到普通 IDE 窗口与 Agents 窗口；在 Magpie 中修改模型分配后会自动更新，插件升级时也无需重新勾选已有模型。
-- Cursor 的 **Auto** 会使用 Magpie 分配的默认模型；你也可以在选择器里指定模型。
+- Cursor 的 **Auto** 和未指定模型的新对话会使用 Magpie 分配的默认模型；你也可以在选择器里指定模型。
 - 模型请求通过 Magpie 为 CCursor 分配的专属 Agent key 发送，用量单独统计在该 Agent 下。
 - 在 Magpie 中关闭 CCursor 连接会停止本机桥接服务，重新开启即可恢复。
 

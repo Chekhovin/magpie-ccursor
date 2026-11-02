@@ -6,6 +6,8 @@ Use the models you configured in **Magpie** directly inside **Cursor**: manage m
 
 [AGPL-3.0-or-later](LICENSE) · Based on [CometixSpace/CCursor](https://github.com/CometixSpace/CCursor)
 
+Version `0.3.0` incorporates upstream CCursor `0.0.16` support for **Cursor 3.27.x**: updated conversation protocols, improved model routing in the Agents Window, and fixes for repeated BYOK toggle actions and stale model lists after switching modes.
+
 `magpie-ccursor` is a CCursor Agent plugin built for Magpie. It runs a lightweight local protocol bridge (`127.0.0.1:39831`) that forwards Cursor's model requests to your local Magpie gateway, which then routes them to your configured providers. Model usage is billed by the providers you configure in Magpie.
 
 ```text
@@ -25,7 +27,7 @@ Installing the plugin in Magpie also sets up the Cursor client hooks automatical
 Keep Magpie running while you use Cursor:
 
 - Assigned models sync to both the standard IDE window and the Agents Window. Changing model assignments in Magpie updates Cursor automatically, and updating the plugin keeps your existing model selections.
-- Cursor's **Auto** uses the default model assigned by Magpie. You can also choose a specific model in the picker.
+- Cursor's **Auto** and new conversations without a specified model use the default model assigned by Magpie. You can also choose a specific model in the picker.
 - Model requests authenticate with the dedicated Agent key Magpie assigns to CCursor, so usage is tracked specifically under that Agent.
 - Disabling the CCursor connection in Magpie stops the local bridge; re-enabling it starts the bridge again.
 

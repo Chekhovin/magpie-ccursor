@@ -26,7 +26,7 @@ export function createAutoSetup(options: SetupOptions & {
     // Manual restore/setup changes intent even if the Cursor installation itself is unchanged.
     const snapshot = await stat(join(dataDir, 'patch-manifest.json')).catch(() => undefined)
     const lock = await stat(join(dataDir, 'patch.lock')).catch(() => undefined)
-    return JSON.stringify(['cursor-recovery-v2', target, snapshot?.mtimeMs, snapshot?.ctimeMs, snapshot?.size, lock?.mtimeMs, lock?.size])
+    return JSON.stringify(['cursor-0016-routing-v3', target, snapshot?.mtimeMs, snapshot?.ctimeMs, snapshot?.size, lock?.mtimeMs, lock?.size])
   }
   return async function reconcileAutoSetup() {
     if (now() < nextCheck) return
