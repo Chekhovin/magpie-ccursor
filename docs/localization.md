@@ -10,7 +10,7 @@
 
 此开关不影响 CCursor 的 Agent 连接、模型分配或对话数据库。关闭只撤销插件附加的翻译，保留模型接入补丁。已有 VS Code 中文语言包及显示语言设置不受修改，因此基础编辑器界面仍可能是中文。开关不是“卸载所有中文语言包”。
 
-面板只能确认选项保存成功，不能读取客户端安装状态。若没有变化，请查看插件日志，或运行 `bun cli.ts status` 查看 `automaticSetup.localization` 的状态。
+面板只能确认选项保存成功，不能读取客户端安装状态。若没有变化，请查看插件日志，或运行 `bun cli.ts status` 检查输出中的 `autoSetup.state` 和 `autoSetup.message`。该命令不直接显示汉化结果，具体查看方法见下方[选项与诊断](#选项与诊断)。
 
 ## 支持范围
 
@@ -37,4 +37,4 @@
 
 Magpie 保存插件自己的 `options.localize`。插件宿主将有效布尔值同步到 `~/.magpie-ccursor/plugin-options.json`，守护进程每次轮询读取它；无需编辑 Agent 的 `connection.json`。
 
-`auto-setup.json` 和补丁清单中的 `localization` 会记录请求值、词条修订及结果：`enabled`、`disabled` 或 `unsupported`。手动恢复后的暂停状态不会被开关覆盖；需要重新接入时，关闭 Cursor 后明确执行 `setup`。
+自动接入完成并记录汉化结果后，可在 `~/.magpie-ccursor/auto-setup.json` 的 `localization.state` 中查看 `enabled`、`disabled` 或 `unsupported`；接入失败或暂停时，`localization` 可能不存在。该文件及补丁清单中的 `localization` 还记录请求值和词条修订。手动恢复后的暂停状态不会被开关覆盖；需要重新接入时，关闭 Cursor 后明确执行 `setup`。
