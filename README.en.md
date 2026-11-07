@@ -6,6 +6,8 @@ Use the models you manage in **Magpie** directly inside **Cursor**: configure mo
 
 `magpie-ccursor` is a CCursor Agent plugin built for Magpie. It runs a lightweight local protocol bridge (`127.0.0.1:39831`) that forwards Cursor's model requests to your local Magpie gateway, which then routes them to your configured providers. Model usage is billed by the providers you configure in Magpie.
 
+> **Compatibility note:** This plugin is designed for Cursor `3.27.x`. Newer versions may cause it to stop working properly.
+
 ```text
 Cursor → Local CCursor bridge (127.0.0.1:39831) → Magpie gateway → Model providers
 ```

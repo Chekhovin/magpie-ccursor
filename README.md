@@ -6,6 +6,8 @@
 
 `magpie-ccursor` 是适配 Magpie 的 CCursor Agent 插件。它在本机运行轻量协议桥（`127.0.0.1:39831`），将 Cursor 的模型请求转发至本地 Magpie 网关，再由 Magpie 调用你配置的供应商。模型费用按你在 Magpie 中接入的供应商计费。
 
+> **兼容性提醒：**本插件适配 Cursor `3.27.x`，更新的版本可能导致插件无法正常工作。
+
 ```text
 Cursor → 本机 CCursor 协议桥 (127.0.0.1:39831) → Magpie 网关 → 模型供应商
 ```
